@@ -11,36 +11,7 @@ const {
   decideRedirect,
 } = require("../../services/authUnified.service");
 const { memberRoleToWarehouseStaffRole } = require("../../utils/warehouseStaffRoleMapping");
-const {
-  branchAccessPermissionUpsertDataForInviteAccept,
-} = require("../../services/branchAccessPermissionInviteAccept");
 
-/** BranchAccessPermission.role is MemberRole — omit when invite uses WarehouseStaffRole-only values. */
-function memberRoleForBranchAccessPermission(role: string | null | undefined): string | undefined {
-  if (!role) return undefined;
-  const r = String(role).toUpperCase();
-  const memberRoles = new Set([
-    "OWNER",
-    "ORG_ADMIN",
-    "BRANCH_MANAGER",
-    "BRANCH_STAFF",
-    "SELLER",
-    "DELIVERY_MANAGER",
-    "DELIVERY_STAFF",
-    "WAREHOUSE_MANAGER",
-    "RECEIVING_STAFF",
-    "DISPATCH_STAFF",
-    "DOCTOR",
-    "CLINIC_STAFF",
-    "CLINIC_RECEPTION",
-    "CLINIC_INVENTORY_STAFF",
-    "PHARMACIST",
-    "GROOMING_STAFF",
-    "BOARDING_STAFF",
-    "TRAINING_STAFF",
-  ]);
-  return memberRoles.has(r) ? r : undefined;
-}
 
 /** Cookie options for access_token: host-only in dev (no Domain), so browser accepts on localhost:port. */
 function getAccessTokenCookieOptions() {
@@ -114,6 +85,7 @@ async function generateUniqueUsername({ emailNorm, phoneNorm, displayName }) {
  * Called after successful login to notify users of pending invitations
  */
 async function createNotificationsForPendingInvites(userId, emailNorm, phoneNorm) {
+  return; // Disabled: staffInvite model is removed
   try {
     // Find pending invites matching user's email or phone
     const pendingInvites = await prisma.staffInvite.findMany({
@@ -878,6 +850,7 @@ exports.logout = async (req, res) => {
  * Public endpoint used by the Register page to validate an invite link.
  */
 exports.verifyInvite = async (req, res) => {
+  return res.status(400).json({ success: false, message: "Staff invite system is disabled" });
   try {
     const token = String(req.query?.token || "").trim();
     if (!token) {
@@ -1039,6 +1012,7 @@ exports.verifyInvite = async (req, res) => {
  * ✅ Existing users must be authenticated (session) to accept
  */
 exports.acceptInvite = async (req, res) => {
+  return res.status(400).json({ success: false, message: "Staff invite system is disabled" });
   try {
     const { token, password, displayName } = req.body || {};
     if (!token) {
@@ -1145,19 +1119,6 @@ exports.acceptInvite = async (req, res) => {
             },
           });
 
-          // CRITICAL FIX: Create BranchAccessPermission for warehouse staff
-          const bapRoleWh = memberRoleForBranchAccessPermission(staffInvite.warehouseRole);
-          const bapWhPayload = branchAccessPermissionUpsertDataForInviteAccept({
-            branchId: wh.branchId,
-            userId: uid,
-            invitedByUserId: staffInvite.invitedByUserId,
-            memberRole: bapRoleWh ?? undefined,
-          });
-          await tx.branchAccessPermission.upsert({
-            where: { branchId_userId: { branchId: wh.branchId, userId: uid } },
-            create: bapWhPayload.create,
-            update: bapWhPayload.update,
-          });
 
           // Create WarehouseStaffAssignment
           const existingAssignment = await tx.warehouseStaffAssignment.findFirst({
@@ -1201,17 +1162,6 @@ exports.acceptInvite = async (req, res) => {
             select: { id: true },
           });
 
-          const bapBranchPayload = branchAccessPermissionUpsertDataForInviteAccept({
-            branchId: staffInvite.branchId,
-            userId: uid,
-            invitedByUserId: staffInvite.invitedByUserId,
-            memberRole: staffInvite.role,
-          });
-          await tx.branchAccessPermission.upsert({
-            where: { branchId_userId: { branchId: staffInvite.branchId, userId: uid } },
-            create: bapBranchPayload.create,
-            update: bapBranchPayload.update,
-          });
 
           const whRole = memberRoleToWarehouseStaffRole(staffInvite.role);
           if (whRole) {

@@ -19,12 +19,12 @@ const port = Number(env.port || process.env.PORT || 3000);
 const apiPrefix = env.apiPrefix || process.env.API_PREFIX || "/api/v1";
 
 // Background maintenance jobs (lightweight in-process schedulers)
-try {
-  const { startStaffInviteCleanup } = require("./common/jobs/staffInviteCleanup");
-  startStaffInviteCleanup();
-} catch (e) {
-  console.error("[JOB_INIT] staffInviteCleanup failed", e);
-}
+// try {
+//   const { startStaffInviteCleanup } = require("./common/jobs/staffInviteCleanup");
+//   startStaffInviteCleanup();
+// } catch (e) {
+//   console.error("[JOB_INIT] staffInviteCleanup failed", e);
+// }
 // [Furtail-CLEANUP Phase 3] expiryEngine disabled — imports inventory/ledger.service
 // which is an enterprise inventory module not required by Furtail Flutter app.
 // Remove this job entirely in Phase 4 when inventory module is deleted.
