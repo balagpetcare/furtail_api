@@ -1,0 +1,93 @@
+const rateLimit = require('express-rate-limit');
+
+// Helper to read numeric envs safely
+function numEnv(key, fallback) {
+  const n = Number(process.env[key]);
+  return Number.isFinite(n) && n > 0 ? n : fallback;
+}
+
+// Global baseline limiter (most endpoints)
+const generalLimiter = rateLimit({
+  windowMs: numEnv('RL_GENERAL_WINDOW_MS', 15 * 60 * 1000),
+  limit: numEnv('RL_GENERAL_MAX', 300),
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Auth endpoints
+const authLimiter = rateLimit({
+  windowMs: numEnv('RL_AUTH_WINDOW_MS', 15 * 60 * 1000),
+  limit: numEnv('RL_AUTH_MAX', 20),
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Withdraw endpoints (create/cancel)
+const withdrawLimiter = rateLimit({
+  windowMs: numEnv('RL_WITHDRAW_WINDOW_MS', 60 * 1000),
+  limit: numEnv('RL_WITHDRAW_MAX', 10),
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Webhooks (should be higher; providers may retry)
+const webhookLimiter = rateLimit({
+  windowMs: numEnv('RL_WEBHOOK_WINDOW_MS', 60 * 1000),
+  limit: numEnv('RL_WEBHOOK_MAX', 120),
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Donation (Phase 2: limit donate requests per window)
+const donationLimiter = rateLimit({
+  windowMs: numEnv('RL_DONATION_WINDOW_MS', 60 * 1000),
+  limit: numEnv('RL_DONATION_MAX', 30),
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Phase 3: Geocode/reverse (Nominatim rate limit ~1 req/sec for public)
+const geocodeLimiter = rateLimit({
+  windowMs: numEnv('RL_GEOCODE_WINDOW_MS', 60 * 1000),
+  limit: numEnv('RL_GEOCODE_MAX', 60),
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Product import upload (per-user to avoid abuse)
+const productImportUploadLimiter = rateLimit({
+  windowMs: numEnv('RL_IMPORT_UPLOAD_WINDOW_MS', 15 * 60 * 1000),
+  limit: numEnv('RL_IMPORT_UPLOAD_MAX', 20),
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Producer governance mutations (suspend, unsuspend, flags, quotas, approve, reject)
+const governanceMutationLimiter = rateLimit({
+  windowMs: numEnv('RL_GOVERNANCE_MUTATION_WINDOW_MS', 60 * 1000),
+  limit: numEnv('RL_GOVERNANCE_MUTATION_MAX', 30),
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+/** Warehouse / inventory stock mutations (manual in/out, draft transfer, dispatch). Per-IP. */
+const inventoryWarehouseMutationLimiter = rateLimit({
+  windowMs: numEnv('RL_INVENTORY_WAREHOUSE_MUTATION_WINDOW_MS', 60 * 1000),
+  limit: numEnv('RL_INVENTORY_WAREHOUSE_MUTATION_MAX', 120),
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+module.exports = {
+  generalLimiter,
+  authLimiter,
+  withdrawLimiter,
+  webhookLimiter,
+  donationLimiter,
+  geocodeLimiter,
+  productImportUploadLimiter,
+  governanceMutationLimiter,
+  inventoryWarehouseMutationLimiter,
+};
+
+export {};

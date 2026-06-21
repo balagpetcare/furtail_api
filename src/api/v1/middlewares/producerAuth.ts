@@ -1,0 +1,291 @@
+const prisma = require("../../../infrastructure/db/prismaClient");
+
+/**
+ * Producer authentication middleware
+ * Checks if user has required producer permissions
+ */
+export const requireProducerPermission = (requiredPermissions: string[]) => {
+  return async (req: any, res: any, next: any) => {
+    try {
+      const userId = req.user?.id;
+      
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          message: "Authentication required",
+        });
+      }
+
+      const requiresVerified = requiredPermissions.some((perm) =>
+        perm.startsWith("producer.products") ||
+        perm.startsWith("producer.batches") ||
+        perm.startsWith("producer.codes") ||
+        perm.startsWith("producer.verification") ||
+        perm.startsWith("producer.analytics")
+      );
+
+      // Check if user owns a producer org
+      const producerOrg = await prisma.producerOrg.findFirst({
+        where: { ownerUserId: userId },
+        select: { id: true, status: true, name: true },
+      });
+
+      // If user owns the producer org, grant all permissions
+      if (producerOrg) {
+        if (producerOrg.status === "SUSPENDED") {
+          return res.status(403).json({
+            success: false,
+            message: "Producer organization is suspended",
+          });
+        }
+        if (requiresVerified && producerOrg.status !== "VERIFIED") {
+          return res.status(403).json({
+            success: false,
+            message: "Producer organization is not verified yet",
+          });
+        }
+        req.producerOrgId = producerOrg.id;
+        req.isProducerOwner = true;
+        return next();
+      }
+
+      // Prefer producer org from body (e.g. POST create product), query, or session
+      const candidateOrgId =
+        req.body?.producerOrgId != null
+          ? Number(req.body.producerOrgId)
+          : req.query?.producerOrgId != null
+            ? Number(req.query.producerOrgId)
+            : req.user?.defaultProducerOrgId != null
+              ? Number(req.user.defaultProducerOrgId)
+              : null;
+
+      const staffWhere = candidateOrgId
+        ? { userId, producerOrgId: candidateOrgId }
+        : { userId };
+
+      const staffMembership = await prisma.producerOrgStaff.findFirst({
+        where: staffWhere,
+        include: {
+          role: {
+            include: {
+              rolePermissions: {
+                include: {
+                  permission: true,
+                },
+              },
+            },
+          },
+          producerOrg: {
+            select: { id: true, status: true },
+          },
+        },
+      });
+
+      if (!staffMembership) {
+        if (candidateOrgId) {
+          return res.status(403).json({
+            success: false,
+            message: "You are not an active member of this producer organization",
+            code: "PRODUCER_ORG_ACCESS",
+          });
+        }
+        return res.status(403).json({
+          success: false,
+          message: "You are not associated with any producer organization",
+          code: "PRODUCER_ORG_ACCESS",
+        });
+      }
+
+      if (staffMembership.status !== "ACTIVE") {
+        return res.status(403).json({
+          success: false,
+          message: "Producer staff access is not active",
+          code: "PRODUCER_ORG_ACCESS",
+        });
+      }
+
+      // Check if producer org is active
+      if (staffMembership.producerOrg.status === "SUSPENDED") {
+        return res.status(403).json({
+          success: false,
+          message: "Producer organization is suspended",
+          code: "PRODUCER_ORG_ACCESS",
+        });
+      }
+      if (requiresVerified && staffMembership.producerOrg.status !== "VERIFIED") {
+        return res.status(403).json({
+          success: false,
+          message: "Producer organization is not verified yet",
+          code: "PRODUCER_ORG_ACCESS",
+        });
+      }
+
+      // Get user's permissions
+      const userPermissions = staffMembership.role.rolePermissions.map(
+        (rp: any) => rp.permission.key
+      );
+
+      // Check if user has all required permissions
+      const hasAllPermissions = requiredPermissions.every((perm) =>
+        userPermissions.includes(perm)
+      );
+
+      if (!hasAllPermissions) {
+        return res.status(403).json({
+          success: false,
+          message: "Insufficient permissions",
+          code: "PRODUCER_PERMISSION_DENIED",
+          required: requiredPermissions,
+          userPermissions,
+        });
+      }
+
+      // Attach producer org info to request
+      req.producerOrgId = staffMembership.producerOrgId;
+      req.isProducerOwner = false;
+      req.producerStaffId = staffMembership.id;
+      req.producerPermissions = userPermissions;
+
+      next();
+    } catch (error) {
+      console.error("Producer auth middleware error:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Authorization check failed",
+      });
+    }
+  };
+};
+
+/**
+ * Producer permission check: user must have at least one of the given permissions.
+ * Use for dashboard/analytics where producer.analytics.read OR producer.verification.read is acceptable.
+ */
+export const requireProducerPermissionAny = (allowedPermissions: string[]) => {
+  return async (req: any, res: any, next: any) => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        return res.status(401).json({ success: false, message: "Authentication required" });
+      }
+
+      const producerOrg = await prisma.producerOrg.findFirst({
+        where: { ownerUserId: userId },
+        select: { id: true, status: true },
+      });
+
+      if (producerOrg) {
+        if (producerOrg.status === "SUSPENDED") {
+          return res.status(403).json({ success: false, message: "Producer organization is suspended" });
+        }
+        const requiresVerified = allowedPermissions.some((p) =>
+          p.startsWith("producer.analytics") || p.startsWith("producer.verification")
+        );
+        if (requiresVerified && producerOrg.status !== "VERIFIED") {
+          return res.status(403).json({ success: false, message: "Producer organization is not verified yet" });
+        }
+        req.producerOrgId = producerOrg.id;
+        req.isProducerOwner = true;
+        return next();
+      }
+
+      const staffMembership = await prisma.producerOrgStaff.findFirst({
+        where: { userId, status: "ACTIVE" },
+        include: {
+          role: { include: { rolePermissions: { include: { permission: true } } } },
+          producerOrg: { select: { id: true, status: true } },
+        },
+      });
+
+      if (!staffMembership) {
+        return res.status(403).json({
+          success: false,
+          message: "You are not associated with any producer organization",
+          code: "PRODUCER_ORG_ACCESS",
+        });
+      }
+      if (staffMembership.producerOrg.status === "SUSPENDED") {
+        return res.status(403).json({ success: false, message: "Producer organization is suspended", code: "PRODUCER_ORG_ACCESS" });
+      }
+      const requiresVerified = allowedPermissions.some((p) =>
+        p.startsWith("producer.analytics") || p.startsWith("producer.verification")
+      );
+      if (requiresVerified && staffMembership.producerOrg.status !== "VERIFIED") {
+        return res.status(403).json({ success: false, message: "Producer organization is not verified yet", code: "PRODUCER_ORG_ACCESS" });
+      }
+
+      const userPermissions = staffMembership.role.rolePermissions.map((rp: any) => rp.permission.key);
+      const hasAny = allowedPermissions.some((perm) => userPermissions.includes(perm));
+      if (!hasAny) {
+        return res.status(403).json({
+          success: false,
+          message: "Insufficient permissions",
+          code: "PRODUCER_PERMISSION_DENIED",
+          requiredPermissions: allowedPermissions,
+          userPermissions,
+        });
+      }
+
+      req.producerOrgId = staffMembership.producerOrgId;
+      req.isProducerOwner = false;
+      req.producerStaffId = staffMembership.id;
+      req.producerPermissions = userPermissions;
+      next();
+    } catch (error) {
+      console.error("Producer auth middleware error:", error);
+      return res.status(500).json({ success: false, message: "Authorization check failed" });
+    }
+  };
+};
+
+/**
+ * Middleware to check if user is producer owner
+ */
+export const requireProducerOwner = async (req: any, res: any, next: any) => {
+  try {
+    const userId = req.user?.id;
+    
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Authentication required",
+      });
+    }
+
+    const producerOrg = await prisma.producerOrg.findFirst({
+      where: { ownerUserId: userId },
+      select: { id: true, status: true },
+    });
+
+    if (!producerOrg) {
+      return res.status(403).json({
+        success: false,
+        message: "Only producer owners can perform this action",
+      });
+    }
+
+    if (producerOrg.status === "SUSPENDED") {
+      return res.status(403).json({
+        success: false,
+        message: "Producer organization is suspended",
+      });
+    }
+
+    req.producerOrgId = producerOrg.id;
+    req.isProducerOwner = true;
+
+    next();
+  } catch (error) {
+    console.error("Producer owner check error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Authorization check failed",
+    });
+  }
+};
+
+module.exports = {
+  requireProducerPermission,
+  requireProducerPermissionAny,
+  requireProducerOwner,
+};
