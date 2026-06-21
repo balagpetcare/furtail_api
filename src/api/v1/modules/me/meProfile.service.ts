@@ -7,11 +7,6 @@ import type { Request } from "express";
 import bcrypt from "bcrypt";
 import { Gender, Prisma, UserStatus, AuditEntityType } from "@prisma/client";
 import prisma from "../../../../infrastructure/db/prismaClient";
-import { getEffectivePermissions } from "../../services/permissions.service";
-import {
-  getActivePermissionsForUser,
-  resolveBranchAccessProfile,
-} from "../../services/branchAccessPermission.service";
 import { computeEffectivePhotoParts } from "../../services/providerProfileBootstrap.service";
 import { isAllowedProfilePhotoMime } from "./profilePhotoUpload.config";
 
@@ -147,16 +142,8 @@ export async function getEnterpriseProfile(userId: number) {
 
   if (!user) return null;
 
-  const [orgMembers, doctorVerification, branchMembers] = await Promise.all([
-    prisma.orgMember.findMany({
-      where: { userId, status: "ACTIVE" },
-      select: {
-        id: true,
-        role: true,
-        status: true,
-        org: { select: { id: true, name: true, status: true } },
-      },
-    }),
+  const orgMembers: any[] = [];
+  const [doctorVerification, branchMembers] = await Promise.all([
     prisma.doctorVerification.findUnique({
       where: { userId },
       select: {
@@ -172,7 +159,6 @@ export async function getEnterpriseProfile(userId: number) {
       include: {
         branch: { select: { id: true, name: true, code: true, status: true, orgId: true } },
         org: { select: { id: true, name: true } },
-        roles: { include: { role: { select: { key: true, label: true, scope: true } } } },
         clinicStaffProfile: {
           select: {
             staffType: true,
@@ -254,11 +240,7 @@ export async function getEnterpriseProfile(userId: number) {
         primaryRole: bm.role,
         branch: bm.branch,
         org: bm.org,
-        rbacRoles: (bm.roles || []).map((r) => ({
-          key: r.role.key,
-          label: r.role.label,
-          scope: r.role.scope,
-        })),
+        rbacRoles: [],
         clinic: bm.clinicStaffProfile
           ? {
               ...bm.clinicStaffProfile,
@@ -684,37 +666,11 @@ export async function changePassword(req: Request, userId: number, body: Record<
   return { ok: true as const, data: { success: true } };
 }
 
-export async function getCapabilities(req: Request, userId: number) {
-  const countryCode = (req as any).countryContext?.countryCode as string | undefined;
-  const stateId = (req as any).countryContext?.state?.stateId as number | undefined;
-  const eff = await getEffectivePermissions(prisma, userId, countryCode, stateId);
-
-  let branchAccess: { branchId: number; role: string; permissions: string[]; scopes: string[]; status: string }[] = [];
-  try {
-    const activePerms = await getActivePermissionsForUser(userId);
-    const resolved = await Promise.all(
-      activePerms.map(async (p: { branchId: number }) => {
-        const profile = await resolveBranchAccessProfile(userId, p.branchId);
-        return profile
-          ? {
-              branchId: p.branchId,
-              role: profile.role,
-              permissions: profile.permissions,
-              scopes: profile.scopes,
-              status: profile.status,
-            }
-          : null;
-      })
-    );
-    branchAccess = resolved.filter((r): r is NonNullable<typeof r> => r !== null);
-  } catch {
-    branchAccess = [];
-  }
-
+export async function getCapabilities(_req: Request, _userId: number) {
   return {
-    permissions: (eff.permissions || []).map((p) => p.key),
-    roles: eff.roles || [],
-    branchAccess,
+    permissions: [],
+    roles: [],
+    branchAccess: [],
   };
 }
 
@@ -724,7 +680,6 @@ export async function getBranches(userId: number) {
     include: {
       branch: { select: { id: true, name: true, code: true, status: true } },
       org: { select: { id: true, name: true } },
-      roles: { include: { role: { select: { key: true, label: true } } } },
     },
     orderBy: { id: "desc" },
   });
@@ -741,7 +696,7 @@ export async function getBranches(userId: number) {
       memberRole: r.role,
       branch: r.branch,
       org: r.org,
-      rbacRoles: (r.roles || []).map((x) => ({ key: x.role.key, label: x.role.label })),
+      rbacRoles: [],
     })),
   };
 }
