@@ -1,4 +1,4 @@
-# BPA Clinic + App Owner/Pet Identity — Implementation Report
+# Furtail Clinic + App Owner/Pet Identity — Implementation Report
 
 **Date:** 2026-03-14  
 **Reference:** CLINIC_APP_OWNER_PET_IDENTITY_STRATEGY.md, IMPLEMENTATION_SPEC.md, API_CONTRACTS.md, DB_PLAN.md.
@@ -88,7 +88,7 @@ Existing endpoints unchanged; behavior changes:
 
 ## 7. Conflicts requiring confirmation
 
-- None. Implementation followed User-first model; no structural conflict with current BPA architecture.
+- None. Implementation followed User-first model; no structural conflict with current Furtail architecture.
 
 ---
 

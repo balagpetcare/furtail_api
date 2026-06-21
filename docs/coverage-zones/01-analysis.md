@@ -38,7 +38,7 @@ Dhaka district: `DIS-47` under `DIV-6` — already in `prisma/seed-data/bd.*.jso
 - **Existing table:** `location_coverage_assignments` with composite unique on hierarchy IDs.
 - **API:** `GET/PUT /api/v1/location-master/coverage/:entityType/:entityId`
 - **Status:** API + schema exist; entity assignment rollout is product-driven.
-- **This phase:** Adds **operational zones** (`coverage_zones`) for BPA planning (metro, DNCC/DSCC, readiness templates) without inserting business entities.
+- **This phase:** Adds **operational zones** (`coverage_zones`) for Furtail planning (metro, DNCC/DSCC, readiness templates) without inserting business entities.
 
 ---
 

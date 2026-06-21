@@ -24,7 +24,7 @@ async function main() {
   const bucket =
     provider === "b2"
       ? process.env.S3_BUCKET || process.env.AWS_BUCKET_NAME
-      : process.env.AWS_BUCKET_NAME || process.env.S3_BUCKET || "bpa-pets";
+      : process.env.AWS_BUCKET_NAME || process.env.S3_BUCKET || "furtail-pets";
   console.log("STORAGE_PROVIDER:", provider);
   console.log("Bucket:", bucket);
   console.log("Endpoint:", process.env.AWS_ENDPOINT || process.env.S3_ENDPOINT);

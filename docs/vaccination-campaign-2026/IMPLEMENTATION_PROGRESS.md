@@ -1,4 +1,4 @@
-# BPA 2026 Vaccination Campaign - Implementation Progress Report
+# Furtail 2026 Vaccination Campaign - Implementation Progress Report
 
 **Date**: 2026-06-02
 **Status**: Backend Core Complete (Phases A-H)
@@ -7,7 +7,7 @@
 
 ## Summary
 
-The backend implementation for the BPA 2026 Cat Flu + Rabies Vaccination Campaign is complete. All core services, APIs, and integrations have been implemented following the documentation specifications.
+The backend implementation for the Furtail 2026 Cat Flu + Rabies Vaccination Campaign is complete. All core services, APIs, and integrations have been implemented following the documentation specifications.
 
 ---
 
@@ -85,8 +85,8 @@ The backend implementation for the BPA 2026 Cat Flu + Rabies Vaccination Campaig
 | `/api/v1/campaign/public/*` | None | Public campaign listing, availability |
 | `/api/v1/campaign/auth/*` | None | OTP request/verify |
 | `/api/v1/campaign/booking/*` | OTP Session | Booking CRUD |
-| `/api/v1/campaign/staff/*` | BPA Auth | Staff operations |
-| `/api/v1/campaign/admin/*` | BPA Admin | Campaign management |
+| `/api/v1/campaign/staff/*` | Furtail Auth | Staff operations |
+| `/api/v1/campaign/admin/*` | Furtail Admin | Campaign management |
 
 ---
 
@@ -131,7 +131,7 @@ The backend implementation for the BPA 2026 Cat Flu + Rabies Vaccination Campaig
 - Custom campaign templates
 - Reminder scheduling (24h, 2h)
 - Delivery status tracking
-- Integration with existing BPA notification queue
+- Integration with existing Furtail notification queue
 
 **Template Codes**:
 - `OTP`, `BOOKING_CONFIRMED`, `REMINDER_24H`, `REMINDER_2H`
@@ -197,9 +197,9 @@ The backend implementation for the BPA 2026 Cat Flu + Rabies Vaccination Campaig
 
 | Component | Reused From |
 |-----------|-------------|
-| PostgreSQL Database | Existing BPA DB |
+| PostgreSQL Database | Existing Furtail DB |
 | Prisma ORM | Existing setup |
-| Authentication (Staff) | Existing BPA auth |
+| Authentication (Staff) | Existing Furtail auth |
 | Payment Gateways | Existing providers |
 | SMS Delivery | Existing notification queue |
 | Audit Logging | Campaign-specific with same pattern |

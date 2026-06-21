@@ -232,7 +232,7 @@ export async function verifyOtp(
   // OTP is valid - delete it
   await store.del(otpKey);
 
-  // Check if user has BPA account
+  // Check if user has Furtail account
   const existingUser = await prisma.userAuth.findFirst({
     where: { phone: normalizedPhone },
     include: { user: true },

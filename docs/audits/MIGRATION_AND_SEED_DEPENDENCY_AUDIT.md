@@ -1,4 +1,4 @@
-# Migration and Seed Dependency Audit (BPA / WPA)
+# Migration and Seed Dependency Audit (Furtail / Furtail)
 
 **Date:** 2026-06-06  
 **Repository:** `backend-api`  

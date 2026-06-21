@@ -1,4 +1,4 @@
-# BPA Clinic Appointment-to-Treatment — Final Production Hardening
+# Furtail Clinic Appointment-to-Treatment — Final Production Hardening
 
 ## Scope
 

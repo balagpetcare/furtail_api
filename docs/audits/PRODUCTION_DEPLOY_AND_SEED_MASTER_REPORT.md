@@ -1,4 +1,4 @@
-# Production Deploy and Seed — Master Report (BPA / WPA)
+# Production Deploy and Seed — Master Report (Furtail / Furtail)
 
 **Date:** 2026-06-06  
 **Repository:** `backend-api`  
@@ -9,7 +9,7 @@
 
 ## 1. Purpose
 
-This master report consolidates the full BPA/WPA production seed system audit. Detailed evidence lives in linked child documents.
+This master report consolidates the full Furtail/Furtail production seed system audit. Detailed evidence lives in linked child documents.
 
 | Document | Contents |
 |----------|----------|
@@ -57,7 +57,7 @@ This master report consolidates the full BPA/WPA production seed system audit. D
 | `npm run seed:coverage-zones` | Upserts coverage zones (run after location migration) |
 | `npm run seed:dhaka-metro` | Partial metro coverage |
 | `npm run seed:clinic-vaccine-items` | Creates org clinical items (`ORG_ID` required) |
-| `npm run seed:campaign-checkout-anchor` | May create/update BPA campaign org/branch |
+| `npm run seed:campaign-checkout-anchor` | May create/update Furtail campaign org/branch |
 | RBAC one-liner (`seedRolesPermissions` + `seedGlobalCountryRoles`) | Updates role labels; may assign PLATFORM_ADMIN |
 | `seedMembershipBackfill` (in full seed) | Overwrites owner membership roles |
 

@@ -1,14 +1,14 @@
 # Redis Subsystem Diagnostics Report
 
 **Date:** 2026-06-03  
-**Service:** BPA API (`backend-api`)  
+**Service:** Furtail API (`backend-api`)  
 **Scope:** Configuration audit, failure modes, graceful degradation, health endpoint, operational guidance.
 
 ---
 
 ## Executive summary
 
-The BPA API Redis layer was fragmented across multiple ad-hoc `ioredis` instances (`utils/redis.ts`, OTP service, payment replay guard, realtime pub/sub, BullMQ queues). That caused inconsistent enablement rules, missing `REDIS_URL` support in the cache client, noisy reconnect loops, and unhandled `Connection is closed` errors on cache `get`/`set`.
+The Furtail API Redis layer was fragmented across multiple ad-hoc `ioredis` instances (`utils/redis.ts`, OTP service, payment replay guard, realtime pub/sub, BullMQ queues). That caused inconsistent enablement rules, missing `REDIS_URL` support in the cache client, noisy reconnect loops, and unhandled `Connection is closed` errors on cache `get`/`set`.
 
 A **central Redis subsystem** under `src/infrastructure/redis/` now provides:
 
@@ -74,7 +74,7 @@ reconnectOnError: READONLY, ECONNRESET, ECONNREFUSED, Connection is closed, ETIM
 | `Connection is closed` | Command sent after disconnect; offline queue was buffering (now disabled for cache) |
 | Cache get/set errors | Uncaught ioredis errors in middleware/services without fallback |
 
-### BPA-specific issues fixed
+### Furtail-specific issues fixed
 
 1. **`REDIS_ENABLED=false` + `REDIS_URL` set** — URL previously forced Redis “on”; now `REDIS_ENABLED=false` disables Redis entirely (matches `.env.example`).
 2. **`utils/redis.ts` ignored `REDIS_URL`** — only used `REDIS_HOST`/`REDIS_PORT`; could point at wrong instance vs BullMQ.
@@ -149,7 +149,7 @@ Start API: no Redis connection attempts; cache uses memory.
 ### Local dev (Docker Redis)
 
 ```bash
-npm run dev:infra   # starts bpa-redis on 6379
+npm run dev:infra   # starts furtail-redis on 6379
 ```
 
 ```env
@@ -165,7 +165,7 @@ npm run worker:notifications
 
 ### Docker Compose full stack
 
-`bpa_worker` uses `REDIS_HOST=bpa-redis`. Ensure `bpa_api` env matches if enabling Redis in container.
+`bpa_worker` uses `REDIS_HOST=furtail-redis`. Ensure `bpa_api` env matches if enabling Redis in container.
 
 ### Verify
 
@@ -214,4 +214,4 @@ npm test -- --testPathPattern=otp.service
 
 ---
 
-*Generated as part of Redis subsystem hardening — BPA API.*
+*Generated as part of Redis subsystem hardening — Furtail API.*

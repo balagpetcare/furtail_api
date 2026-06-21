@@ -7,7 +7,7 @@ const ffmpegPath = require('ffmpeg-static');
 
 function _tmpFile(ext = 'mp4') {
   const id = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-  return path.join(os.tmpdir(), `bpa-${id}.${ext}`);
+  return path.join(os.tmpdir(), `furtail-${id}.${ext}`);
 }
 
 function runFfmpeg(args) {

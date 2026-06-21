@@ -1,5 +1,5 @@
 /**
- * Campaign middleware — auth and staff RBAC (reuses BPA JWT + CampaignStaff roles).
+ * Campaign middleware — auth and staff RBAC (reuses Furtail JWT + CampaignStaff roles).
  */
 
 import type { Request, Response, NextFunction } from "express";
@@ -64,7 +64,7 @@ async function resolveCampaignId(req: Request): Promise<number | undefined> {
   return undefined;
 }
 
-/** BPA staff JWT required */
+/** Furtail staff JWT required */
 export const requireCampaignAuth = [
   authenticateToken,
   (req: Request, res: Response, next: NextFunction) => {

@@ -226,7 +226,7 @@ export async function createStaffInvite(
   const to = phoneNorm ? phoneNorm : emailNorm;
   const base = String(process.env.PANEL_PUBLIC_URL || process.env.PUBLIC_WEB_URL || "").replace(/\/$/, "");
   const link = `${base}/register?invite=${rawToken}`;
-  const msg = `BPA Invite: You are invited as ${roleNorm} for branch "${branch.name}". Complete registration: ${link}`;
+  const msg = `Furtail Invite: You are invited as ${roleNorm} for branch "${branch.name}". Complete registration: ${link}`;
 
   let emailPayload: { subject: string; html: string; text: string } | undefined;
   if (channel === "EMAIL") {
@@ -479,7 +479,7 @@ export async function createWarehouseStaffInvite(
   const to = phoneNorm ? phoneNorm : emailNorm;
   const base = String(process.env.PANEL_PUBLIC_URL || process.env.PUBLIC_WEB_URL || "").replace(/\/$/, "");
   const link = `${base}/register?invite=${rawToken}`;
-  const msg = `BPA Invite: You are invited as ${roleNorm} for warehouse "${warehouse.name}". Complete registration: ${link}`;
+  const msg = `Furtail Invite: You are invited as ${roleNorm} for warehouse "${warehouse.name}". Complete registration: ${link}`;
   await sendInvite({ channel, to, message: msg }).catch(() => null);
 
   await logStaffInviteAudit(prisma, {
@@ -586,7 +586,7 @@ export async function reinviteStaffInviteForBranch(
   const to = (invite.phone || invite.email || "").trim();
   const base = String(process.env.PANEL_PUBLIC_URL || process.env.PUBLIC_WEB_URL || "").replace(/\/$/, "");
   const link = `${base}/register?invite=${rawToken}`;
-  const msg = `BPA Invite (reminder): You are invited as ${invite.role} for branch "${invite.branch?.name}". Complete registration: ${link}`;
+  const msg = `Furtail Invite (reminder): You are invited as ${invite.role} for branch "${invite.branch?.name}". Complete registration: ${link}`;
 
   let emailPayload: { subject: string; html: string; text: string } | undefined;
   if (channel === "EMAIL") {
@@ -695,7 +695,7 @@ export async function resendStaffInviteForBranch(
   const to = (invite.phone || invite.email || "").trim();
   const base = String(process.env.PANEL_PUBLIC_URL || process.env.PUBLIC_WEB_URL || "").replace(/\/$/, "");
   const link = `${base}/register?invite=${rawToken}`;
-  const msg = `BPA Invite (reminder): You are invited as ${invite.role} for branch "${invite.branch?.name}". Complete registration: ${link}`;
+  const msg = `Furtail Invite (reminder): You are invited as ${invite.role} for branch "${invite.branch?.name}". Complete registration: ${link}`;
 
   let emailPayload: { subject: string; html: string; text: string } | undefined;
   if (channel === "EMAIL") {

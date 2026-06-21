@@ -93,7 +93,7 @@ export async function searchGeo(req: any, res: any): Promise<void> {
 
     const response = await axios.get('https://nominatim.openstreetmap.org/search', {
       params,
-      headers: { 'User-Agent': 'BPA-Location-System/1.0' },
+      headers: { 'User-Agent': 'Furtail-Location-System/1.0' },
       timeout: 10000,
     });
 
@@ -135,7 +135,7 @@ export async function reverseGeo(req: any, res: any): Promise<void> {
 
     const response = await axios.get('https://nominatim.openstreetmap.org/reverse', {
       params: { lat, lon: lng, format: 'json', addressdetails: 1 },
-      headers: { 'User-Agent': 'BPA-Location-System/1.0' },
+      headers: { 'User-Agent': 'Furtail-Location-System/1.0' },
       timeout: 10000,
     });
 

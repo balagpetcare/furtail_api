@@ -1,6 +1,6 @@
 # Vaccination Campaign — Master Redesign Plan
 
-**Project scope:** BPA 2026 Cat Flu + Rabies Vaccination Campaign  
+**Project scope:** Furtail 2026 Cat Flu + Rabies Vaccination Campaign  
 **Audit date:** 2026-06-04  
 **Workspaces in scope:**
 
@@ -76,7 +76,7 @@ A **single phased redesign of ~6 weeks** (5 phases — see §10) is enough to sh
 | Config engine | `src/api/v1/modules/campaign/config.service.ts` + `CampaignConfig`, `CampaignConfigHistory` |
 | Admin UI list | `bpa_web/app/admin/(larkon)/campaigns/page.tsx` |
 | Admin UI detail (21 sub-routes) | `bpa_web/app/admin/(larkon)/campaigns/[id]/*` |
-| Admin components | `bpa_web/src/bpa/campaign/admin/CampaignNav.tsx`, `CampaignForm.tsx`, `CampaignTrendChart.tsx`, `CampaignDashboardWidgets.tsx`, `CampaignStatusBadge.tsx`, `smsTemplates.ts` |
+| Admin components | `bpa_web/src/furtail/campaign/admin/CampaignNav.tsx`, `CampaignForm.tsx`, `CampaignTrendChart.tsx`, `CampaignDashboardWidgets.tsx`, `CampaignStatusBadge.tsx`, `smsTemplates.ts` |
 | API client | `bpa_web/lib/campaignApi.ts` |
 
 ### 1.2 Campaign lifecycle (verified in code)
@@ -303,7 +303,7 @@ Default insert status: `CONFIRMED` for free + express; `DRAFT` for paid legacy u
 8. **No "pay at venue" path** despite `payAtVenueEnabled` config flag.
 9. **`DONATION` pricing type** is enum-only — no donation flow in services.
 10. **QR HMAC checksum is not validated on scan** (BUG-103).
-11. **Claim does not link booking to logged-in BPA user** — only returns details. There is no post-claim "save to my account" action.
+11. **Claim does not link booking to logged-in Furtail user** — only returns details. There is no post-claim "save to my account" action.
 12. **`findByVerificationCode` scans 30 days of bookings** — O(n) hot path on scale (not currently called from public, but available).
 13. **`/booking/[ref]` is session-only** — no server fetch by `ref + code`; share/refresh in a new device fails.
 14. **`/book/payment/failed` cancel URL omits ref** in express flow — failed pay loses recovery context.
@@ -330,7 +330,7 @@ Default insert status: `CONFIRMED` for free + express; `DRAFT` for paid legacy u
 
 1. **Feature flag `CAMPAIGN_SIMPLIFIED_BOOKING`** to gate legacy.
 2. **Booking detail by `ref + verificationCode`** — public GET that backs `/booking/[ref]` without OTP/session.
-3. **Booking-to-account linking** (`POST /booking/:ref/link-account` after BPA login).
+3. **Booking-to-account linking** (`POST /booking/:ref/link-account` after Furtail login).
 4. **Refund policy enforcement** (tiered, audited).
 5. **Pay-at-venue flow** end-to-end (staff cash receipt, mark paid).
 6. **Donation pricing flow** if business wants it.
@@ -574,7 +574,7 @@ All exports must enforce `canExportData` (or `campaign.manage`) and write a `Cam
 | Rollout uses `BdDivision`/`BdDistrict`/`BdUpazila` (BD-only) — bare Int FKs to bd_* | Cannot model non-BD geography |
 | `estimatedCostBdt` column on `CampaignSmsLog` | BDT-specific |
 | Booking phone validators assume BD format `01[3-9]XXXXXXXX` | Single-country |
-| `Order.branchId` required — campaign uses organizer's default branch | BD BPA org assumption |
+| `Order.branchId` required — campaign uses organizer's default branch | BD Furtail org assumption |
 
 ### 8.2 Schema duplicates / legacy
 
@@ -600,7 +600,7 @@ All exports must enforce `canExportData` (or `campaign.manage`) and write a `Cam
 
 - No Supertest / integration tests for `/campaign/booking/*`
 - No tests for `campaign-link` module
-- No widget / integration tests in `bpa_app`
+- No widget / integration tests in `furtail_app`
 - No load / performance suite per `20-qa-strategy.md`
 
 ### 8.5 Security gaps
@@ -788,7 +788,7 @@ Effort estimates are calendar-time engineering work, single backend + single fro
 | R5.7 | QR HMAC validation on scan (BUG-103) | `qr.service.ts` |
 | R5.8 | Reschedule endpoint + UI in claim flow | new `POST /public/booking/reschedule` |
 | R5.9 | Waitlist endpoint + UI (`FR-BK-14`) — optional gated by `CampaignConfig.waitlistEnabled` | new |
-| R5.10 | Booking-to-account linking endpoint (`POST /booking/:ref/link-account` after BPA login) | new |
+| R5.10 | Booking-to-account linking endpoint (`POST /booking/:ref/link-account` after Furtail login) | new |
 | R5.11 | Reconciliation cron: nightly `bookedCount` drift check on `CampaignSlot` + `CampaignRolloutRegion` | `scripts/reconcile-campaign-counts.ts` scheduled |
 | R5.12 | Stale-doc banners removed once redesign verified in staging | docs/ |
 
@@ -808,10 +808,10 @@ Effort estimates are calendar-time engineering work, single backend + single fro
 
 ## 11. Out-of-scope notes (acknowledged, deferred)
 
-- Flutter `bpa_app` campaign module redesign — outside this audit.
+- Flutter `furtail_app` campaign module redesign — outside this audit.
 - Vaccine inventory and dose tracking integration with permanent stock module.
 - Full multi-tenant SaaS — country-readiness is the bridge; full tenancy is a separate program.
-- Push notifications (FCM) — `bpa_app` v2 concern.
+- Push notifications (FCM) — `furtail_app` v2 concern.
 
 ---
 
@@ -875,7 +875,7 @@ app/admin/(larkon)/campaigns/
   [id]/statistics, [id]/reports, [id]/vaccinations
   [id]/rollout-reports, [id]/certificates, [id]/verification
   [id]/pricing, [id]/edit
-src/bpa/campaign/admin/
+src/furtail/campaign/admin/
   CampaignNav.tsx                                  # grouped tabs
   UserSearchPicker.tsx                             # new
   smsTemplates.ts                                  # remove — use API

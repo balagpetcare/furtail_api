@@ -9,7 +9,7 @@ describe("SslWirelessProvider", () => {
 
   beforeEach(() => {
     process.env.SSL_WIRELESS_API_TOKEN = "token";
-    process.env.SSL_WIRELESS_SENDER_ID = "BPA";
+    process.env.SSL_WIRELESS_SENDER_ID = "Furtail";
     process.env.SSL_WIRELESS_BASE_URL = "https://smsplus.sslwireless.com";
     mockedAxios.post.mockReset();
   });
@@ -31,7 +31,7 @@ describe("SslWirelessProvider", () => {
       "https://smsplus.sslwireless.com/api/v3/send-sms",
       expect.objectContaining({
         api_token: "token",
-        sid: "BPA",
+        sid: "Furtail",
         msisdn: "8801712345678",
         sms: "Test message",
       }),

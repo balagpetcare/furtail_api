@@ -1,7 +1,7 @@
-# 🎯 BPA Context Pack
-## Complete AI Assistant Guide for Bangladesh Pet Association (BPA)
+# 🎯 Furtail Context Pack
+## Complete AI Assistant Guide for Furtail (Furtail)
 
-> **Purpose:** This document provides comprehensive context to AI assistants (Cursor AI, GitHub Copilot, etc.) to work on BPA system professionally, maintaining standards, and delivering scalable solutions.
+> **Purpose:** This document provides comprehensive context to AI assistants (Cursor AI, GitHub Copilot, etc.) to work on Furtail system professionally, maintaining standards, and delivering scalable solutions.
 
 ---
 
@@ -23,7 +23,7 @@
 
 ### A) Project Identity
 
-* **Project Name:** Bangladesh Pet Association (BPA)
+* **Project Name:** Furtail (Furtail)
 * **Goal:** Multi-tenant ecosystem connecting:
   * 🏥 Pet Clinics
   * 🛍️ Pet Shops
@@ -35,7 +35,7 @@
 
 ### B) Project Scope
 
-BPA is a **unified digital ecosystem** where:
+Furtail is a **unified digital ecosystem** where:
 - Pet parents can manage their pets, book appointments, shop online
 - Clinics can manage patients, prescriptions, appointments
 - Pet shops can manage inventory, POS, online orders
@@ -129,7 +129,7 @@ Every change must include:
 ### D) Development Environment
 
 * **API Base URL:** `http://localhost:3000/api/v1`
-* **CORS:** Configured for Next.js apps (bpa_web 3100–3107, bpa-landing 3101, vaccination_2026 3110)
+* **CORS:** Configured for Next.js apps (bpa_web 3100–3107, furtail-landing 3101, vaccination_2026 3110)
 * **Environment Variables:** `.env` files (see `.env.example`)
 
 ---
@@ -425,10 +425,10 @@ prisma/schema.prisma
 
 ## 8. Master Prompt for AI
 
-### Copy this prompt when starting work on BPA:
+### Copy this prompt when starting work on Furtail:
 
 ```
-You are working on the BPA (Bangladesh Pet Association) backend API.
+You are working on the Furtail (Furtail) backend API.
 
 HARD CONSTRAINTS (never violate):
 - API runs on port 3000 only.
@@ -464,7 +464,7 @@ PRIORITY:
 - Fix broken API endpoints (404, 500 errors)
 - Fix Prisma select/unknown fields errors
 - Fix permission middleware issues
-- Ensure CORS allows Next.js apps (bpa_web 3100–3107, bpa-landing 3101, vaccination_2026 3110)
+- Ensure CORS allows Next.js apps (bpa_web 3100–3107, furtail-landing 3101, vaccination_2026 3110)
 ```
 
 ---
@@ -550,4 +550,4 @@ npm start          # Production
 
 *Last Updated: January 2026*
 *Version: 1.0.0*
-*For AI Assistants: Use this document as your primary context when working on BPA backend API.*
+*For AI Assistants: Use this document as your primary context when working on Furtail backend API.*

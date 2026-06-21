@@ -1,4 +1,4 @@
-# BPA Clinic + App Unified Owner/Pet Identity Strategy
+# Furtail Clinic + App Unified Owner/Pet Identity Strategy
 
 **Purpose:** Single source of truth for unified owner and pet identity across clinic (staff) and app (owner panel). Ensures clinic-side and app-side registration, owner/user linking, and appointment → intake → visit flow converge to one canonical pet/owner model.
 

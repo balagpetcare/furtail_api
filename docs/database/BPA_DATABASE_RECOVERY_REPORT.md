@@ -1,4 +1,4 @@
-# BPA Database Recovery Report
+# Furtail Database Recovery Report
 
 **Date:** 2026-06-05  
 **Host:** Windows 10, PostgreSQL 18 (`postgresql-x64-18` service)  
@@ -8,11 +8,11 @@
 
 ## Executive summary
 
-The backend was temporarily pointed at a **non-existent database** (`bpa_dev`) with **invalid credentials** (`postgres` / `postgres`). The only BPA database on this machine is **`bpa_pet_db`**, which contains the full Prisma schema (487 tables, 271 migrations) and real development data including users, organizations, campaign bookings, and orders.
+The backend was temporarily pointed at a **non-existent database** (`bpa_dev`) with **invalid credentials** (`postgres` / `postgres`). The only Furtail database on this machine is **`bpa_pet_db`**, which contains the full Prisma schema (487 tables, 271 migrations) and real development data including users, organizations, campaign bookings, and orders.
 
 **Action taken:** `.env` updated to reconnect using the credentials from the last known working configuration (backup `.env` + `docker-compose.yml`).
 
-**Confidence:** **Very high (95%+)** — single candidate with BPA data; migrations applied through today; matches all historical config references.
+**Confidence:** **Very high (95%+)** — single candidate with Furtail data; migrations applied through today; matches all historical config references.
 
 ---
 
@@ -65,10 +65,10 @@ The backend was temporarily pointed at a **non-existent database** (`bpa_dev`) w
 
 | Database | Purpose |
 |----------|---------|
-| `bpa_pet_db` | **BPA application data** |
+| `bpa_pet_db` | **Furtail application data** |
 | `bpa_pet_db_shadow` | Prisma shadow DB |
 | `postgres` | System default |
-| `pranidoctor_db` | Non-BPA |
+| `pranidoctor_db` | Non-Furtail |
 
 ---
 
@@ -89,7 +89,7 @@ The backend was temporarily pointed at a **non-existent database** (`bpa_dev`) w
 | `users` | 4 | Active accounts |
 | `user_auth` | 4 | Email/phone login rows |
 | `user_profiles` | 4 | Display names / usernames |
-| `organizations` | 1 | "Bangladesh Pet Association" |
+| `organizations` | 1 | "Furtail" |
 | `branches` | 1 | |
 | `pets` | 0 | |
 | `products` | 0 | |
@@ -103,8 +103,8 @@ The backend was temporarily pointed at a **non-existent database** (`bpa_dev`) w
 | User ID | Email | Phone | Profile |
 |--------:|-------|-------|---------|
 | 1 | balagpetcare@gmail.com | — | balagpetcare |
-| 2 | balag@bangladeshpetassociation.com | 01777889994 | Bala G 74 |
-| 3 | admin@bangladeshpetassociation.com | 01701022274 | BPA Super Admin |
+| 2 | balag@furtail.world | 01777889994 | Bala G 74 |
+| 3 | admin@furtail.world | 01701022274 | Furtail Super Admin |
 | 4 | balag.bd@gmail.com | — | Bala G |
 
 > Passwords are stored as bcrypt hashes in `user_auth.passwordHash`. Login success/failure depends on the password used at account creation (`SUPER_ADMIN_PASSWORD` from seed/bootstrap, or passwords set via the app) — not on `DATABASE_URL` once connected.
@@ -124,7 +124,7 @@ The backend was temporarily pointed at a **non-existent database** (`bpa_dev`) w
 
 | Candidate | Score | Reasoning |
 |-----------|------:|-----------|
-| **`bpa_pet_db`** | **Winner** | Only DB with BPA schema + data; 271 migrations; latest migration today; matches backup `.env`, docker-compose, and next_app config |
+| **`bpa_pet_db`** | **Winner** | Only DB with Furtail schema + data; 271 migrations; latest migration today; matches backup `.env`, docker-compose, and next_app config |
 | `bpa_dev` | Eliminated | Database does not exist on server |
 | `bpa_onboarding` | Eliminated | Not present locally (template-only name in `.env.example`) |
 
@@ -176,8 +176,8 @@ Created for this recovery (safe to re-run):
 
 | Script | Purpose |
 |--------|---------|
-| `scripts/_audit-databases.mjs` | List all DBs and score BPA candidates |
-| `scripts/_verify-bpa-pet-db.mjs` | Table counts + migration snapshot |
+| `scripts/_audit-databases.mjs` | List all DBs and score Furtail candidates |
+| `scripts/_verify-furtail-pet-db.mjs` | Table counts + migration snapshot |
 | `scripts/_list-auth-tables.mjs` | Dump `user_auth` / `user_profiles` |
 
 ---
@@ -195,7 +195,7 @@ Created for this recovery (safe to re-run):
 
 | Item | Status |
 |------|--------|
-| BPA data preserved | ✅ |
+| Furtail data preserved | ✅ |
 | Correct database selected | ✅ `bpa_pet_db` |
 | `.env` updated | ✅ |
 | Prisma connected | ✅ |

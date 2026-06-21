@@ -5,7 +5,7 @@
 -- Run this in your database to create a working warehouse staff login.
 --
 -- TEST LOGIN CREDENTIALS:
---   Email: warehouse.test@bpa.com
+--   Email: warehouse.test@furtail.com
 --   Password: test1234
 --   Branch: Branch ID 1 (assumes branch with ID 1 exists)
 --
@@ -41,7 +41,7 @@ INSERT INTO "UserAuth" ("userId", "provider", "email", "passwordHash", "createdA
 VALUES (
   @USER_ID,  -- Replace with actual user ID from Step 1
   'LOCAL',
-  'warehouse.test@bpa.com',
+  'warehouse.test@furtail.com',
   '$2b$10$YourHashedPasswordHere',  -- Generate: await bcrypt.hash('test1234', 10)
   NOW(),
   NOW()
@@ -118,7 +118,7 @@ WITH new_user AS (
 ),
 user_auth AS (
   INSERT INTO "UserAuth" ("userId", "provider", "email", "passwordHash", "createdAt", "updatedAt")
-  SELECT "id", 'LOCAL', 'warehouse.test@bpa.com', '$2b$10$...', NOW(), NOW()
+  SELECT "id", 'LOCAL', 'warehouse.test@furtail.com', '$2b$10$...', NOW(), NOW()
   FROM new_user
 ),
 user_profile AS (
@@ -147,7 +147,7 @@ SET "status" = 'APPROVED', "updatedAt" = NOW();
 -- Check user exists:
 -- SELECT * FROM "User" u
 -- JOIN "UserAuth" ua ON ua."userId" = u."id"
--- WHERE ua."email" = 'warehouse.test@bpa.com';
+-- WHERE ua."email" = 'warehouse.test@furtail.com';
 
 -- Check branch membership:
 -- SELECT * FROM "BranchMember"
@@ -177,5 +177,5 @@ SET "status" = 'APPROVED', "updatedAt" = NOW();
 -- 5. Login test:
 --    curl -X POST http://localhost:3000/api/v1/auth/staff/login \
 --      -H "Content-Type: application/json" \
---      -d '{"email":"warehouse.test@bpa.com","password":"test1234"}'
+--      -d '{"email":"warehouse.test@furtail.com","password":"test1234"}'
 -- ============================================================================

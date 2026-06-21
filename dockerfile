@@ -1,4 +1,4 @@
-# BPA API - Dockerfile (Debian-based to avoid Prisma OpenSSL issues on Alpine)
+# Furtail API - Dockerfile (Debian-based to avoid Prisma OpenSSL issues on Alpine)
 FROM node:20-bookworm-slim
 
 WORKDIR /app

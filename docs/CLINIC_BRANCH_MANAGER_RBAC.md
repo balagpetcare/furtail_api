@@ -1,6 +1,6 @@
 # Clinic Branch Manager RBAC (Enterprise Permission Matrix)
 
-This document defines the **Branch Manager Permission Matrix** and Enterprise RBAC for the BPA Clinic System. Permission keys use the format `clinic.module.action` or `domain.action`.
+This document defines the **Branch Manager Permission Matrix** and Enterprise RBAC for the Furtail Clinic System. Permission keys use the format `clinic.module.action` or `domain.action`.
 
 ---
 

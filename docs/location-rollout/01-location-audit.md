@@ -1,6 +1,6 @@
 # Location Usage Audit
 
-**Scope:** `backend-api`, `bpa_web`, `bpa_app`  
+**Scope:** `backend-api`, `bpa_web`, `furtail_app`  
 **Date:** 2026-06-03  
 **Mode:** Read-only inventory (no code changes)
 
@@ -8,7 +8,7 @@
 
 ## Executive summary
 
-BPA has **three parallel geo/address stacks** on the backend and **two client picker generations** on web and Flutter.
+Furtail has **three parallel geo/address stacks** on the backend and **two client picker generations** on web and Flutter.
 
 | Layer | Canonical (target) | Legacy / parallel |
 |-------|-------------------|-------------------|
@@ -191,7 +191,7 @@ No duplicate BD hierarchy hooks; cascade logic is inline in `LocationPickerUnifi
 
 ---
 
-## 3. Flutter (`D:\BPA_Data\bpa_app`)
+## 3. Flutter (`D:\BPA_Data\furtail_app`)
 
 ### 3.1 Canonical stack (ACTIVE)
 

@@ -1,11 +1,11 @@
 /**
- * Server-side domain registry (mirrors packages/bpa-seo/src/shared/seo/domains.ts).
+ * Server-side domain registry (mirrors packages/furtail-seo/src/shared/seo/domains.ts).
  * Used for CORS hints, redirect URLs, and documentation references.
  */
 
 export const BPA_DOMAINS = {
-  BPA_APEX: "bangladeshpetassociation.com",
-  VACCINATION: "vaccination.bangladeshpetassociation.com",
+  BPA_APEX: "furtail.world",
+  VACCINATION: "vaccination.furtail.world",
   COMMUNITY_PETS_CLINIC: "communitypetsclinic.com",
   COMMUNITY_PET_SHOP: "communitypetshop.com",
   PET_SMART_SOLUTION: "petsmartsolution.com",

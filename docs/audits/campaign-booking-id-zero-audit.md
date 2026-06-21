@@ -2,7 +2,7 @@
 
 **Date:** 2026-06-07  
 **Scope:** Analysis only — no code changes  
-**Projects:** `vaccination_2026` (public booking site), `backend-api` (campaign public API), `bpa-landing` (Book Now bridge), `bpa_web` (admin campaign creation)
+**Projects:** `vaccination_2026` (public booking site), `backend-api` (campaign public API), `furtail-landing` (Book Now bridge), `bpa_web` (admin campaign creation)
 
 ---
 
@@ -63,7 +63,7 @@ flowchart TD
 | Locator map pins | `components/landing/CampaignLocatorSection.tsx` | 159 | `/book?campaign={slug}&location={id}` |
 | Site header | `components/SiteHeader.tsx` | 74, 81, 110 | `/book` |
 | Sticky mobile CTA | `components/landing/StickyMobileCta.tsx` | 51 | `/book` |
-| bpa-landing promo | `bpa-landing/src/components/vaccination/vaccination-campaign-promo.tsx` | 167–168 | `getCampaignBookingUrl()` → `{origin}/book` (no slug) |
+| furtail-landing promo | `furtail-landing/src/components/vaccination/vaccination-campaign-promo.tsx` | 167–168 | `getCampaignBookingUrl()` → `{origin}/book` (no slug) |
 
 **None of the plain `/book` links pass the campaign slug.** Several links *do* append `?campaign=…`, but the booking page never consumes that parameter (see §1.3).
 
@@ -143,7 +143,7 @@ The public booking site **never generates** `campaignId`. It only receives `id` 
 
 | Location | File | Line(s) | Mechanism |
 |----------|------|---------|-----------|
-| Admin form (manual) | `bpa_web/src/bpa/campaign/admin/CampaignForm.tsx` | 110–117 | Operator-entered; lowercased/sanitized |
+| Admin form (manual) | `bpa_web/src/furtail/campaign/admin/CampaignForm.tsx` | 110–117 | Operator-entered; lowercased/sanitized |
 | API validation | `backend-api/src/api/v1/modules/campaign/campaign.validation.ts` | 31 | Regex `^[a-z0-9-]+$`, 3–100 chars |
 | Create service | `backend-api/src/api/v1/modules/campaign/campaign.service.ts` | 50 | Stored as `input.slug` (required at create) |
 | Utility (optional) | `backend-api/src/api/v1/modules/campaign/campaign.utils.ts` | 246–251 | `generateSlug(text)` — **not auto-applied** on create |
@@ -222,7 +222,7 @@ The public booking site **never generates** `campaignId`. It only receives `id` 
 |---------|------|------|-------------|
 | vaccination_2026 | `components/landing/v2/HeroSection.tsx` | 73 | `/book` |
 | vaccination_2026 | `components/landing/v2/CampaignAvailabilitySection.tsx` | 112, 189 | `/book` |
-| bpa-landing | `vaccination-campaign-promo.tsx` | 175 | External `/book` |
+| furtail-landing | `vaccination-campaign-promo.tsx` | 175 | External `/book` |
 
 ### Booking page
 
@@ -290,7 +290,7 @@ User report matches the **first** row → requested slug has **no DB row**.
 | Factor | Evidence |
 |--------|----------|
 | Duplicate fetch on `/book` | `app/book/page.tsx:14` and `BookingWizard.tsx:95` both call `fetchCampaignBySlug(SLUG)` |
-| bpa-landing sends users to bare `/book` | `bpa-landing/src/config/campaign.ts:44–45` — no slug in URL |
+| furtail-landing sends users to bare `/book` | `furtail-landing/src/config/campaign.ts:44–45` — no slug in URL |
 | No `.env.local` in repo | Only `.env.example` tracked; local env may be missing → code default used |
 | Admin ACTIVE campaign ≠ env slug | Documented in `docs/debug/campaign-not-found-analysis.md` for `uat-paid-2026` vs `uat-free-2026` |
 
@@ -336,7 +336,7 @@ User report matches the **first** row → requested slug has **no DB row**.
 |------|--------------|------------|
 | B1. Shared slug resolver | New `lib/resolveCampaignSlug.ts`; used by `app/page.tsx`, `app/book/page.tsx`, `BookingWizard.tsx` | Single resolution order documented in code |
 | B2. Read URL `campaign` param | `app/book/page.tsx`, `BookingWizard.tsx` | `/book?campaign=uat-paid-2026` loads that campaign |
-| B3. Pass slug from all CTAs | `HeroSection`, `CampaignAvailabilitySection`, `SiteHeader`, `StickyMobileCta`, bpa-landing `getCampaignBookingUrl()` | All Book Now links include `?campaign={slug}` when slug known |
+| B3. Pass slug from all CTAs | `HeroSection`, `CampaignAvailabilitySection`, `SiteHeader`, `StickyMobileCta`, furtail-landing `getCampaignBookingUrl()` | All Book Now links include `?campaign={slug}` when slug known |
 | B4. Align code fallback with `.env.example` | `BookingWizard.tsx:25`, `app/book/page.tsx:8`, `app/page.tsx:8`, `CampaignBookingContext.tsx:7` | Change default `uat-free-2026` → `cat-flu-rabies-2026` **or** remove fallback and fail loudly if env unset |
 | B5. Propagate `location` / `slot` query params | `BookingWizard` draft init | Pre-select location/slot when linked from availability section |
 
@@ -380,7 +380,7 @@ searchParams.campaign
 ## 7. Related documentation
 
 - `backend-api/docs/debug/campaign-not-found-analysis.md` — related slug/env mismatch (`Campaign not found` gate path)
-- `backend-api/docs/architecture/bpa-vaccination-domain-strategy.md` — domain + env strategy
+- `backend-api/docs/architecture/furtail-vaccination-domain-strategy.md` — domain + env strategy
 - `backend-api/docs/deployment/BPA_DEPLOYMENT_READINESS_AUDIT.md` — notes env criticality
 
 ---
@@ -400,5 +400,5 @@ searchParams.campaign
 | Slug DB lookup + **ID 0 throw** | `backend-api/src/api/v1/modules/campaign/campaign.service.ts:142–167` |
 | Error template | `backend-api/src/api/v1/modules/campaign/campaign.errors.ts:25–26` |
 | Campaign ID schema | `backend-api/prisma/schema.prisma:13955–13958` |
-| Slug admin entry | `bpa_web/src/bpa/campaign/admin/CampaignForm.tsx:110–117` |
-| bpa-landing Book Now | `bpa-landing/src/config/campaign.ts:44–45` |
+| Slug admin entry | `bpa_web/src/furtail/campaign/admin/CampaignForm.tsx:110–117` |
+| furtail-landing Book Now | `furtail-landing/src/config/campaign.ts:44–45` |

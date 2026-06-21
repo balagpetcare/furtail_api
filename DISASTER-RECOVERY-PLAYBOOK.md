@@ -1,7 +1,7 @@
-# Disaster Recovery Playbook — Full BPA Campaign
+# Disaster Recovery Playbook — Full Furtail Campaign
 
-**Scope:** BPA 2026 Cat Flu + Rabies Vaccination Campaign  
-**Systems:** `backend-api` · `vaccination_2026` · `bpa_web` · `bpa_app`  
+**Scope:** Furtail 2026 Cat Flu + Rabies Vaccination Campaign  
+**Systems:** `backend-api` · `vaccination_2026` · `bpa_web` · `furtail_app`  
 **Infrastructure:** PostgreSQL · Redis · MinIO (S3-compatible) · SMS · Payment gateways  
 **Last updated:** June 2, 2026  
 **Owner:** Platform Engineering + Campaign Operations
@@ -42,7 +42,7 @@ This playbook defines **operational recovery** after incidents affecting campaig
 | `certificateToken` | PostgreSQL `campaign_pets` / `vaccinations` | **Yes** (in DB) | PDF/QR yes — `GET /certificates/:token/pdf` |
 | OTP / SMS queue | Redis | Snapshot optional | Users re-request OTP; `recover-stuck` SMS |
 | Payment idempotency keys | Redis + PostgreSQL | DB orders required | DB is source of truth |
-| Uploaded clinic/media files | MinIO `bpa-pets` (+ `BD/` prefix) | **Yes** if used | No |
+| Uploaded clinic/media files | MinIO `furtail-pets` (+ `BD/` prefix) | **Yes** if used | No |
 | Env secrets | Vault / host env | **Yes** (secure store) | Must restore to verify QR checksums |
 
 **Campaign note:** QR and certificate **files are not persisted to MinIO** by default — they are generated at runtime (`qr.service.ts`, `certificate.service.ts` via Puppeteer). **Protect the database and secrets**, not a separate QR bucket.
@@ -130,17 +130,17 @@ psql -d bpa_dr_test -c "SELECT COUNT(*) FROM campaign_bookings;"
 
 ```bash
 # MinIO Client — list bucket
-mc alias set bpa https://<minio-host>:9000 <ACCESS_KEY> <SECRET_KEY>
-mc ls bpa/bpa-pets --recursive | tail -20
-mc mirror bpa/bpa-pets s3/bpa-pets-dr-backup --overwrite
+mc alias set furtail https://<minio-host>:9000 <ACCESS_KEY> <SECRET_KEY>
+mc ls furtail/furtail-pets --recursive | tail -20
+mc mirror furtail/furtail-pets s3/furtail-pets-dr-backup --overwrite
 
 # AWS CLI equivalent
-aws s3 ls s3://bpa-pets/ --endpoint-url https://<minio-host>:9000
+aws s3 ls s3://furtail-pets/ --endpoint-url https://<minio-host>:9000
 ```
 
 **Checklist:**
 
-- [ ] Bucket `bpa-pets` (or prod name) exists
+- [ ] Bucket `furtail-pets` (or prod name) exists
 - [ ] Last mirror/sync < 24h
 - [ ] `MINIO_PUBLIC_URL` / `AWS_ENDPOINT` in vault
 - [ ] Init script tested: `npm run storage:init` (MinIO dev only; B2 via console)
@@ -286,8 +286,8 @@ SELECT COUNT(*) FROM campaign_sms_logs WHERE status = 'SENT';
 
 ### 5.3 MinIO — restore bucket
 
-1. Identify last good mirror path (`bpa-pets-dr-backup` or S3 version).  
-2. `mc mirror s3/bpa-pets-dr-backup bpa/bpa-pets --overwrite`  
+1. Identify last good mirror path (`furtail-pets-dr-backup` or S3 version).  
+2. `mc mirror s3/furtail-pets-dr-backup furtail/furtail-pets --overwrite`  
 3. Verify random object GET via public URL or signed URL.  
 4. Confirm API `AWS_*` env points to restored endpoint.
 
@@ -322,7 +322,7 @@ Run `generateCertificate` via staff complete flow or admin tooling.
 | worker | Same image; `REDIS_ENABLED=true` |
 | vaccination_2026 | Hosting rollback (Vercel/hosting previous build) |
 | bpa_web | Previous production build |
-| bpa_app | Optional; API compatibility only |
+| furtail_app | Optional; API compatibility only |
 
 See `docs/vaccination-campaign-2026/05-ROLLBACK-PLAN.md` for layer-specific rollback.
 
@@ -350,14 +350,14 @@ Prisma Migrate is **forward-only**. Disaster **rollback** = restore backup + red
 
 | Role | Name | Phone | Email | When to call |
 |------|------|-------|-------|--------------|
-| **Incident Commander** | _On-call Engineering Lead_ | _+880…_ | _oncall@bpa…_ | All Sev-1/2 |
-| **Database / DBA** | _DBA Primary_ | _+880…_ | _dba@bpa…_ | Postgres restore |
-| **DevOps / Infra** | _Platform_ | _+880…_ | _platform@bpa…_ | Redis, MinIO, DNS |
-| **Campaign Product Owner** | _Campaign PM_ | _+880…_ | _campaign@bpa…_ | Pause/go-live decisions |
-| **Clinic Operations Lead** | _Field Ops_ | _+880…_ | _clinics@bpa…_ | Site comms, paper fallback |
+| **Incident Commander** | _On-call Engineering Lead_ | _+880…_ | _oncall@furtail…_ | All Sev-1/2 |
+| **Database / DBA** | _DBA Primary_ | _+880…_ | _dba@furtail…_ | Postgres restore |
+| **DevOps / Infra** | _Platform_ | _+880…_ | _platform@furtail…_ | Redis, MinIO, DNS |
+| **Campaign Product Owner** | _Campaign PM_ | _+880…_ | _campaign@furtail…_ | Pause/go-live decisions |
+| **Clinic Operations Lead** | _Field Ops_ | _+880…_ | _clinics@furtail…_ | Site comms, paper fallback |
 | **SMS Provider (SSL Wireless)** | _Account mgr_ | _…_ | _…_ | OTP/SMS outage |
 | **Payment (bKash/Nagad/SSL)** | _Merchant support_ | _…_ | _…_ | Payment gateway down |
-| **Security** | _InfoSec_ | _+880…_ | _security@bpa…_ | Breach, webhook abuse |
+| **Security** | _InfoSec_ | _+880…_ | _security@furtail…_ | Breach, webhook abuse |
 
 **Communication channels:**
 

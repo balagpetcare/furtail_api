@@ -167,8 +167,8 @@ const REGISTRY: PermissionEntry[] = [
   { key: "staff.view", label: "View staff", group: "Staff Branch", description: "View staff and shifts.", scope: "both" },
   { key: "clinic.overview.manage", label: "Manage clinic overview", group: "Clinic Setup", description: "Manage clinic overview and settings.", scope: "both" },
   { key: "settings.manage", label: "Manage settings", group: "Settings", description: "Change settings.", scope: "both" },
-  // ----- Vaccination Campaign 2026 (BPA national campaign module) -----
-  { key: "campaign.manage", label: "Manage vaccination campaigns", group: "Vaccination Campaign", description: "Create, configure, publish, and operate BPA vaccination campaigns (locations, slots, staff).", scope: "admin" },
+  // ----- Vaccination Campaign 2026 (Furtail national campaign module) -----
+  { key: "campaign.manage", label: "Manage vaccination campaigns", group: "Vaccination Campaign", description: "Create, configure, publish, and operate Furtail vaccination campaigns (locations, slots, staff).", scope: "admin" },
   { key: "campaign.view", label: "View vaccination campaigns", group: "Vaccination Campaign", description: "Read campaign configuration, bookings, and reports.", scope: "admin" },
   // ----- Clinic (permissionMenu clinic) -----
   { key: "service.read", label: "View services", group: "Clinic", description: "View clinic service catalog.", scope: "both" },

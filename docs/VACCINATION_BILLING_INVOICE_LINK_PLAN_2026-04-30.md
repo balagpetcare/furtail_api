@@ -389,7 +389,7 @@ Safer rule:
     "billing": {
       "created": true,
       "orderId": 12345,
-      "orderNumber": "BPA-XXXX",
+      "orderNumber": "Furtail-XXXX",
       "invoiceNumber": null,
       "paymentStatus": "PENDING",
       "visitId": 9001,

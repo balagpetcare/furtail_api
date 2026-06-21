@@ -9,7 +9,7 @@
 ## 1. Purpose and Scope
 
 - **In scope:** Global master catalog → branch pharmacy catalog → batch/stock → prescription/dispense → injection/vial control → billing/POS → audit/reconciliation. Branch-aware, fraud-resistant, prescription-linked, injection-controlled, batch-expiry traceable, retail + clinical compatible.
-- **Out of scope:** Standalone "pharmacy product module" separate from clinical items; duplicate inventory or billing systems; generic pharmacy software patterns not aligned to BPA clinic/POS/injection stack.
+- **Out of scope:** Standalone "pharmacy product module" separate from clinical items; duplicate inventory or billing systems; generic pharmacy software patterns not aligned to Furtail clinic/POS/injection stack.
 
 ---
 

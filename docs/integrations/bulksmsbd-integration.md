@@ -1,6 +1,6 @@
 # BulkSMSBD SMS Integration
 
-Central SMS gateway for the BPA/WPA ecosystem using [BulkSMSBD](http://bulksmsbd.net).
+Central SMS gateway for the Furtail/Furtail ecosystem using [BulkSMSBD](http://bulksmsbd.net).
 
 ## Architecture
 
@@ -65,7 +65,7 @@ Direct send (no queue) happens when Redis is disabled or `direct: true` is passe
 
 | Key | Use case |
 |-----|----------|
-| `OTP` | Your BPA OTP is {OTP} |
+| `OTP` | Your Furtail OTP is {OTP} |
 | `BOOKING_REQUEST` | After booking creation |
 | `PAYMENT_SUCCESS` | After successful payment |
 | `PAYMENT_FAILED` | After failed payment |

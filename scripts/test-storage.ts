@@ -70,7 +70,7 @@ async function main() {
   const config = resolveStorageConfig();
   const configErrors = validateStorageConfig(config);
 
-  console.log("\n=== BPA Storage Integration Test ===\n");
+  console.log("\n=== Furtail Storage Integration Test ===\n");
   console.log("Provider:", config.provider);
   console.log("Bucket:", config.bucketName);
   console.log("Endpoint:", config.endpoint);
@@ -100,7 +100,7 @@ async function main() {
   const provider = getStorageProvider();
   const rand = crypto.randomBytes(6).toString("hex");
   const testKey = `BD/_storage_test/${Date.now()}_${rand}.txt`;
-  const testBody = Buffer.from(`bpa-storage-integration-test-${config.provider}-${Date.now()}`);
+  const testBody = Buffer.from(`furtail-storage-integration-test-${config.provider}-${Date.now()}`);
   const contentType = "text/plain; charset=utf-8";
 
   const results: StepResult[] = [];

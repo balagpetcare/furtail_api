@@ -1,7 +1,7 @@
 # Current Implementation Audit + Gap Analysis (বাংলা)
 
 **Repo/Branch:**  
-- Backend: balagpetcare/bpa_app_api @ ver/V100.0.01.03  
+- Backend: balagpetcare/furtail_api @ ver/V100.0.01.03  
 - Frontend: balagpetcare/web_app @ ver/V100.0.01.03  
 
 **Target Architecture:**  

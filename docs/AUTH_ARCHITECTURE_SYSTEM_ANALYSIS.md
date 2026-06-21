@@ -1,4 +1,4 @@
-# BPA Auth Architecture – System Analysis
+# Furtail Auth Architecture – System Analysis
 
 **Date:** 2025-02-07  
 **Status:** Unification implemented – see [AUTH_UNIFICATION_IMPLEMENTATION.md](./AUTH_UNIFICATION_IMPLEMENTATION.md)  

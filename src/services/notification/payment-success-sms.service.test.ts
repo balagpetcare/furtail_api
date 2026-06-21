@@ -63,7 +63,7 @@ describe("payment-success-sms.service", () => {
 
   it("formats the vaccination payment success message", () => {
     const message = __paymentSuccessSmsTestUtils.buildMessage(baseBooking);
-    expect(message).toContain("Bangladesh Pet Association");
+    expect(message).toContain("Furtail");
     expect(message).toContain("Booking Ref: VAC-TEST01");
     expect(message).toContain("Campaign: Dhaka Cat Vaccination 2026");
     expect(message).toContain("Pet: Milo, Luna");

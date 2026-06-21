@@ -6,8 +6,8 @@
  * - /api/v1/campaign/public/* - Public endpoints (no auth required)
  * - /api/v1/campaign/auth/* - OTP authentication endpoints
  * - /api/v1/campaign/booking/* - Booking endpoints (OTP session required)
- * - /api/v1/campaign/staff/* - Staff endpoints (BPA auth required)
- * - /api/v1/campaign/admin/* - Admin endpoints (BPA auth + campaign admin role)
+ * - /api/v1/campaign/staff/* - Staff endpoints (Furtail auth required)
+ * - /api/v1/campaign/admin/* - Admin endpoints (Furtail auth + campaign admin role)
  */
 
 import { Router } from "express";
@@ -756,7 +756,7 @@ bookingRouter.post("/:ref/cancel", cancelBookingPublicHandler);
 router.use("/booking", bookingRouter);
 
 // ============================================================================
-// Staff Routes (BPA Auth + CampaignStaff RBAC)
+// Staff Routes (Furtail Auth + CampaignStaff RBAC)
 // ============================================================================
 
 const staffRouter = Router();
@@ -832,7 +832,7 @@ staffRouter.post("/vaccinations/skip", ...requireCampaignStaff("canRecordVaccina
 router.use("/staff", staffRouter);
 
 // ============================================================================
-// Admin Routes (BPA Auth + campaign.manage)
+// Admin Routes (Furtail Auth + campaign.manage)
 // ============================================================================
 
 const adminRouter = Router();

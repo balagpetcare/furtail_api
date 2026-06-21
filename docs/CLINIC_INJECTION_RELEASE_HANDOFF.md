@@ -1,4 +1,4 @@
-# BPA Clinic Injection Tokens + Injection Room — Final Release Handoff
+# Furtail Clinic Injection Tokens + Injection Room — Final Release Handoff
 
 **Date:** 2026-03-14.  
 **Scope:** Final rollout preparation only — consistency pass, UI/null check, handoff summary. No feature work, no architecture or schema change.

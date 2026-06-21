@@ -17,7 +17,7 @@ export function resolveScriptStorageEnv() {
     return {
       provider: "b2",
       region: first(process.env.S3_REGION, process.env.AWS_REGION, "us-east-005"),
-      bucket: first(process.env.S3_BUCKET, process.env.AWS_BUCKET_NAME, "bpa-production-media"),
+      bucket: first(process.env.S3_BUCKET, process.env.AWS_BUCKET_NAME, "furtail-production-media"),
       endpoint: first(process.env.S3_ENDPOINT, process.env.AWS_ENDPOINT),
       publicBase: first(
         process.env.STORAGE_PUBLIC_URL,
@@ -36,7 +36,7 @@ export function resolveScriptStorageEnv() {
   return {
     provider: "minio",
     region: first(process.env.AWS_REGION, process.env.S3_REGION, "us-east-1"),
-    bucket: first(process.env.AWS_BUCKET_NAME, process.env.S3_BUCKET, "bpa-pets"),
+    bucket: first(process.env.AWS_BUCKET_NAME, process.env.S3_BUCKET, "furtail-pets"),
     endpoint: first(process.env.AWS_ENDPOINT, process.env.S3_ENDPOINT, "http://localhost:9000"),
     publicBase: first(
       process.env.STORAGE_PUBLIC_URL,

@@ -1,7 +1,7 @@
-# BPA Image Storage Audit Report
+# Furtail Image Storage Audit Report
 
 **Date:** 2026-06-05  
-**Scope:** `backend-api` (MinIO/S3, media API, posts feed) + `bpa_app` (Flutter image loading)
+**Scope:** `backend-api` (MinIO/S3, media API, posts feed) + `furtail_app` (Flutter image loading)
 
 ---
 
@@ -11,7 +11,7 @@ Feed images showed broken placeholders due to **three compounding issues**:
 
 1. **MinIO bucket had no public read policy** → HTTP **403** on direct object URLs.
 2. **`MINIO_PUBLIC_URL` pointed at `127.0.0.1`** → URLs stored in PostgreSQL were not reachable from phones on the LAN.
-3. **Objects missing in MinIO** (empty `bpa-pets` bucket) while DB still referenced old keys → HTTP **404** after policy was fixed.
+3. **Objects missing in MinIO** (empty `furtail-pets` bucket) while DB still referenced old keys → HTTP **404** after policy was fixed.
 
 Code and configuration fixes are in place. **Existing feed posts with missing objects must be re-created** (re-upload the same photo once; hash-based dedup will repair the `media` row in storage).
 
@@ -23,7 +23,7 @@ Code and configuration fixes are in place. **Existing feed posts with missing ob
 |--------|---------------------|-------|
 | `AWS_ENDPOINT` | `http://192.168.10.111:9000` | API → MinIO (correct for host dev) |
 | `MINIO_PUBLIC_URL` | ~~`http://127.0.0.1:9000`~~ → **`http://192.168.10.111:9000`** | Must match a host phones can reach |
-| `AWS_BUCKET_NAME` | `bpa-pets` | Consistent across API, init script, Flutter `MEDIA_BASE_URL` path |
+| `AWS_BUCKET_NAME` | `furtail-pets` | Consistent across API, init script, Flutter `MEDIA_BASE_URL` path |
 | `AWS_ACCESS_KEY_ID` | `minioadmin` | Matches running MinIO instance |
 | `AWS_FORCE_PATH_STYLE` | `true` | Required for MinIO path-style URLs |
 
@@ -33,7 +33,7 @@ MinIO process (verified running):
 - Console: `:9001`
 - Data dir: `D:\minio\data`
 
-**Action applied:** `npm run minio:init` — public read policy on `bpa-pets`.
+**Action applied:** `npm run minio:init` — public read policy on `furtail-pets`.
 
 ---
 
@@ -41,11 +41,11 @@ MinIO process (verified running):
 
 | Layer | Bucket |
 |-------|--------|
-| `appConfig.storage.bucketName` | `bpa-pets` |
-| `scripts/init-minio.ts` | `bpa-pets` |
+| `appConfig.storage.bucketName` | `furtail-pets` |
+| `scripts/init-minio.ts` | `furtail-pets` |
 | `presign.service.ts` fallback | `AWS_BUCKET_NAME` / `MINIO_BUCKET` |
-| Flutter `MEDIA_BASE_URL` | No bucket in host; path is `/bpa-pets/<key>` |
-| DB `media.url` | `…/bpa-pets/BD/media/…` |
+| Flutter `MEDIA_BASE_URL` | No bucket in host; path is `/furtail-pets/<key>` |
+| DB `media.url` | `…/furtail-pets/BD/media/…` |
 
 **Consistent.** No bucket name mismatch found.
 
@@ -58,7 +58,7 @@ MinIO process (verified running):
 | Route | `POST /api/v1/media/upload` |
 | Auth | Bearer JWT |
 | Handler | `media.controller.ts` → `media.processor` → `media.service.uploadAndCreateMedia` |
-| Storage | `PutObject` to `bpa-pets` |
+| Storage | `PutObject` to `furtail-pets` |
 | DB | `media` row: `url`, `key`, `hash`, `type`, … |
 
 Upload test after policy fix: **200 OK** for new object  
@@ -83,8 +83,8 @@ Sample rows (after repair script):
 
 | id | key | url (canonical) |
 |----|-----|-----------------|
-| 1 | `BD/media/2/1780346714709_3fda3f2c2fa8a8eac40d.jpg` | `http://192.168.10.111:9000/bpa-pets/BD/media/2/…` |
-| 2 | `BD/media/2/1780346829965_27147ff04b10ff45b541.jpg` | `http://192.168.10.111:9000/bpa-pets/BD/media/2/…` |
+| 1 | `BD/media/2/1780346714709_3fda3f2c2fa8a8eac40d.jpg` | `http://192.168.10.111:9000/furtail-pets/BD/media/2/…` |
+| 2 | `BD/media/2/1780346829965_27147ff04b10ff45b541.jpg` | `http://192.168.10.111:9000/furtail-pets/BD/media/2/…` |
 
 **HTTP HEAD on these URLs: 404** — files are not in the current MinIO data directory (likely wiped when MinIO was re-pointed to `D:\minio\data`).
 
@@ -123,7 +123,7 @@ Presigned flow is separate from feed images. Feed requires `npm run minio:init` 
 | Component | URL handling |
 |-----------|----------------|
 | `PostMediaModel.fromJson` | `MediaUrl.normalize()` |
-| `FitWidthNetworkImage` / `BpaCachedImage` | `CachedNetworkImage` |
+| `FitWidthNetworkImage` / `FurtailCachedImage` | `CachedNetworkImage` |
 | `AppConfig.mediaBaseUrl` | `env/dev.json` → `http://192.168.10.111:9000` |
 
 Android cleartext: `network_security_config.xml` updated for LAN + emulator hosts.
@@ -194,4 +194,4 @@ flowchart LR
 - [ ] `node scripts/audit-media-urls.mjs` → new uploads return HTTP **200**  
 - [ ] `GET /api/v1/posts/feed` → `media[].media.url` host is `192.168.10.111` (not `127.0.0.1`)  
 - [ ] Flutter feed shows images after re-upload  
-- [ ] MinIO console shows objects under `bpa-pets/BD/media/…`
+- [ ] MinIO console shows objects under `furtail-pets/BD/media/…`

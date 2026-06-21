@@ -3,20 +3,20 @@
 **Status:** 📋 **Planning only — do not implement until approved**  
 **Date:** 2026-06-05  
 **Owner:** Platform Engineering  
-**Repos:** `backend-api` · `bpa-landing` · `vaccination_2026` · `bpa_web` · `bpa_app`  
-**Related:** `DISASTER-RECOVERY-PLAYBOOK.md` · `docs/vaccination-campaign-2026/05-ROLLBACK-PLAN.md` · `docs/nginx-production-deployment.md` · `docs/architecture/bpa-vaccination-domain-strategy.md`
+**Repos:** `backend-api` · `furtail-landing` · `vaccination_2026` · `bpa_web` · `furtail_app`  
+**Related:** `DISASTER-RECOVERY-PLAYBOOK.md` · `docs/vaccination-campaign-2026/05-ROLLBACK-PLAN.md` · `docs/nginx-production-deployment.md` · `docs/architecture/furtail-vaccination-domain-strategy.md`
 
 ---
 
 ## 1. Executive summary
 
-This document defines an **enterprise-grade monitoring, alerting, backup, and failover** strategy for the BPA public campaign stack:
+This document defines an **enterprise-grade monitoring, alerting, backup, and failover** strategy for the Furtail public campaign stack:
 
 | Surface | Production URL | App | Default port |
 |---------|----------------|-----|--------------|
-| Landing | `https://bangladeshpetassociation.com` | `bpa-landing` | 3101 |
-| Vaccination | `https://vaccination.bangladeshpetassociation.com` | `vaccination_2026` | 3110 |
-| Central API | `https://api.bangladeshpetassociation.com` | `backend-api` | 3000 |
+| Landing | `https://furtail.world` | `furtail-landing` | 3101 |
+| Vaccination | `https://vaccination.furtail.world` | `vaccination_2026` | 3110 |
+| Central API | `https://api.furtail.world` | `backend-api` | 3000 |
 | Database | Managed PostgreSQL (primary) | — | 5432 |
 
 **Goals:**
@@ -45,7 +45,7 @@ flowchart TB
   end
 
   subgraph Apps["Application tier"]
-    LAND[bpa-landing :3101]
+    LAND[furtail-landing :3101]
     CAMP[vaccination_2026 :3110]
     API[backend-api :3000]
     WORK[notification worker]
@@ -119,7 +119,7 @@ flowchart TB
 
 ### 3.3 Proposed (post-approval)
 
-#### BPA API (`backend-api`)
+#### Furtail API (`backend-api`)
 
 | Endpoint | Type | Checks | Used by |
 |----------|------|--------|---------|
@@ -142,7 +142,7 @@ flowchart TB
 }
 ```
 
-#### Landing (`bpa-landing`)
+#### Landing (`furtail-landing`)
 
 | Endpoint | Type | Checks |
 |----------|------|--------|
@@ -181,14 +181,14 @@ Run from **two external regions** (e.g. Singapore + Mumbai) plus one **internal*
 
 | ID | Name | URL | Method | Expected | Interval | Timeout |
 |----|------|-----|--------|----------|----------|---------|
-| U1 | Landing home | `https://bangladeshpetassociation.com/` | GET | HTTP 200, body contains `BPA` or title | 1 min | 15s |
-| U2 | Landing health | `https://bangladeshpetassociation.com/health` | GET | HTTP 200, `ok: true` | 1 min | 10s |
-| U3 | Vaccination home | `https://vaccination.bangladeshpetassociation.com/` | GET | HTTP 200 | 1 min | 15s |
-| U4 | Vaccination health | `https://vaccination.bangladeshpetassociation.com/health` | GET | HTTP 200, `ok: true` | 1 min | 10s |
-| U5 | Vaccination book | `https://vaccination.bangladeshpetassociation.com/book` | GET | HTTP 200 | 5 min | 20s |
-| U6 | API liveness | `https://api.bangladeshpetassociation.com/health` | GET | HTTP 200, `ok: true` | 1 min | 10s |
-| U7 | API readiness | `https://api.bangladeshpetassociation.com/health/ready` | GET | HTTP 200, all checks ok | 1 min | 15s |
-| U8 | API campaign public | `https://api.bangladeshpetassociation.com/api/v1/campaign/public/sms/health` | GET | HTTP 200 | 5 min | 15s |
+| U1 | Landing home | `https://furtail.world/` | GET | HTTP 200, body contains `Furtail` or title | 1 min | 15s |
+| U2 | Landing health | `https://furtail.world/health` | GET | HTTP 200, `ok: true` | 1 min | 10s |
+| U3 | Vaccination home | `https://vaccination.furtail.world/` | GET | HTTP 200 | 1 min | 15s |
+| U4 | Vaccination health | `https://vaccination.furtail.world/health` | GET | HTTP 200, `ok: true` | 1 min | 10s |
+| U5 | Vaccination book | `https://vaccination.furtail.world/book` | GET | HTTP 200 | 5 min | 20s |
+| U6 | API liveness | `https://api.furtail.world/health` | GET | HTTP 200, `ok: true` | 1 min | 10s |
+| U7 | API readiness | `https://api.furtail.world/health/ready` | GET | HTTP 200, all checks ok | 1 min | 15s |
+| U8 | API campaign public | `https://api.furtail.world/api/v1/campaign/public/sms/health` | GET | HTTP 200 | 5 min | 15s |
 | U9 | TLS cert expiry | All three hosts | SSL | > 14 days remaining | Daily | — |
 
 ### 4.2 Deep / transactional checks (optional, lower frequency)
@@ -220,9 +220,9 @@ Active checks require a local sidecar or `health_check` (nginx plus) — documen
 
 | Severity | Definition | Response target | Channel |
 |----------|------------|-----------------|---------|
-| **SEV-1 Critical** | Campaign booking/payment down; DB unreachable; total site outage | 15 min | PagerDuty / phone + Slack `#bpa-incidents` |
-| **SEV-2 High** | Degraded — OTP delays, single app down, API 5xx > 5% | 30 min | Slack `#bpa-incidents` + email on-call |
-| **SEV-3 Medium** | Non-blocking — landing only, admin UI, elevated latency | 4 hours | Slack `#bpa-ops` |
+| **SEV-1 Critical** | Campaign booking/payment down; DB unreachable; total site outage | 15 min | PagerDuty / phone + Slack `#furtail-incidents` |
+| **SEV-2 High** | Degraded — OTP delays, single app down, API 5xx > 5% | 30 min | Slack `#furtail-incidents` + email on-call |
+| **SEV-3 Medium** | Non-blocking — landing only, admin UI, elevated latency | 4 hours | Slack `#furtail-ops` |
 | **SEV-4 Low** | Informational — cert expiring in 30d, disk 70% | Next business day | Email / ticket |
 
 ### 5.2 Alert rules (proposed)
@@ -253,12 +253,12 @@ Active checks require a local sidecar or `health_check` (nginx plus) — documen
 ```mermaid
 flowchart LR
   A[Monitor fires] --> B{SEV-1/2?}
-  B -->|Yes| C[Slack #bpa-incidents]
+  B -->|Yes| C[Slack #furtail-incidents]
   C --> D[On-call engineer 15m]
   D --> E{Resolved?}
   E -->|No 30m| F[Escalate Product Owner]
   E -->|No 60m| G[Escalate Clinic Ops — pause campaign]
-  B -->|SEV-3/4| H[Slack #bpa-ops / ticket]
+  B -->|SEV-3/4| H[Slack #furtail-ops / ticket]
 ```
 
 ### 5.5 Campaign-specific kill switch
@@ -307,7 +307,7 @@ Consolidates and extends `DISASTER-RECOVERY-PLAYBOOK.md` §4.
 
 | App | Stateful data | Backup approach |
 |-----|---------------|-----------------|
-| `bpa-landing` | None (SSR build) | Redeploy from git tag; env in vault |
+| `furtail-landing` | None (SSR build) | Redeploy from git tag; env in vault |
 | `vaccination_2026` | None (SSR); session in browser | Redeploy from git tag |
 | `backend-api` | None in app layer | Redeploy image; env in vault |
 | **Worker** | BullMQ jobs in Redis | Redis RDB; drain queue before restore |
@@ -337,7 +337,7 @@ Consolidates and extends `DISASTER-RECOVERY-PLAYBOOK.md` §4.
 
 ## 7. Failover strategy
 
-### 7.1 Landing app (`bpa-landing`)
+### 7.1 Landing app (`furtail-landing`)
 
 | Scenario | Failover action | RTO |
 |----------|-----------------|-----|
@@ -359,7 +359,7 @@ Consolidates and extends `DISASTER-RECOVERY-PLAYBOOK.md` §4.
 
 Booking funnel depends on API + Redis + DB — vaccination app failover alone is insufficient if API is down.
 
-### 7.3 BPA API (`backend-api`)
+### 7.3 Furtail API (`backend-api`)
 
 | Scenario | Failover action | RTO |
 |----------|-----------------|-----|
@@ -424,7 +424,7 @@ Aligns with `docs/vaccination-campaign-2026/05-ROLLBACK-PLAN.md`. **Planning ref
 
 | Step | Action | Owner |
 |------|--------|-------|
-| 1 | Announce incident in `#bpa-incidents` | On-call |
+| 1 | Announce incident in `#furtail-incidents` | On-call |
 | 2 | **Pause campaign** (admin) if bookings affected | Campaign ops |
 | 3 | Identify last good git tag / container image | On-call |
 | 4 | Deploy previous artifact (`git checkout <tag>`, build, restart) | Platform |
@@ -435,11 +435,11 @@ Aligns with `docs/vaccination-campaign-2026/05-ROLLBACK-PLAN.md`. **Planning ref
 
 ```bash
 # Example — adjust for your process manager
-cd /opt/bpa/backend-api
+cd /opt/furtail/backend-api
 git fetch && git checkout <LAST_GOOD_TAG>
 npm ci && npm run build
-pm2 restart bpa-api bpa-worker
-curl -sf https://api.bangladeshpetassociation.com/health/ready
+pm2 restart furtail-api furtail-worker
+curl -sf https://api.furtail.world/health/ready
 ```
 
 ### 8.2 Vaccination app rollback
@@ -447,28 +447,28 @@ curl -sf https://api.bangladeshpetassociation.com/health/ready
 | Step | Action |
 |------|--------|
 | 1 | Roll hosting platform to **previous deployment** (Vercel/PM2/git tag) |
-| 2 | Verify `https://vaccination.bangladeshpetassociation.com/health` |
+| 2 | Verify `https://vaccination.furtail.world/health` |
 | 3 | Verify `/book` loads (does not require API regression) |
 | 4 | If API also rolled back, coordinate order: **API first**, then frontend |
 
 ```bash
-cd /opt/bpa/vaccination_2026
+cd /opt/furtail/vaccination_2026
 git checkout <LAST_GOOD_TAG>
-npm ci && npm run build && pm2 restart bpa-vaccination
+npm ci && npm run build && pm2 restart furtail-vaccination
 ```
 
 ### 8.3 Landing app rollback
 
 | Step | Action |
 |------|--------|
-| 1 | Deploy previous `bpa-landing` build |
+| 1 | Deploy previous `furtail-landing` build |
 | 2 | Verify apex home + `/vaccination` bridge |
 | 3 | No API rollback needed for CSS-only landing issues |
 
 ```bash
-cd /opt/bpa/bpa-landing
+cd /opt/furtail/furtail-landing
 git checkout <LAST_GOOD_TAG>
-npm ci && npm run build && pm2 restart bpa-landing
+npm ci && npm run build && pm2 restart furtail-landing
 ```
 
 ### 8.4 Database rollback (data recovery — not schema down)
@@ -515,11 +515,11 @@ npm ci && npm run build && pm2 restart bpa-landing
 
 1. Check upstream ports 3101 / 3110 locally: `curl -I http://127.0.0.1:3101/health`.
 2. Review last frontend deploy; rollback §8.2 / §8.3.
-3. Check nginx error logs: `/var/log/nginx/bpa-*.error.log`.
+3. Check nginx error logs: `/var/log/nginx/furtail-*.error.log`.
 
 ### 9.3 API down, frontends up
 
-1. `curl https://api.bangladeshpetassociation.com/health/ready`
+1. `curl https://api.furtail.world/health/ready`
 2. Check PostgreSQL + Redis; review API logs.
 3. Rollback API §8.1 if deploy-correlated.
 4. Pause campaign until readiness returns.
@@ -579,7 +579,7 @@ Before implementation, stakeholders must sign off on:
 | `DISASTER-RECOVERY-PLAYBOOK.md` | Operational DR + restore commands |
 | `docs/vaccination-campaign-2026/05-ROLLBACK-PLAN.md` | Layer-specific rollback |
 | `docs/nginx-production-deployment.md` | Edge routing + TLS |
-| `docs/architecture/bpa-vaccination-domain-strategy.md` | Multi-domain architecture |
+| `docs/architecture/furtail-vaccination-domain-strategy.md` | Multi-domain architecture |
 | `docs/PRISMA_MIGRATION_NON_DESTRUCTIVE_POLICY.md` | No destructive DB ops |
 
 ---

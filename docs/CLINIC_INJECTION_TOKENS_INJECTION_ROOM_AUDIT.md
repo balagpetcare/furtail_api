@@ -133,7 +133,7 @@ Base URL: `/api/v1/clinic/branches/:branchId` (frontend `clinicBase(branchId)`).
 2. **Injection-tokens page**
    - Add small dashboard strip (e.g. pending count, used today) using list or a lightweight stats API.
    - Add date range filters and pagination (or "Load more") for list.
-   - Replace raw IDs with search/autocomplete where feasible (visit, variant) per BPA patterns.
+   - Replace raw IDs with search/autocomplete where feasible (visit, variant) per Furtail patterns.
    - Token table: add optional "View details" opening context/audit; replace native confirm with modal for cancel (optional reason).
    - Empty/loading/error: use shared clinic components and clear CTAs.
 3. **Injection-room page**

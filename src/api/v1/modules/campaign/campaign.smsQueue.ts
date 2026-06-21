@@ -30,7 +30,7 @@ export async function enqueueCampaignSmsMessage(
 
     type: meta?.template || "CAMPAIGN_SMS",
 
-    title: "BPA Vaccination Campaign",
+    title: "Furtail Vaccination Campaign",
 
     message,
 

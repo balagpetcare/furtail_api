@@ -131,7 +131,7 @@ Legacy rollout regions are **no longer** labeled as “coverage zones” in admi
 ### bpa_web
 
 - `lib/campaignApi.ts`
-- `src/bpa/campaign/admin/CampaignOperationsCenter.tsx`
+- `src/furtail/campaign/admin/CampaignOperationsCenter.tsx`
 
 ---
 

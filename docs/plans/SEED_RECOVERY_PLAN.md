@@ -258,9 +258,9 @@ Super Admin requires **three layers** (audit §6.3). Recovery must automate laye
 
 ```bash
 # After db:seed — requires vault secrets
-SUPER_ADMIN_EMAIL=admin@bangladeshpetassociation.com \
+SUPER_ADMIN_EMAIL=admin@furtail.world \
 SUPER_ADMIN_PASSWORD='<from-vault>' \
-SUPER_ADMIN_WHITELIST_EMAILS=admin@bangladeshpetassociation.com \
+SUPER_ADMIN_WHITELIST_EMAILS=admin@furtail.world \
 npm run admin:bootstrap
 
 npm run admin:verify
@@ -372,7 +372,7 @@ Re-run safe. Verify Rabies, DHPP, FVRCP exist.
 ```bash
 # 1. Backup / snapshot (even on fresh — habit)
 # 2. Migrations
-cd /opt/bpa/backend-api
+cd /opt/furtail/backend-api
 git pull origin main
 npm ci
 node scripts/check-migration-integrity.js
@@ -382,7 +382,7 @@ npm run prisma:migrate:deploy
 export SEED_DEMO_PRODUCTS=false
 export SEED_COVERAGE_ZONES=true          # after Phase 1.2 implemented
 export SEED_MASTER_CATALOG_REPLACE=false # after Phase 2.1 implemented
-export SUPER_ADMIN_WHITELIST_EMAILS=admin@bangladeshpetassociation.com
+export SUPER_ADMIN_WHITELIST_EMAILS=admin@furtail.world
 npm run db:seed
 
 # 4. Verify seed
@@ -393,13 +393,13 @@ npm run seed:coverage-zones
 npm run verify:coverage-zones
 
 # 6. Super Admin user (first time only)
-export SUPER_ADMIN_EMAIL=admin@bangladeshpetassociation.com
+export SUPER_ADMIN_EMAIL=admin@furtail.world
 export SUPER_ADMIN_PASSWORD='<vault>'
 npm run admin:bootstrap
 npm run admin:verify
 
 # 7. Restart API
-pm2 restart bpa-api bpa-worker
+pm2 restart furtail-api furtail-worker
 ```
 
 ### 10.2 Existing production database (re-seed reference data)

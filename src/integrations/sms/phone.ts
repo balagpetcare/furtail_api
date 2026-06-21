@@ -19,6 +19,6 @@ export function formatBdMsisdn(phone: string): string {
   return cleaned;
 }
 
-export function generateCsmsId(prefix = "BPA"): string {
+export function generateCsmsId(prefix = "Furtail"): string {
   return `${prefix}${Date.now()}${Math.random().toString(36).slice(2, 6)}`.slice(0, 32);
 }

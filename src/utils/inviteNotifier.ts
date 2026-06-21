@@ -36,7 +36,7 @@ exports.sendInvite = async function sendInvite(args: SendInviteArgs) {
         console.log(`[INVITE:EMAIL] SMTP not configured; fallback log. to=${to} message=${msg}`);
         return { success: true, fallback: "log" };
       }
-      const subject = args.email?.subject || "BPA Invitation";
+      const subject = args.email?.subject || "Furtail Invitation";
       const html = args.email?.html || `<pre style="font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;">${escapeHtml(msg)}</pre>`;
       const text = args.email?.text || msg;
       return await sendMail({ to, subject, html, text });
@@ -47,7 +47,7 @@ exports.sendInvite = async function sendInvite(args: SendInviteArgs) {
     }
   }
 
-  // SMS via central BPA SMS service
+  // SMS via central Furtail SMS service
   if (channel === "SMS") {
     try {
       const { sendSMS } = require("../shared/services/sms/sms.service");

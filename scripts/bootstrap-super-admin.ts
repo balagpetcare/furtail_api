@@ -208,7 +208,7 @@ async function main() {
       email: admin.email,
       phone: admin.phone,
       password,
-      displayName: process.env.SUPER_ADMIN_NAME || "BPA Super Admin",
+      displayName: process.env.SUPER_ADMIN_NAME || "Furtail Super Admin",
       roleId: role.id,
     });
     results.push({

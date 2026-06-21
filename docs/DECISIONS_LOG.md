@@ -1,4 +1,4 @@
-# BPA Decisions Log
+# Furtail Decisions Log
 
 ## Fixed Decisions
 - API prefix: /api/v1

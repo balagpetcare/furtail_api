@@ -3304,8 +3304,8 @@ model CampaignBooking {
   slotId     Int?
   bookingMode CampaignBookingMode @default(VENUE)
 
-  // Owner (may or may not have BPA account)
-  ownerUserId      Int? // NULL if not linked to BPA account
+  // Owner (may or may not have Furtail account)
+  ownerUserId      Int? // NULL if not linked to Furtail account
   ownerPhone       String @db.VarChar(15)
   ownerName        String
   ownerAddressJson Json?

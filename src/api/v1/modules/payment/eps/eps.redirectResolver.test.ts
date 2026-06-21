@@ -5,10 +5,10 @@ describe("buildEpsLandingRedirectPath", () => {
     const path = buildEpsLandingRedirectPath(
       "success",
       { MerchantTransactionId: "CKO-EZTUBGCU" },
-      { checkoutId: "sess-uuid-123", bookingRef: "BPA-ABC123" }
+      { checkoutId: "sess-uuid-123", bookingRef: "Furtail-ABC123" }
     );
     expect(path).toContain("checkoutId=sess-uuid-123");
-    expect(path).toContain("ref=BPA-ABC123");
+    expect(path).toContain("ref=Furtail-ABC123");
   });
 
   it("uses legacy booking ref when checkoutId is absent", () => {

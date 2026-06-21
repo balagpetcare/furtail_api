@@ -6,7 +6,7 @@ This report covers cross-application integration of the centralized Bangladesh l
 
 - `D:/BPA_Data/backend-api`
 - `D:/BPA_Data/bpa_web` (active web app; requested `web_app` path was not present)
-- `D:/BPA_Data/bpa_app`
+- `D:/BPA_Data/furtail_app`
 
 ## Step 1: Next.js Reusable Components
 

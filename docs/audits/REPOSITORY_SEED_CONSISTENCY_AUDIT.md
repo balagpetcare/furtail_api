@@ -1,4 +1,4 @@
-# Repository Seed Consistency Audit (BPA / WPA)
+# Repository Seed Consistency Audit (Furtail / Furtail)
 
 **Date:** 2026-06-06  
 **Repository:** `backend-api`  

@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-The BPA (Business Process Automation) system has a **highly advanced and production-ready inventory management foundation** with comprehensive batch tracking, FEFO (First Expire First Out) logic, multi-location support, and immutable ledger architecture. The system is 85% complete for enterprise pharmacy requirements.
+The Furtail (Business Process Automation) system has a **highly advanced and production-ready inventory management foundation** with comprehensive batch tracking, FEFO (First Expire First Out) logic, multi-location support, and immutable ledger architecture. The system is 85% complete for enterprise pharmacy requirements.
 
 **Key Findings:**
 - ✅ Core batch/lot tracking with expiry dates fully implemented
@@ -515,7 +515,7 @@ Assessment: ✅ **Full CRUD + reporting** - excellent API coverage
 
 ## 9. Conclusion
 
-The BPA system has an **exceptionally strong inventory foundation** with enterprise-grade features already in place. The batch tracking, FEFO logic, and multi-location architecture are production-ready and well-designed.
+The Furtail system has an **exceptionally strong inventory foundation** with enterprise-grade features already in place. The batch tracking, FEFO logic, and multi-location architecture are production-ready and well-designed.
 
 **Strengths:**
 - Immutable audit ledger

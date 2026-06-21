@@ -1,4 +1,4 @@
-# BPA Clinic Injection Tokens + Injection Room — Final Stabilization Completion
+# Furtail Clinic Injection Tokens + Injection Room — Final Stabilization Completion
 
 **Date:** 2026-03-14.  
 **Scope:** Final audit, safe completion work, QA hardening, handoff.

@@ -38,7 +38,7 @@ export class BulkSmsBdProvider implements SmsProvider {
   }
 
   async sendOtp(phone: string, otp: string, context?: SmsSendContext): Promise<SmsSendResult> {
-    const message = `Your BPA verification code is ${otp}. Valid for 5 minutes. Do not share this code.`;
+    const message = `Your Furtail verification code is ${otp}. Valid for 5 minutes. Do not share this code.`;
     return this.send(phone, message, { ...context, template: context?.template || "OTP" });
   }
 

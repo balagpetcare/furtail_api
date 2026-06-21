@@ -1,4 +1,4 @@
-# BPA Dhaka City CSV Seeder
+# Furtail Dhaka City CSV Seeder
 
 This seeder is designed to be **fast** and **copy-paste friendly**.
 

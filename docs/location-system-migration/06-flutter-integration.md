@@ -1,4 +1,4 @@
-# Flutter Integration Plan (BPA/WPA Mobile)
+# Flutter Integration Plan (Furtail/Furtail Mobile)
 
 ## Objective
 

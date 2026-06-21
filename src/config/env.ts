@@ -6,8 +6,8 @@ const env = {
   apiPrefix: process.env.API_PREFIX || "/api/v1",
 
   // Public URLs for share links (safe defaults)
-  publicWebUrl: process.env.PUBLIC_WEB_URL || "https://bpa.app",
-  publicDeepLinkScheme: process.env.PUBLIC_DEEPLINK_SCHEME || "bpa",
+  publicWebUrl: process.env.PUBLIC_WEB_URL || "https://furtail.app",
+  publicDeepLinkScheme: process.env.PUBLIC_DEEPLINK_SCHEME || "furtail",
 };
 
 module.exports = { env };

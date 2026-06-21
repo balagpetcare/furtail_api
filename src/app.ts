@@ -1,4 +1,4 @@
-// BPA API Express app (TypeScript source, CommonJS runtime style)
+// Furtail API Express app (TypeScript source, CommonJS runtime style)
 require("dotenv").config();
 
 const express = require("express");

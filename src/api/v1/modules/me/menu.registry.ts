@@ -1,5 +1,5 @@
 /**
- * BPA Permission → Menu registry (server-side)
+ * Furtail Permission → Menu registry (server-side)
  * - No DB change in this patch (static mapping)
  * - UI consumes /api/v1/me/menu?app=owner|shop|clinic|admin|partner
  */

@@ -604,7 +604,7 @@ export async function notifyPreRegisteredUsers(input: {
       const { enqueueCampaignSmsMessage } = require("./campaign.smsQueue") as {
         enqueueCampaignSmsMessage: (p: string, m: string, meta?: object) => Promise<boolean>;
       };
-      const msg = `BPA Vaccination: booking is now open for your area. Visit the campaign site to book (${row.catCount} cat(s) pre-registered).`;
+      const msg = `Furtail Vaccination: booking is now open for your area. Visit the campaign site to book (${row.catCount} cat(s) pre-registered).`;
       await enqueueCampaignSmsMessage(row.phone, msg, { template: "CAMPAIGN_PREREG_OPEN" });
     } catch {
       /* queue optional */

@@ -1,9 +1,9 @@
-# BPA Production Deployment Plan
+# Furtail Production Deployment Plan
 
 **Date:** 2026-06-05  
-**Scope:** Complete step-by-step production server deployment for the BPA ecosystem  
+**Scope:** Complete step-by-step production server deployment for the Furtail ecosystem  
 **Type:** Planning document only — execute with a change ticket and rollback plan  
-**Target domain:** `bangladeshpetassociation.com`
+**Target domain:** `furtail.world`
 
 ---
 
@@ -13,17 +13,17 @@ This plan deploys the **Phase 1 production stack** (campaign go-live):
 
 | Host | Repository | Port | Process name |
 |---|---|---|---|
-| `api.bangladeshpetassociation.com` | `bpa_app_api` | 3000 | `bpa-api`, `bpa-worker` |
-| `bangladeshpetassociation.com` | `bpa_land` | 3101 | `bpa-landing` |
-| `vaccination.bangladeshpetassociation.com` | `vaccination_2026` | 3110 | `bpa-vaccination` |
+| `api.furtail.world` | `furtail_api` | 3000 | `furtail-api`, `furtail-worker` |
+| `furtail.world` | `bpa_land` | 3101 | `furtail-landing` |
+| `vaccination.furtail.world` | `vaccination_2026` | 3110 | `furtail-vaccination` |
 
-**Phase 2** (post-campaign): `next_v1` admin/staff panels, `bpa_app` mobile store release.
+**Phase 2** (post-campaign): `next_v1` admin/staff panels, `furtail_app` mobile store release.
 
 **Architecture:**
 
 ```text
 Internet → Cloudflare (DNS, WAF, SSL) → Origin VPS (nginx :443)
-                                              ├── :3101 bpa-landing
+                                              ├── :3101 furtail-landing
                                               ├── :3110 vaccination_2026
                                               └── :3000 backend-api (+ worker)
                                                     ├── PostgreSQL :5432
@@ -49,7 +49,7 @@ Internet → Cloudflare (DNS, WAF, SSL) → Origin VPS (nginx :443)
 ### Access Requirements
 
 - [ ] SSH access to origin server
-- [ ] Cloudflare account with zone `bangladeshpetassociation.com`
+- [ ] Cloudflare account with zone `furtail.world`
 - [ ] GitHub deploy access to all four repositories
 - [ ] Secrets vault (or secure `.env` delivery method)
 - [ ] Payment gateway credentials (sandbox first, then production)
@@ -60,7 +60,7 @@ Internet → Cloudflare (DNS, WAF, SSL) → Origin VPS (nginx :443)
 
 | # | Blocker | Owner | Status |
 |---|---|---|---|
-| 1 | Push `bpa-landing` application code to `bpa_land` GitHub | Dev team | **Required** |
+| 1 | Push `furtail-landing` application code to `bpa_land` GitHub | Dev team | **Required** |
 | 2 | Production secrets prepared in vault | Ops | Required |
 | 3 | PostgreSQL provisioned with connection string | Ops | Required |
 | 4 | Redis provisioned | Ops | Required |
@@ -75,9 +75,9 @@ Internet → Cloudflare (DNS, WAF, SSL) → Origin VPS (nginx :443)
 On your workstation, verify all repos are clean and on `main`:
 
 ```bash
-# bpa_app_api
-cd /opt/bpa/backend-api  # or clone fresh
-git clone https://github.com/balagpetcare/bpa_app_api.git backend-api
+# furtail_api
+cd /opt/furtail/backend-api  # or clone fresh
+git clone https://github.com/balagpetcare/furtail_api.git backend-api
 cd backend-api && git checkout main && git pull origin main
 git log -1 --oneline   # expect: 5cad431 or later
 
@@ -87,8 +87,8 @@ cd vaccination_2026 && git checkout main && git pull origin main
 git log -1 --oneline   # expect: a3a22fe or later
 
 # bpa_land (verify application code exists after push)
-git clone https://github.com/balagpetcare/bpa_land.git bpa-landing
-cd bpa-landing && git checkout main && git pull origin main
+git clone https://github.com/balagpetcare/bpa_land.git furtail-landing
+cd furtail-landing && git checkout main && git pull origin main
 ls package.json src/   # must exist — not just README
 
 # next_v1 (Phase 2 — clone now for admin access)
@@ -101,9 +101,9 @@ Deploy to staging hosts first:
 
 | Production | Staging |
 |---|---|
-| `api.bangladeshpetassociation.com` | `api-staging.bangladeshpetassociation.com` |
-| `bangladeshpetassociation.com` | `staging.bangladeshpetassociation.com` |
-| `vaccination.bangladeshpetassociation.com` | `vaccination-staging.bangladeshpetassociation.com` |
+| `api.furtail.world` | `api-staging.furtail.world` |
+| `furtail.world` | `staging.furtail.world` |
+| `vaccination.furtail.world` | `vaccination-staging.furtail.world` |
 
 Run full booking funnel on staging before production cutover.
 
@@ -113,7 +113,7 @@ Run full booking funnel on staging before production cutover.
 # Tag current production state before deploy
 cd backend-api && git tag release-$(date +%Y%m%d)-pre-deploy && git push origin release-$(date +%Y%m%d)-pre-deploy
 cd ../vaccination_2026 && git tag release-$(date +%Y%m%d)-pre-deploy && git push origin release-$(date +%Y%m%d)-pre-deploy
-cd ../bpa-landing && git tag release-$(date +%Y%m%d)-pre-deploy && git push origin release-$(date +%Y%m%d)-pre-deploy
+cd ../furtail-landing && git tag release-$(date +%Y%m%d)-pre-deploy && git push origin release-$(date +%Y%m%d)-pre-deploy
 ```
 
 Record rollback tags in deploy ticket.
@@ -138,7 +138,7 @@ Record snapshot ID in deploy ticket.
 ### 0.5 On-Call & Communication
 
 - [ ] Assign on-call engineer
-- [ ] Prepare `#bpa-incidents` channel
+- [ ] Prepare `#furtail-incidents` channel
 - [ ] Schedule maintenance window (if migration locks expected)
 - [ ] Notify campaign operations team
 
@@ -167,13 +167,13 @@ sudo apt install -y nodejs
 sudo npm install -g pm2
 
 # Create deploy user directories
-sudo mkdir -p /opt/bpa/{backend-api,bpa-landing,vaccination_2026,bpa_web}
-sudo chown -R deploy:deploy /opt/bpa
+sudo mkdir -p /opt/furtail/{backend-api,furtail-landing,vaccination_2026,bpa_web}
+sudo chown -R deploy:deploy /opt/furtail
 ```
 
 ### 1.2 DNS Configuration (Cloudflare)
 
-In Cloudflare Dashboard → `bangladeshpetassociation.com`:
+In Cloudflare Dashboard → `furtail.world`:
 
 | Type | Name | Content | Proxy |
 |---|---|---|---|
@@ -232,7 +232,7 @@ redis-cli -u "$REDIS_URL" ping   # expect: PONG
 ### 2.3 Run Database Migrations
 
 ```bash
-cd /opt/bpa/backend-api
+cd /opt/furtail/backend-api
 git checkout main && git pull origin main
 
 # Install dependencies
@@ -274,7 +274,7 @@ Deploy in this exact order. Each step includes verification before proceeding.
 #### Clone and Build
 
 ```bash
-cd /opt/bpa/backend-api
+cd /opt/furtail/backend-api
 git checkout main && git pull origin main
 
 # Install production dependencies
@@ -286,10 +286,10 @@ npm run build
 
 #### Environment File
 
-Create `/opt/bpa/backend-api/.env` (from vault — never commit):
+Create `/opt/furtail/backend-api/.env` (from vault — never commit):
 
 ```bash
-# /opt/bpa/backend-api/.env — PRODUCTION (example structure, use vault values)
+# /opt/furtail/backend-api/.env — PRODUCTION (example structure, use vault values)
 
 PORT=3000
 NODE_ENV=production
@@ -304,18 +304,18 @@ REDIS_URL=redis://user:pass@host:6379
 # Auth
 JWT_SECRET=<vault-secret-min-32-chars>
 JWT_EXPIRES_IN=7d
-COOKIE_DOMAIN=.bangladeshpetassociation.com
+COOKIE_DOMAIN=.furtail.world
 
 # URLs
-API_PUBLIC_BASE_URL=https://api.bangladeshpetassociation.com
-APP_URL=https://api.bangladeshpetassociation.com
-CORS_ORIGINS=https://bangladeshpetassociation.com,https://vaccination.bangladeshpetassociation.com,https://admin.bangladeshpetassociation.com
+API_PUBLIC_BASE_URL=https://api.furtail.world
+APP_URL=https://api.furtail.world
+CORS_ORIGINS=https://furtail.world,https://vaccination.furtail.world,https://admin.furtail.world
 
 # Storage (B2 recommended for production)
 STORAGE_PROVIDER=s3
 S3_ENDPOINT=https://s3.<region>.backblazeb2.com
 S3_REGION=<region>
-S3_BUCKET=bpa-production
+S3_BUCKET=furtail-production
 S3_ACCESS_KEY=<vault>
 S3_SECRET_KEY=<vault>
 STORAGE_PUBLIC_URL=https://<cdn-or-bucket-url>
@@ -330,26 +330,26 @@ PAYMENT_PROVIDER=<amarpay|bkash|sslcommerz>
 # ... payment credentials from vault
 
 # Campaign
-CAMPAIGN_LANDING_URL=https://vaccination.bangladeshpetassociation.com
+CAMPAIGN_LANDING_URL=https://vaccination.furtail.world
 CAMPAIGN_SIMPLIFIED_BOOKING=true
 ```
 
 Secure the file:
 
 ```bash
-chmod 600 /opt/bpa/backend-api/.env
+chmod 600 /opt/furtail/backend-api/.env
 ```
 
 #### PM2 Configuration
 
-Create `/opt/bpa/ecosystem.config.cjs`:
+Create `/opt/furtail/ecosystem.config.cjs`:
 
 ```javascript
 module.exports = {
   apps: [
     {
-      name: 'bpa-api',
-      cwd: '/opt/bpa/backend-api',
+      name: 'furtail-api',
+      cwd: '/opt/furtail/backend-api',
       script: 'dist/index.js',
       instances: 1,
       exec_mode: 'fork',
@@ -357,15 +357,15 @@ module.exports = {
         NODE_ENV: 'production',
       },
       max_memory_restart: '1G',
-      error_file: '/var/log/bpa/api-error.log',
-      out_file: '/var/log/bpa/api-out.log',
+      error_file: '/var/log/furtail/api-error.log',
+      out_file: '/var/log/furtail/api-out.log',
       merge_logs: true,
       restart_delay: 5000,
       max_restarts: 10,
     },
     {
-      name: 'bpa-worker',
-      cwd: '/opt/bpa/backend-api',
+      name: 'furtail-worker',
+      cwd: '/opt/furtail/backend-api',
       script: 'npm',
       args: 'run worker:notifications',
       instances: 1,
@@ -374,8 +374,8 @@ module.exports = {
         NODE_ENV: 'production',
       },
       max_memory_restart: '512M',
-      error_file: '/var/log/bpa/worker-error.log',
-      out_file: '/var/log/bpa/worker-out.log',
+      error_file: '/var/log/furtail/worker-error.log',
+      out_file: '/var/log/furtail/worker-out.log',
       merge_logs: true,
       restart_delay: 10000,
       max_restarts: 10,
@@ -385,11 +385,11 @@ module.exports = {
 ```
 
 ```bash
-sudo mkdir -p /var/log/bpa
-sudo chown deploy:deploy /var/log/bpa
+sudo mkdir -p /var/log/furtail
+sudo chown deploy:deploy /var/log/furtail
 
 # Start processes
-pm2 start /opt/bpa/ecosystem.config.cjs
+pm2 start /opt/furtail/ecosystem.config.cjs
 pm2 save
 pm2 startup   # follow printed instructions for systemd integration
 ```
@@ -416,7 +416,7 @@ curl -fsS http://127.0.0.1:3000/api/v1/campaign/public/campaigns
 #### Clone and Build
 
 ```bash
-cd /opt/bpa/vaccination_2026
+cd /opt/furtail/vaccination_2026
 git checkout main && git pull origin main
 npm ci
 npm run build
@@ -424,14 +424,14 @@ npm run build
 
 #### Environment File
 
-Create `/opt/bpa/vaccination_2026/.env.production.local`:
+Create `/opt/furtail/vaccination_2026/.env.production.local`:
 
 ```bash
-NEXT_PUBLIC_API_BASE_URL=https://api.bangladeshpetassociation.com
-API_BASE_URL=https://api.bangladeshpetassociation.com
-NEXT_PUBLIC_SITE_URL=https://vaccination.bangladeshpetassociation.com
+NEXT_PUBLIC_API_BASE_URL=https://api.furtail.world
+API_BASE_URL=https://api.furtail.world
+NEXT_PUBLIC_SITE_URL=https://vaccination.furtail.world
 NEXT_PUBLIC_CAMPAIGN_SLUG=cat-flu-rabies-2026
-NEXT_PUBLIC_BRIDGE_CAMPAIGN_URL=https://bangladeshpetassociation.com/vaccination
+NEXT_PUBLIC_BRIDGE_CAMPAIGN_URL=https://furtail.world/vaccination
 
 # Analytics (set when ready)
 # NEXT_PUBLIC_ANALYTICS_GA4_ID=G-XXXXXXXX
@@ -441,7 +441,7 @@ NEXT_PUBLIC_BRIDGE_CAMPAIGN_URL=https://bangladeshpetassociation.com/vaccination
 #### PM2 Start
 
 ```bash
-pm2 start npm --name bpa-vaccination --cwd /opt/bpa/vaccination_2026 -- start
+pm2 start npm --name furtail-vaccination --cwd /opt/furtail/vaccination_2026 -- start
 pm2 save
 ```
 
@@ -462,7 +462,7 @@ curl -fsS http://127.0.0.1:3110/book | head -c 200
 #### Clone and Build
 
 ```bash
-cd /opt/bpa/bpa-landing
+cd /opt/furtail/furtail-landing
 git checkout main && git pull origin main
 
 # Verify application code exists
@@ -474,14 +474,14 @@ npm run build
 
 #### Environment File
 
-Create `/opt/bpa/bpa-landing/.env.production.local`:
+Create `/opt/furtail/furtail-landing/.env.production.local`:
 
 ```bash
-NEXT_PUBLIC_SITE_URL=https://bangladeshpetassociation.com
-NEXT_PUBLIC_SITE_NAME=Bangladesh Pet Association
-NEXT_PUBLIC_API_URL=https://api.bangladeshpetassociation.com/api/v1
-NEXT_PUBLIC_CAMPAIGN_SITE_URL=https://vaccination.bangladeshpetassociation.com
-NEXT_PUBLIC_CAMPAIGN_BOOK_URL=https://vaccination.bangladeshpetassociation.com/book
+NEXT_PUBLIC_SITE_URL=https://furtail.world
+NEXT_PUBLIC_SITE_NAME=Furtail
+NEXT_PUBLIC_API_URL=https://api.furtail.world/api/v1
+NEXT_PUBLIC_CAMPAIGN_SITE_URL=https://vaccination.furtail.world
+NEXT_PUBLIC_CAMPAIGN_BOOK_URL=https://vaccination.furtail.world/book
 
 # Analytics (set when ready)
 # NEXT_PUBLIC_ANALYTICS_GA4_ID=G-XXXXXXXX
@@ -490,7 +490,7 @@ NEXT_PUBLIC_CAMPAIGN_BOOK_URL=https://vaccination.bangladeshpetassociation.com/b
 #### PM2 Start
 
 ```bash
-pm2 start npm --name bpa-landing --cwd /opt/bpa/bpa-landing -- start
+pm2 start npm --name furtail-landing --cwd /opt/furtail/furtail-landing -- start
 pm2 save
 ```
 
@@ -517,7 +517,7 @@ Using `next_v1` admin panel (Phase 2) or direct API:
 5. Verify public campaign list:
 
 ```bash
-curl -fsS https://api.bangladeshpetassociation.com/api/v1/campaign/public/campaigns | jq .
+curl -fsS https://api.furtail.world/api/v1/campaign/public/campaigns | jq .
 ```
 
 **Gate:** Active campaign must appear in public API response.
@@ -529,7 +529,7 @@ curl -fsS https://api.bangladeshpetassociation.com/api/v1/campaign/public/campai
 ### 4.1 Deploy nginx Configs
 
 ```bash
-cd /opt/bpa/backend-api
+cd /opt/furtail/backend-api
 
 # Copy shared infrastructure
 sudo cp infra/nginx/conf.d/*.conf /etc/nginx/conf.d/
@@ -538,9 +538,9 @@ sudo cp infra/nginx/sites-available/*.conf /etc/nginx/sites-available/
 
 # Enable API site (create from deployment guide §3.5 if not in VCS)
 sudo ln -sf /etc/nginx/sites-available/00-acme-and-redirect.conf /etc/nginx/sites-enabled/
-sudo ln -sf /etc/nginx/sites-available/bangladeshpetassociation.com.conf /etc/nginx/sites-enabled/
-sudo ln -sf /etc/nginx/sites-available/vaccination.bangladeshpetassociation.com.conf /etc/nginx/sites-enabled/
-sudo ln -sf /etc/nginx/sites-available/api.bangladeshpetassociation.com.conf /etc/nginx/sites-enabled/
+sudo ln -sf /etc/nginx/sites-available/furtail.world.conf /etc/nginx/sites-enabled/
+sudo ln -sf /etc/nginx/sites-available/vaccination.furtail.world.conf /etc/nginx/sites-enabled/
+sudo ln -sf /etc/nginx/sites-available/api.furtail.world.conf /etc/nginx/sites-enabled/
 ```
 
 ### 4.2 Uncomment API Upstream
@@ -562,11 +562,11 @@ Create `/etc/nginx/conf.d/05-cloudflare-real-ip.conf` per `PRODUCTION_DEPLOYMENT
 
 ```bash
 sudo certbot certonly --nginx \
-  -d bangladeshpetassociation.com \
-  -d www.bangladeshpetassociation.com \
-  -d vaccination.bangladeshpetassociation.com \
-  -d api.bangladeshpetassociation.com \
-  --email admin@bangladeshpetassociation.com \
+  -d furtail.world \
+  -d www.furtail.world \
+  -d vaccination.furtail.world \
+  -d api.furtail.world \
+  --email admin@furtail.world \
   --agree-tos \
   --no-eff-email
 
@@ -618,28 +618,28 @@ Run all checks. **Any failure triggers rollback evaluation.**
 
 ```bash
 # API
-curl -fsS https://api.bangladeshpetassociation.com/health
-curl -fsS https://api.bangladeshpetassociation.com/health/redis
+curl -fsS https://api.furtail.world/health
+curl -fsS https://api.furtail.world/health/redis
 
 # Landing
-curl -fsS https://bangladeshpetassociation.com/ | head -c 200
-curl -fsS https://bangladeshpetassociation.com/vaccination | head -c 200
+curl -fsS https://furtail.world/ | head -c 200
+curl -fsS https://furtail.world/vaccination | head -c 200
 
 # Vaccination
-curl -fsS https://vaccination.bangladeshpetassociation.com/ | head -c 200
-curl -fsS https://vaccination.bangladeshpetassociation.com/book | head -c 200
+curl -fsS https://vaccination.furtail.world/ | head -c 200
+curl -fsS https://vaccination.furtail.world/book | head -c 200
 
 # Campaign API
-curl -fsS https://api.bangladeshpetassociation.com/api/v1/campaign/public/campaigns
+curl -fsS https://api.furtail.world/api/v1/campaign/public/campaigns
 ```
 
 ### 6.2 End-to-End Funnel
 
 | Step | Action | Expected |
 |---|---|---|
-| 1 | Visit `bangladeshpetassociation.com` | Homepage loads, HTTPS |
+| 1 | Visit `furtail.world` | Homepage loads, HTTPS |
 | 2 | Click "Book Vaccination" or visit `/vaccination` | Bridge page or redirect to subdomain |
-| 3 | Arrive at `vaccination.bangladeshpetassociation.com/book` | Booking wizard loads |
+| 3 | Arrive at `vaccination.furtail.world/book` | Booking wizard loads |
 | 4 | Select location and slot | Slots appear from API |
 | 5 | Enter phone, request OTP | SMS sent (or sandbox mock) |
 | 6 | Complete booking | Confirmation page with reference |
@@ -649,21 +649,21 @@ curl -fsS https://api.bangladeshpetassociation.com/api/v1/campaign/public/campai
 
 ```bash
 # Security headers
-curl -sI https://bangladeshpetassociation.com/ | grep -i strict-transport
-curl -sI https://api.bangladeshpetassociation.com/health | grep -i x-content-type
+curl -sI https://furtail.world/ | grep -i strict-transport
+curl -sI https://api.furtail.world/health | grep -i x-content-type
 
 # CORS (from vaccination origin)
-curl -sI -H "Origin: https://vaccination.bangladeshpetassociation.com" \
-  https://api.bangladeshpetassociation.com/api/v1/campaign/public/campaigns | grep -i access-control
+curl -sI -H "Origin: https://vaccination.furtail.world" \
+  https://api.furtail.world/api/v1/campaign/public/campaigns | grep -i access-control
 
 # No secrets exposed
-curl -fsS https://api.bangladeshpetassociation.com/.env   # expect 404
+curl -fsS https://api.furtail.world/.env   # expect 404
 ```
 
 ### 6.4 Performance
 
-- Run Lighthouse on `https://bangladeshpetassociation.com/` (target: LCP < 2.5s)
-- Run Lighthouse on `https://vaccination.bangladeshpetassociation.com/book`
+- Run Lighthouse on `https://furtail.world/` (target: LCP < 2.5s)
+- Run Lighthouse on `https://vaccination.furtail.world/book`
 - Verify `/_next/static/` assets return `Cache-Control: immutable`
 
 ### 6.5 Process Health
@@ -707,17 +707,17 @@ Use if smoke tests fail, SEV-1/2 incident, or error rate > 0.5%.
 
 ```bash
 # Frontend rollback
-cd /opt/bpa/bpa-landing && git checkout release-YYYYMMDD-pre-deploy && npm ci && npm run build && pm2 restart bpa-landing
-cd /opt/bpa/vaccination_2026 && git checkout release-YYYYMMDD-pre-deploy && npm ci && npm run build && pm2 restart bpa-vaccination
+cd /opt/furtail/furtail-landing && git checkout release-YYYYMMDD-pre-deploy && npm ci && npm run build && pm2 restart furtail-landing
+cd /opt/furtail/vaccination_2026 && git checkout release-YYYYMMDD-pre-deploy && npm ci && npm run build && pm2 restart furtail-vaccination
 
 # API rollback
-cd /opt/bpa/backend-api && git checkout release-YYYYMMDD-pre-deploy && npm ci && npm run build && pm2 restart bpa-api bpa-worker
+cd /opt/furtail/backend-api && git checkout release-YYYYMMDD-pre-deploy && npm ci && npm run build && pm2 restart furtail-api furtail-worker
 
 # Database rollback (last resort)
-# 1. Stop API + worker: pm2 stop bpa-api bpa-worker
+# 1. Stop API + worker: pm2 stop furtail-api furtail-worker
 # 2. Restore pre-deploy snapshot
 # 3. Update DATABASE_URL if endpoint changed
-# 4. Restart: pm2 start bpa-api bpa-worker
+# 4. Restart: pm2 start furtail-api furtail-worker
 # NEVER: prisma migrate reset
 ```
 
@@ -731,31 +731,31 @@ Deploy after Phase 1 is stable. Required for ongoing campaign management.
 
 | Host | Port | Process |
 |---|---|---|
-| `admin.bangladeshpetassociation.com` | 3103 | `bpa-web-admin` |
+| `admin.furtail.world` | 3103 | `furtail-web-admin` |
 
 ### Steps
 
 ```bash
-cd /opt/bpa/bpa_web
+cd /opt/furtail/bpa_web
 git checkout main && git pull origin main
 npm ci && npm run build
 
 # .env.production.local
-NEXT_PUBLIC_API_BASE_URL=https://api.bangladeshpetassociation.com
-NEXT_PUBLIC_AUTH_BASE_URL=https://api.bangladeshpetassociation.com
+NEXT_PUBLIC_API_BASE_URL=https://api.furtail.world
+NEXT_PUBLIC_AUTH_BASE_URL=https://api.furtail.world
 AUTH_COOKIE_NAME=bpa_admin
 
-pm2 start npm --name bpa-web-admin --cwd /opt/bpa/bpa_web -- run start
+pm2 start npm --name furtail-web-admin --cwd /opt/furtail/bpa_web -- run start
 # Note: default start is :3100; for admin-only, consider SITE_MODE=admin next start -p 3103
 ```
 
-Add nginx vhost for `admin.bangladeshpetassociation.com` → `127.0.0.1:3103`.
+Add nginx vhost for `admin.furtail.world` → `127.0.0.1:3103`.
 
-Update `CORS_ORIGINS` on API to include `https://admin.bangladeshpetassociation.com`.
+Update `CORS_ORIGINS` on API to include `https://admin.furtail.world`.
 
 ---
 
-## Phase 3 Deployment: Mobile App (bpa_app)
+## Phase 3 Deployment: Mobile App (furtail_app)
 
 **Not a server deployment.** Separate track for App Store / Play Store.
 
@@ -763,7 +763,7 @@ Update `CORS_ORIGINS` on API to include `https://admin.bangladeshpetassociation.
 
 1. Final bundle IDs (not `com.example.*`)
 2. `flutterfire configure` with production Firebase project
-3. Fill `env/prod.json` with `https://api.bangladeshpetassociation.com`
+3. Fill `env/prod.json` with `https://api.furtail.world`
 4. Android release keystore + Play App Signing
 5. iOS provisioning profile + `DEVELOPMENT_TEAM`
 6. Disable cleartext HTTP in release builds
@@ -773,7 +773,7 @@ Update `CORS_ORIGINS` on API to include `https://admin.bangladeshpetassociation.
 ### Build Commands (when ready)
 
 ```bash
-cd bpa_app
+cd furtail_app
 flutter build appbundle --release --dart-define-from-file=env/prod.json   # Android
 flutter build ipa --release --dart-define-from-file=env/prod.json         # iOS
 ```
@@ -786,7 +786,7 @@ flutter build ipa --release --dart-define-from-file=env/prod.json         # iOS
 
 ```bash
 pm2 list                                    # all online
-curl -fsS https://api.bangladeshpetassociation.com/health
+curl -fsS https://api.furtail.world/health
 df -h                                       # disk space
 ```
 
@@ -815,12 +815,12 @@ git tag release-$(date +%Y%m%d)-pre-deploy && git push origin release-$(date +%Y
 pg_dump ... && node scripts/check-migration-integrity.js
 
 # 3. Pull, build, restart (per app)
-cd /opt/bpa/backend-api && git pull origin main && npm ci && npm run build
+cd /opt/furtail/backend-api && git pull origin main && npm ci && npm run build
 npm run prisma:migrate:deploy   # only if new migrations
-pm2 restart bpa-api bpa-worker
+pm2 restart furtail-api furtail-worker
 
-cd /opt/bpa/vaccination_2026 && git pull origin main && npm ci && npm run build && pm2 restart bpa-vaccination
-cd /opt/bpa/bpa-landing && git pull origin main && npm ci && npm run build && pm2 restart bpa-landing
+cd /opt/furtail/vaccination_2026 && git pull origin main && npm ci && npm run build && pm2 restart furtail-vaccination
+cd /opt/furtail/furtail-landing && git pull origin main && npm ci && npm run build && pm2 restart furtail-landing
 
 # 4. Smoke tests (§6.1)
 # 5. Close ticket
@@ -831,13 +831,13 @@ cd /opt/bpa/bpa-landing && git pull origin main && npm ci && npm run build && pm
 ## Server Directory Layout (Final State)
 
 ```text
-/opt/bpa/
+/opt/furtail/
 ├── ecosystem.config.cjs          # PM2 process definitions
-├── backend-api/                  # bpa_app_api (port 3000)
+├── backend-api/                  # furtail_api (port 3000)
 │   ├── .env                      # production secrets (chmod 600)
 │   ├── dist/                     # compiled TypeScript
 │   └── prisma/                   # schema + migrations
-├── bpa-landing/                  # bpa_land (port 3101)
+├── furtail-landing/                  # bpa_land (port 3101)
 │   ├── .env.production.local
 │   └── .next/                    # build output
 ├── vaccination_2026/             # (port 3110)
@@ -852,7 +852,7 @@ cd /opt/bpa/bpa-landing && git pull origin main && npm ci && npm run build && pm
 ├── snippets/                     # SSL, security headers, proxy configs
 └── sites-enabled/                # vhosts for all hosts
 
-/var/log/bpa/                     # PM2 application logs
+/var/log/furtail/                     # PM2 application logs
 ```
 
 ---
@@ -860,11 +860,11 @@ cd /opt/bpa/bpa-landing && git pull origin main && npm ci && npm run build && pm
 ## Quick Reference: Clone URLs
 
 ```bash
-git clone https://github.com/balagpetcare/bpa_app_api.git       # API
+git clone https://github.com/balagpetcare/furtail_api.git       # API
 git clone https://github.com/balagpetcare/bpa_land.git           # Landing
 git clone https://github.com/balagpetcare/vaccination_2026.git   # Campaign
 git clone https://github.com/balagpetcare/next_v1.git            # Admin (Phase 2)
-git clone https://github.com/balagpetcare/bpa_app.git            # Mobile (Phase 3)
+git clone https://github.com/balagpetcare/furtail_app.git            # Mobile (Phase 3)
 ```
 
 ---

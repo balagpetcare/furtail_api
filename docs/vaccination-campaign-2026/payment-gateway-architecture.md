@@ -1,6 +1,6 @@
 # Payment Gateway Architecture (Vaccination Campaign 2026)
 
-Provider-based payment system for the BPA backend API. One active gateway is selected at runtime via environment variables; the booking module and campaign checkout flow use the same unified payment layer without code changes when switching providers.
+Provider-based payment system for the Furtail backend API. One active gateway is selected at runtime via environment variables; the booking module and campaign checkout flow use the same unified payment layer without code changes when switching providers.
 
 ## Supported providers
 
@@ -23,7 +23,7 @@ flowchart TB
     GW[Gateway IPN / Callback]
   end
 
-  subgraph api [BPA API]
+  subgraph api [Furtail API]
     R["/api/v1/payments/*"]
     O[Payment Orchestrator]
     REG[Provider Registry]

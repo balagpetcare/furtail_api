@@ -31,7 +31,7 @@ function resolveClientMediaUrl(input: { url?: string | null; key?: string | null
       host === "localhost" ||
       host === "127.0.0.1" ||
       host === "10.0.2.2" ||
-      host.includes("bpa-storage") ||
+      host.includes("furtail-storage") ||
       host.includes("minio") ||
       host.includes("backblazeb2.com");
 

@@ -197,7 +197,7 @@ export async function recordVaccination(
   }
 
   if (certificateToken) {
-    const base = process.env.CAMPAIGN_BASE_URL || "https://vaccine.bpa.org.bd";
+    const base = process.env.CAMPAIGN_BASE_URL || "https://vaccine.furtail.org.bd";
     const certUrl = `${base}/api/v1/campaign/public/certificates/${certificateToken}`;
     sendVaccinationComplete(booking.id, certUrl).catch((err) =>
       console.warn("[Campaign] vaccination complete SMS failed:", err?.message)

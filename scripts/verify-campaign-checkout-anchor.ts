@@ -1,5 +1,5 @@
 /**
- * Verifies BPA campaign checkout anchor: org, ACTIVE branch, campaign.organizerId,
+ * Verifies Furtail campaign checkout anchor: org, ACTIVE branch, campaign.organizerId,
  * and that paid init creates session + order with branchId (payment may fail on gateway env).
  */
 import "dotenv/config";
@@ -7,7 +7,7 @@ import prisma from "../src/infrastructure/db/prismaClient";
 import { initCheckout } from "../src/api/v1/modules/campaign/checkout.service";
 
 const ORG_NAME =
-  process.env.CAMPAIGN_ORGANIZER_ORG_NAME?.trim() || "Bangladesh Pet Association";
+  process.env.CAMPAIGN_ORGANIZER_ORG_NAME?.trim() || "Furtail";
 
 async function main() {
   const org = await prisma.organization.findFirst({

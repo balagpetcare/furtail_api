@@ -1,7 +1,7 @@
-# Final Production Certification — BPA Vaccination Campaign 2026
+# Final Production Certification — Furtail Vaccination Campaign 2026
 
 **Certification date:** 2026-06-02  
-**Scope:** Full stack — `backend-api` · `vaccination_2026` · `bpa_web` · `bpa_app`  
+**Scope:** Full stack — `backend-api` · `vaccination_2026` · `bpa_web` · `furtail_app`  
 **Certifier:** Engineering audit synthesis (code review, migration/UAT/payment/SMS reports, automated tests, production builds)  
 **Environment reviewed:** Local/staging evidence; **production staging E2E not fully executed**
 
@@ -9,7 +9,7 @@
 
 ## Executive summary
 
-The BPA 2026 Cat Flu + Rabies Vaccination Campaign is **functionally complete across all four surfaces** with **material hardening** on payment, SMS, migrations, and disaster recovery since the Phase-2 audit. **Automated API UAT** (14/14 executed steps pass) and **19 backend unit tests** (campaign/OTP/payment) pass. **Cross-surface UAT, paid-gateway E2E, load testing, and production ops proof** remain incomplete.
+The Furtail 2026 Cat Flu + Rabies Vaccination Campaign is **functionally complete across all four surfaces** with **material hardening** on payment, SMS, migrations, and disaster recovery since the Phase-2 audit. **Automated API UAT** (14/14 executed steps pass) and **19 backend unit tests** (campaign/OTP/payment) pass. **Cross-surface UAT, paid-gateway E2E, load testing, and production ops proof** remain incomplete.
 
 | Dimension | Score (0–100) | Grade |
 |-----------|---------------|-------|
@@ -42,7 +42,7 @@ The BPA 2026 Cat Flu + Rabies Vaccination Campaign is **functionally complete ac
 | `MIGRATION-VERIFICATION.md` | Schema deploy safety (254/254 local) |
 | `DISASTER-RECOVERY-PLAYBOOK.md` | Ops recovery posture |
 | `PREMIUM-LANDING-UPGRADE.md` | Landing UX/SEO/performance design |
-| `bpa_app/DIGITAL-HEALTH-CARD-REPORT.md` | Flutter campaign integration |
+| `furtail_app/DIGITAL-HEALTH-CARD-REPORT.md` | Flutter campaign integration |
 | `npm test` (campaign/otp/payment) | 19 passed |
 | `next build` (vaccination_2026) | Production build success |
 | Code inspection | QR, certificate, verification services |
@@ -103,7 +103,7 @@ The BPA 2026 Cat Flu + Rabies Vaccination Campaign is **functionally complete ac
 
 ---
 
-### 4. Flutter (`bpa_app`)
+### 4. Flutter (`furtail_app`)
 
 | Area | Status | Evidence |
 |------|--------|----------|
@@ -330,7 +330,7 @@ Complete **all** before first live clinic day:
 | Migration verification | `MIGRATION-VERIFICATION.md` |
 | Disaster recovery | `DISASTER-RECOVERY-PLAYBOOK.md` |
 | Landing upgrade | `vaccination_2026/PREMIUM-LANDING-UPGRADE.md` |
-| Flutter health card | `bpa_app/DIGITAL-HEALTH-CARD-REPORT.md` |
+| Flutter health card | `furtail_app/DIGITAL-HEALTH-CARD-REPORT.md` |
 | Launch checklist (prior) | `docs/vaccination-campaign-2026/04-LAUNCH-CHECKLIST.md` |
 
 ---
@@ -348,9 +348,9 @@ Complete **all** before first live clinic day:
 
 ## Final certification statement
 
-> **The BPA Vaccination Campaign 2026 stack is certified for PILOT-GO** under a **FREE, limited-clinic** operational model, subject to the pilot gate checklist above.
+> **The Furtail Vaccination Campaign 2026 stack is certified for PILOT-GO** under a **FREE, limited-clinic** operational model, subject to the pilot gate checklist above.
 >
 > **FULL-GO** for **paid, multi-city, or national** public launch is **not granted** until paid payment E2E UAT, P1 security items, load testing, and stakeholder sign-off are completed.
 
-**Certification ID:** BPA-VAC-2026-FINAL-20260602  
+**Certification ID:** Furtail-VAC-2026-FINAL-20260602  
 **Next review:** After staging dry-run + paid UAT, or 30 days post-pilot start.

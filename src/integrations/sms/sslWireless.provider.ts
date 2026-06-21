@@ -18,7 +18,7 @@ export class SslWirelessProvider implements SmsProvider {
       return { success: false, provider: this.name, error: "SSL Wireless is not configured" };
     }
 
-    const csmsId = generateCsmsId(context?.campaignSmsLogId ? `BPA${context.campaignSmsLogId}` : "BPA");
+    const csmsId = generateCsmsId(context?.campaignSmsLogId ? `Furtail${context.campaignSmsLogId}` : "Furtail");
 
     try {
       const response = await axios.post(

@@ -1,4 +1,4 @@
-# BPA Clinic + App Owner/Pet Identity — API Contracts
+# Furtail Clinic + App Owner/Pet Identity — API Contracts
 
 **Purpose:** API surface for unified owner/pet identity. Request/response shapes, error codes, permissions.
 

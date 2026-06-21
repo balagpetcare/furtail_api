@@ -28,7 +28,7 @@ Delivered end-to-end **booking exports**, **analytics exports** (CSV / XLSX / PD
 ## 2. API reference
 
 Base: `/api/v1/campaign/admin`  
-Auth: `requireCampaignAdmin` (BPA JWT + campaign admin permission).
+Auth: `requireCampaignAdmin` (Furtail JWT + campaign admin permission).
 
 ### 2.1 Booking export
 
@@ -128,13 +128,13 @@ Reuses: `csvExportHelper.js`, `analytics.service` aggregations, `sendCampaignSms
 | File | Role |
 |------|------|
 | `lib/campaignApi.ts` | Export download helpers, SMS APIs |
-| `src/bpa/campaign/admin/CampaignExportButtons.tsx` | CSV / XLSX / PDF button group |
-| `src/bpa/campaign/admin/SmsCenterPanel.tsx` | Tabbed SMS Center |
+| `src/furtail/campaign/admin/CampaignExportButtons.tsx` | CSV / XLSX / PDF button group |
+| `src/furtail/campaign/admin/SmsCenterPanel.tsx` | Tabbed SMS Center |
 | `app/admin/(larkon)/campaigns/[id]/analytics/page.tsx` | Payment split + exports |
 | `app/admin/(larkon)/campaigns/[id]/bookings/page.tsx` | Filtered booking export |
 | `app/admin/(larkon)/campaigns/[id]/sms/page.tsx` | SMS Center shell |
 | `app/admin/(larkon)/campaigns/[id]/exports/page.tsx` | Export hub |
-| `src/bpa/campaign/admin/CampaignNav.tsx` | Exports + SMS Center nav labels |
+| `src/furtail/campaign/admin/CampaignNav.tsx` | Exports + SMS Center nav labels |
 
 ---
 

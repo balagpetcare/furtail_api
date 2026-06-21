@@ -2,7 +2,7 @@
 
 **Last updated:** 2026-06-05
 
-The BPA API uses a pluggable **S3-compatible storage provider** for media uploads (avatars, posts, KYC, products, clinical items, etc.).
+The Furtail API uses a pluggable **S3-compatible storage provider** for media uploads (avatars, posts, KYC, products, clinical items, etc.).
 
 ## Provider selection
 
@@ -34,8 +34,8 @@ appConfig.storage
 ```env
 STORAGE_PROVIDER=minio
 AWS_REGION=us-east-1
-AWS_BUCKET_NAME=bpa-pets
-AWS_ENDPOINT=http://bpa-storage:9000
+AWS_BUCKET_NAME=furtail-pets
+AWS_ENDPOINT=http://furtail-storage:9000
 STORAGE_PUBLIC_URL=http://192.168.x.x:9000
 AWS_ACCESS_KEY_ID=minioadmin
 AWS_SECRET_ACCESS_KEY=minioadmin
@@ -56,7 +56,7 @@ Docker Compose runs `storage:init` automatically before `npm run dev`.
 STORAGE_PROVIDER=b2
 S3_ENDPOINT=https://s3.us-east-005.backblazeb2.com
 S3_REGION=us-east-005
-S3_BUCKET=bpa-production-media
+S3_BUCKET=furtail-production-media
 S3_ACCESS_KEY=YOUR_KEY_ID
 S3_SECRET_KEY=YOUR_APPLICATION_KEY
 S3_FORCE_PATH_STYLE=true

@@ -10,7 +10,7 @@ async function main() {
     await runDhakaCitySeed(prisma as any);
   }
 
-  console.log("📍 Seeding BPA coverage zones...");
+  console.log("📍 Seeding Furtail coverage zones...");
   await runCoverageZoneSeed(prisma as any);
   const [zones, mappings, metadata] = await Promise.all([
     prisma.coverageZone.count(),

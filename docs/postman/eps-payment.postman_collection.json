@@ -1,7 +1,7 @@
 {
   "info": {
-    "name": "BPA EPS Payment Gateway",
-    "description": "EPS Bangladesh payment integration for BPA campaign booking.",
+    "name": "Furtail EPS Payment Gateway",
+    "description": "EPS Bangladesh payment integration for Furtail campaign booking.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [

@@ -1,4 +1,4 @@
-# BPA Clinic Settlement System Architecture
+# Furtail Clinic Settlement System Architecture
 
 > **Version:** 1.0  
 > **Last Updated:** 2026-03-20  
@@ -25,7 +25,7 @@
 
 ## 1. Overview
 
-The BPA Clinic Settlement System manages doctor earnings from clinical services, ensuring accurate calculation, transparent tracking, and timely payouts. It supports multiple contract types, handles complex billing scenarios (surgery, emergency, discounts), and provides a complete audit trail.
+The Furtail Clinic Settlement System manages doctor earnings from clinical services, ensuring accurate calculation, transparent tracking, and timely payouts. It supports multiple contract types, handles complex billing scenarios (surgery, emergency, discounts), and provides a complete audit trail.
 
 ### Key Capabilities
 

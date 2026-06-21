@@ -14,7 +14,7 @@ The 2026 campaign is primarily **FREE** for pet owners. However, the system must
 - Multi-vaccine packages
 
 ### 1.2 Integration Strategy
-- **Reuse existing BPA payment infrastructure**
+- **Reuse existing Furtail payment infrastructure**
 - Leverage existing `Order` and `OrderPayment` models
 - Use existing payment gateway integrations
 
@@ -22,7 +22,7 @@ The 2026 campaign is primarily **FREE** for pet owners. However, the system must
 
 ## 2. Existing Payment Infrastructure
 
-### 2.1 Current BPA Models
+### 2.1 Current Furtail Models
 
 ```prisma
 // Existing Order Model
@@ -338,7 +338,7 @@ async function initiateCardPayment(req: CreatePaymentRequest) {
     cancel_url: `${baseUrl}/campaign-payment/callback/cancel`,
     cus_name: req.customerName,
     cus_phone: req.phone,
-    cus_email: req.email || 'guest@bpa.com.bd',
+    cus_email: req.email || 'guest@furtail.com.bd',
     product_name: 'Vaccination Campaign Booking',
     product_category: 'Healthcare',
   };

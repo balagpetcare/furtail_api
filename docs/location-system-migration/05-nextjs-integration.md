@@ -1,8 +1,8 @@
-# Next.js Integration Plan (BPA Web)
+# Next.js Integration Plan (Furtail Web)
 
 ## Objective
 
-Migrate BPA web location flows to one canonical backend location source with minimal UX disruption.
+Migrate Furtail web location flows to one canonical backend location source with minimal UX disruption.
 
 ## 1) Current Integration Challenges
 

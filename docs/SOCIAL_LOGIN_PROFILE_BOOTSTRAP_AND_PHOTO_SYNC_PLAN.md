@@ -44,7 +44,7 @@
 
 ### Name rules
 
-- Bootstrap may set `UserProfile.displayName` from provider **only if** current name is a **placeholder** (`empty`, `New User`, `user`, `bpa staff`, case-insensitive).
+- Bootstrap may set `UserProfile.displayName` from provider **only if** current name is a **placeholder** (`empty`, `New User`, `user`, `furtail staff`, case-insensitive).
 - Otherwise **displayName is not overwritten** on subsequent logins.
 - `providerDisplayName` is **always refreshed** on successful provider sync (metadata only).
 
@@ -86,7 +86,7 @@ Removing manual photo (`DELETE /api/v1/me/profile/photo`) disconnects media → 
 
 - **Account Hub** (`AccountHubPage`): Overview tab shows profile photo preview, `photoSource` badge (uploaded / social / default), upload/change via `POST /api/v1/me/profile/photo` (multipart `file`), remove via `DELETE /api/v1/me/profile/photo` when `photoSource === MANUAL`. Short copy explains social fallback. Basic tab shows read-only **Name from your sign-in provider** when `providerDisplayName` is set.
 - **Header / dropdown**: `TopProfileMenu` and Larkon `ProfileDropdown` prefer `profile.effectivePhotoUrl`, then `avatarMedia.url`. Fixed 32×32 container to avoid layout shift.
-- **Session refresh**: After upload/remove, the hub dispatches `bpa:me-refresh`; `useMe` listens and refetches `/api/v1/auth/me` so topbar avatars update without a full page reload.
+- **Session refresh**: After upload/remove, the hub dispatches `furtail:me-refresh`; `useMe` listens and refetches `/api/v1/auth/me` so topbar avatars update without a full page reload.
 
 ---
 

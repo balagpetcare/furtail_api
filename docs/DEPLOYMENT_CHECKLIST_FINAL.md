@@ -1,4 +1,4 @@
-# Final Deployment Checklist — BPA Warehouse System
+# Final Deployment Checklist — Furtail Warehouse System
 
 **Date:** 2026-04-04
 **Phase:** Production deployment readiness
@@ -57,7 +57,7 @@ npm run build
 
 # 3. Start application (storage HeadBucket check runs on boot)
 npm start
-# OR for PM2: pm2 restart bpa-api
+# OR for PM2: pm2 restart furtail-api
 
 # 4. Health check
 curl http://localhost:3000/health
@@ -75,7 +75,7 @@ npm run build
 
 # 2. Deploy static assets
 npm start
-# OR for PM2: pm2 restart bpa-web
+# OR for PM2: pm2 restart furtail-web
 
 # 3. Health check
 curl http://localhost:3100/
@@ -176,7 +176,7 @@ curl http://localhost:3100/
 
 ```bash
 # 1. Stop applications
-pm2 stop bpa-api bpa-web
+pm2 stop furtail-api furtail-web
 
 # 2. Revert to previous deployment
 git checkout <previous-release-tag>
@@ -189,7 +189,7 @@ npx prisma migrate reset --skip-seed
 # OR restore from backup
 
 # 4. Restart applications
-pm2 start bpa-api bpa-web
+pm2 start furtail-api furtail-web
 
 # 5. Verify rollback success
 curl http://localhost:3000/health

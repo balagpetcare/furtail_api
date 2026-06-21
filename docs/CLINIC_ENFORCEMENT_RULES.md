@@ -1,4 +1,4 @@
-# BPA Clinic Treatment Workflow — Enforcement Rules
+# Furtail Clinic Treatment Workflow — Enforcement Rules
 
 **Date:** 2026-03-14  
 **Scope:** Backend-only validation added to ensure operational safety. No architecture redesign.

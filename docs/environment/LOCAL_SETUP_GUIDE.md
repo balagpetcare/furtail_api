@@ -1,4 +1,4 @@
-# BPA Backend — Local Development Setup
+# Furtail Backend — Local Development Setup
 
 This guide restores a working local environment after a missing `.env` file.
 
@@ -39,7 +39,7 @@ npm run validate:env
 npm run dev:infra
 ```
 
-This starts `bpa_db`, `bpa-redis`, and `bpa-storage` per `docker-compose.yml`.
+This starts `bpa_db`, `furtail-redis`, and `furtail-storage` per `docker-compose.yml`.
 
 ### Option B — Local PostgreSQL
 
@@ -90,7 +90,7 @@ With Docker infra running:
 ```env
 STORAGE_PROVIDER=minio
 AWS_ENDPOINT=http://localhost:9000
-AWS_BUCKET_NAME=bpa-pets
+AWS_BUCKET_NAME=furtail-pets
 AWS_ACCESS_KEY_ID=minioadmin
 AWS_SECRET_ACCESS_KEY=minioadmin
 AWS_FORCE_PATH_STYLE=true
@@ -185,7 +185,7 @@ SMTP_HOST=
 SMTP_PORT=587
 SMTP_USER=
 SMTP_PASS=
-SMTP_FROM=BPA <no-reply@yourdomain.com>
+SMTP_FROM=Furtail <no-reply@yourdomain.com>
 ```
 
 ## 9. Start the API

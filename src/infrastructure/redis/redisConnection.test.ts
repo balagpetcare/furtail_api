@@ -36,11 +36,11 @@ describe("redisConnection", () => {
 
   it("getRedisConnectionOptions uses host/port when URL absent", () => {
     delete process.env.REDIS_URL;
-    process.env.REDIS_HOST = "bpa-redis";
+    process.env.REDIS_HOST = "furtail-redis";
     process.env.REDIS_PORT = "6379";
     const { getRedisConnectionOptions } = require("./redisConnection");
     const opts = getRedisConnectionOptions();
-    expect(opts.host).toBe("bpa-redis");
+    expect(opts.host).toBe("furtail-redis");
     expect(opts.port).toBe(6379);
     expect(opts.maxRetriesPerRequest).toBeNull();
     expect(opts.enableOfflineQueue).toBe(false);

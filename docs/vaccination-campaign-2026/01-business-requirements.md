@@ -10,7 +10,7 @@
 This document defines the business requirements for the 2026 Cat Flu + Rabies Vaccination Campaign system. It establishes functional and non-functional requirements that the system must satisfy.
 
 ### 1.2 Business Context
-Bangladesh Pet Alliance (BPA) is launching a mass vaccination campaign for cats to combat rabies and cat flu. The campaign requires a digital system to manage registrations, appointments, vaccinations, and certificates at scale.
+Bangladesh Pet Alliance (Furtail) is launching a mass vaccination campaign for cats to combat rabies and cat flu. The campaign requires a digital system to manage registrations, appointments, vaccinations, and certificates at scale.
 
 ---
 
@@ -22,7 +22,7 @@ Bangladesh Pet Alliance (BPA) is launching a mass vaccination campaign for cats 
 | BO-1 | Increase cat vaccination coverage | 10,000+ cats vaccinated in campaign |
 | BO-2 | Reduce administrative overhead | 80% reduction vs paper-based system |
 | BO-3 | Create verifiable vaccination records | 100% digital certificates |
-| BO-4 | Build pet owner database | Convert 30% to BPA app users |
+| BO-4 | Build pet owner database | Convert 30% to Furtail app users |
 | BO-5 | Enable data-driven public health | Complete demographic analytics |
 
 ### 2.2 Success Metrics
@@ -47,7 +47,7 @@ Bangladesh Pet Alliance (BPA) is launching a mass vaccination campaign for cats 
 | PO-6 | Cancel/reschedule booking | P1 |
 | PO-7 | Receive reminder SMS before appointment | P1 |
 | PO-8 | Download vaccination certificate | P0 |
-| PO-9 | Link vaccination to existing BPA account | P1 |
+| PO-9 | Link vaccination to existing Furtail account | P1 |
 | PO-10 | Walk-in registration at venue | P0 |
 
 ### 3.2 Campaign Staff (Vaccination Teams)
@@ -208,7 +208,7 @@ Bangladesh Pet Alliance (BPA) is launching a mass vaccination campaign for cats 
 | ID | Requirement | Description |
 |----|-------------|-------------|
 | NFR-S-1 | OTP Authentication | Phone verification required |
-| NFR-S-2 | Staff Authentication | Existing BPA auth |
+| NFR-S-2 | Staff Authentication | Existing Furtail auth |
 | NFR-S-3 | API Security | Rate limiting, CORS |
 | NFR-S-4 | Data Encryption | HTTPS, encrypted at rest |
 | NFR-S-5 | Audit Logging | All vaccination actions logged |
@@ -289,10 +289,10 @@ Bangladesh Pet Alliance (BPA) is launching a mass vaccination campaign for cats 
 ### 8.1 Internal Integrations
 | System | Integration Type | Purpose |
 |--------|------------------|---------|
-| BPA Backend | REST API | All data operations |
-| BPA Database | Via Prisma ORM | Data storage |
-| BPA Auth | JWT | Staff authentication |
-| BPA Notifications | BullMQ | SMS queue |
+| Furtail Backend | REST API | All data operations |
+| Furtail Database | Via Prisma ORM | Data storage |
+| Furtail Auth | JWT | Staff authentication |
+| Furtail Notifications | BullMQ | SMS queue |
 
 ### 8.2 External Integrations
 | System | Integration Type | Purpose |
@@ -327,7 +327,7 @@ Bangladesh Pet Alliance (BPA) is launching a mass vaccination campaign for cats 
 
 | Term | Definition |
 |------|------------|
-| BPA | Bangladesh Pet Alliance |
+| Furtail | Bangladesh Pet Alliance |
 | Campaign | A vaccination event with defined dates and locations |
 | Booking | A scheduled appointment for vaccination |
 | Token | QR code reference for booking verification |

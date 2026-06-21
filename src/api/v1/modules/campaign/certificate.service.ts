@@ -183,8 +183,8 @@ export async function getCertificateData(
       vaccinatedAt: vaccination.administeredAt,
       validUntil: vaccination.nextDueDate ?? addDays(vaccination.administeredAt, 365),
       batchNumber: vaccination.batchNumber ?? undefined,
-      location: vaccination.vetClinic ?? "BPA Vaccination Campaign",
-      campaignName: "BPA Vaccination Campaign",
+      location: vaccination.vetClinic ?? "Furtail Vaccination Campaign",
+      campaignName: "Furtail Vaccination Campaign",
       qrCodeImage: qrImage,
       issuedAt: vaccination.createdAt,
     };
@@ -467,10 +467,10 @@ function generateCertificateHtml(data: CertificateData): string {
     <div class="footer">
       <div class="certificate-id">${data.certificateToken}</div>
       <div class="verification-note">
-        Verify this certificate at: https://vaccine.bpa.org.bd/verify/${data.certificateToken}
+        Verify this certificate at: https://vaccine.furtail.org.bd/verify/${data.certificateToken}
       </div>
       <div class="verification-note">
-        Issued on ${issuedDate} by Bangladesh Pet Association
+        Issued on ${issuedDate} by Furtail
       </div>
     </div>
   </div>
@@ -541,8 +541,8 @@ export async function getBookingCertificates(bookingId: number) {
     vaccineType: pet.vaccination?.vaccineType.name,
     vaccinatedAt: pet.vaccination?.administeredAt,
     validUntil: pet.vaccination?.nextDueDate,
-    verifyUrl: `https://vaccine.bpa.org.bd/verify/${pet.certificateToken}`,
-    downloadUrl: `https://vaccine.bpa.org.bd/api/certificates/${pet.certificateToken}/pdf`,
+    verifyUrl: `https://vaccine.furtail.org.bd/verify/${pet.certificateToken}`,
+    downloadUrl: `https://vaccine.furtail.org.bd/api/certificates/${pet.certificateToken}/pdf`,
   }));
 }
 

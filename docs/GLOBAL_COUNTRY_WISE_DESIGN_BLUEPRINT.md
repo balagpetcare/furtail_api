@@ -1,6 +1,6 @@
 # Global + Country-wise Design Blueprint
 
-**WorldPetsAssociation.com – BPA Standard Practices**
+**WorldPetsAssociation.com – Furtail Standard Practices**
 
 *(Aligned with [BPA_STANDARD.md](../BPA_STANDARD.md), [PROJECT_CONTEXT.md](../PROJECT_CONTEXT.md). Multi-tenant, RBAC, API=3000, Next.js apps, MinIO, PostgreSQL, Docker, scale-ready.)*
 
@@ -9,8 +9,8 @@
 ## Important note: Domain and trademark
 
 - **worldpetsassociation.com** – Domain creation **2026-01-15**; DNS visible (e.g. dns1.cyberdeveloperbd.com). Hosting/WHOIS may show AlibabaCloud.
-- **World Pet Association (WPA)** – An existing organisation at **worldpetassociation.org** uses a similar name.
-- **Recommendation:** Before global branding, do a **trademark/branding check** to avoid conflict (e.g. World Pets Association vs World Pet Association). Consider legal review and distinct branding (e.g. BPA Global or WPA Pets Platform) to avoid confusion.
+- **Furtail (Furtail)** – An existing organisation at **worldpetassociation.org** uses a similar name.
+- **Recommendation:** Before global branding, do a **trademark/branding check** to avoid conflict (e.g. World Pets Association vs Furtail). Consider legal review and distinct branding (e.g. Furtail Global or Furtail Pets Platform) to avoid confusion.
 
 ---
 
@@ -18,14 +18,14 @@
 
 সিস্টেম ৩ স্তরে চালাবেন:
 
-### A) Global Layer (WPA Global)
+### A) Global Layer (Furtail Global)
 
 - Global Admin (Super Admin)
 - Global policies: AML/KYC rules, content rules, ads policy, data retention, security baseline
 - Global marketplace/partners directory (optional)
 - Global feature flags: কোন দেশ কোন ফিচার পাবে
 
-### B) Country Layer (WPA Bangladesh, WPA India, WPA UAE…)
+### B) Country Layer (Furtail Bangladesh, Furtail India, Furtail UAE…)
 
 প্রতি দেশে আলাদা কনফিগ/রুলস:
 
@@ -70,7 +70,7 @@
 
 ---
 
-## 3. Core data model extension (BPA Standard অনুযায়ী)
+## 3. Core data model extension (Furtail Standard অনুযায়ী)
 
 বর্তমান multi-tenant (Organization/Branch/User/Roles) এর সাথে **Geo + Country config** যোগ হবে।
 
@@ -113,7 +113,7 @@ Google Maps লাগবে না – নিচের স্ট্যাক ব
 
 - Nominatim reverse
 
-### Cost reduction (BPA Standard)
+### Cost reduction (Furtail Standard)
 
 - **Redis cache:** একই lat/lng বা search query বারবার hit না করে cache
 - **Country-wise provider fallback:** একটা provider down হলে আরেকটা
@@ -127,7 +127,7 @@ Google Maps লাগবে না – নিচের স্ট্যাক ব
 
 - ১টা primary region (যেমন BDIX/SG)
 - CDN (e.g. Cloudflare) সামনে
-- API (port 3000) + DB + MinIO আলাদা সার্ভার (BPA স্ট্যান্ডার্ড)
+- API (port 3000) + DB + MinIO আলাদা সার্ভার (Furtail স্ট্যান্ডার্ড)
 
 ### Phase-2 (Multi-Region)
 
@@ -187,7 +187,7 @@ Google Maps লাগবে না – নিচের স্ট্যাক ব
 
 ---
 
-## 9. RBAC (BPA Standard) + Country roles
+## 9. RBAC (Furtail Standard) + Country roles
 
 Existing RBAC এর ওপর **country layer** বসবে।
 
@@ -242,7 +242,7 @@ Existing RBAC এর ওপর **country layer** বসবে।
 
 ---
 
-## 12. Next spec docs to create (BPA Standard অনুযায়ী)
+## 12. Next spec docs to create (Furtail Standard অনুযায়ী)
 
 নিচের ২টা স্পেক ডক **রেডি** করলে ডেভেলপাররা সরাসরি ইমপ্লিমেন্ট শুরু করতে পারবে:
 

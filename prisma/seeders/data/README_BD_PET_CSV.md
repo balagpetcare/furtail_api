@@ -30,7 +30,7 @@ npm run generate:bd-pet-csv
 
 Output: `prisma/seeders/data/bd_pet_products_master_catalog.csv`
 
-## Use in BPA
+## Use in Furtail
 
 1. **Admin** → **Commerce & Catalog** → **Master Catalog** → **Import CSV**
 2. Click **Bangladesh Sample** to download this file (or use **Download Template** for empty).

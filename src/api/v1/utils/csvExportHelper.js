@@ -1,5 +1,5 @@
 /**
- * Standard CSV export helper for BPA batch exports.
+ * Standard CSV export helper for Furtail batch exports.
  * - UTF-8 with BOM (Excel-friendly; Bengali/special chars preserved)
  * - Dates: YYYY-MM-DD; timestamps: ISO 8601
  * - Numbers: plain (no commas); Booleans: true/false; Enums: uppercase

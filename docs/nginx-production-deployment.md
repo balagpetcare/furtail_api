@@ -1,12 +1,12 @@
-# BPA Production Nginx Deployment
+# Furtail Production Nginx Deployment
 
 Deployment-ready reverse-proxy configuration for:
 
 | Host | App | Upstream (default) |
 |------|-----|-------------------|
-| `bangladeshpetassociation.com` | `bpa-landing` | `127.0.0.1:3101` |
-| `www.bangladeshpetassociation.com` | → apex redirect | — |
-| `vaccination.bangladeshpetassociation.com` | `vaccination_2026` | `127.0.0.1:3110` |
+| `furtail.world` | `furtail-landing` | `127.0.0.1:3101` |
+| `www.furtail.world` | → apex redirect | — |
+| `vaccination.furtail.world` | `vaccination_2026` | `127.0.0.1:3110` |
 
 **Source files:** `infra/nginx/`
 
@@ -37,9 +37,9 @@ DNS (before TLS):
 
 | Record | Value |
 |--------|--------|
-| `A` / `AAAA` `bangladeshpetassociation.com` | Server public IP |
-| `CNAME` `www` | `bangladeshpetassociation.com` |
-| `CNAME` `vaccination` | `bangladeshpetassociation.com` or same IP |
+| `A` / `AAAA` `furtail.world` | Server public IP |
+| `CNAME` `www` | `furtail.world` |
+| `CNAME` `vaccination` | `furtail.world` or same IP |
 
 ---
 
@@ -55,8 +55,8 @@ sudo cp infra/nginx/snippets/*.conf /etc/nginx/snippets/
 # Site blocks
 sudo cp infra/nginx/sites-available/*.conf /etc/nginx/sites-available/
 sudo ln -sf /etc/nginx/sites-available/00-acme-and-redirect.conf /etc/nginx/sites-enabled/
-sudo ln -sf /etc/nginx/sites-available/bangladeshpetassociation.com.conf /etc/nginx/sites-enabled/
-sudo ln -sf /etc/nginx/sites-available/vaccination.bangladeshpetassociation.com.conf /etc/nginx/sites-enabled/
+sudo ln -sf /etc/nginx/sites-available/furtail.world.conf /etc/nginx/sites-enabled/
+sudo ln -sf /etc/nginx/sites-available/vaccination.furtail.world.conf /etc/nginx/sites-enabled/
 
 # ACME webroot
 sudo mkdir -p /var/www/certbot
@@ -73,10 +73,10 @@ sudo nginx -t
 
 ```bash
 sudo certbot --nginx \
-  -d bangladeshpetassociation.com \
-  -d www.bangladeshpetassociation.com \
-  -d vaccination.bangladeshpetassociation.com \
-  --email admin@bangladeshpetassociation.com \
+  -d furtail.world \
+  -d www.furtail.world \
+  -d vaccination.furtail.world \
+  --email admin@furtail.world \
   --agree-tos \
   --no-eff-email
 ```
@@ -87,16 +87,16 @@ Certbot updates certificate paths in server blocks. Align with `snippets/ssl-let
 
 ```bash
 sudo certbot certonly --webroot -w /var/www/certbot \
-  -d bangladeshpetassociation.com \
-  -d www.bangladeshpetassociation.com \
-  -d vaccination.bangladeshpetassociation.com
+  -d furtail.world \
+  -d www.furtail.world \
+  -d vaccination.furtail.world
 ```
 
 Certificate path used in configs:
 
 ```
-/etc/letsencrypt/live/bangladeshpetassociation.com/fullchain.pem
-/etc/letsencrypt/live/bangladeshpetassociation.com/privkey.pem
+/etc/letsencrypt/live/furtail.world/fullchain.pem
+/etc/letsencrypt/live/furtail.world/privkey.pem
 ```
 
 ### Auto-renewal
@@ -114,14 +114,14 @@ sudo certbot renew --dry-run
 Run Next.js in production mode before enabling nginx:
 
 ```bash
-# bpa-landing
-cd /opt/bpa/bpa-landing && npm run build && npm run start   # binds :3101
+# furtail-landing
+cd /opt/furtail/furtail-landing && npm run build && npm run start   # binds :3101
 
 # vaccination_2026
-cd /opt/bpa/vaccination_2026 && npm run build && npm run start  # binds :3110
+cd /opt/furtail/vaccination_2026 && npm run build && npm run start  # binds :3110
 
 # backend-api (campaign /api proxy)
-cd /opt/bpa/backend-api && npm run start  # :3000
+cd /opt/furtail/backend-api && npm run start  # :3000
 ```
 
 Use **systemd** or **PM2** for persistence. Update `infra/nginx/conf.d/00-upstreams.conf` if ports or hosts differ.
@@ -152,8 +152,8 @@ Adjust in `conf.d/01-rate-limit.conf`. Monitor `429` in access logs.
 ## Security notes
 
 1. **CSP** in `snippets/security-headers.conf` is a baseline — tighten after auditing third-party scripts (GA4, Meta, Clarity, payment iframes).
-2. **`/vaccination`** on apex is served by **bpa-landing** (bridge page). No nginx 301 to subdomain unless marketing requests it.
-3. Payment webhooks must hit `api.bangladeshpetassociation.com` only — not these vhosts.
+2. **`/vaccination`** on apex is served by **furtail-landing** (bridge page). No nginx 301 to subdomain unless marketing requests it.
+3. Payment webhooks must hit `api.furtail.world` only — not these vhosts.
 4. Enable `limit_req_status 429` logging in fail2ban if needed.
 
 ---
@@ -161,9 +161,9 @@ Adjust in `conf.d/01-rate-limit.conf`. Monitor `429` in access logs.
 ## Health checks
 
 ```bash
-curl -I https://bangladeshpetassociation.com/
-curl -I https://vaccination.bangladeshpetassociation.com/
-curl -I https://vaccination.bangladeshpetassociation.com/api/health  # if API exposes health
+curl -I https://furtail.world/
+curl -I https://vaccination.furtail.world/
+curl -I https://vaccination.furtail.world/api/health  # if API exposes health
 ```
 
 ---
@@ -171,5 +171,5 @@ curl -I https://vaccination.bangladeshpetassociation.com/api/health  # if API ex
 ## Related docs
 
 - [docs/infrastructure/PORT_AND_DOMAIN_MAP.md](./infrastructure/PORT_AND_DOMAIN_MAP.md) — canonical port and host matrix
-- `docs/architecture/bpa-vaccination-domain-strategy.md` §4 Nginx plan
-- `docs/seo/` (bpa-landing) — canonical URL strategy for apex `/vaccination`
+- `docs/architecture/furtail-vaccination-domain-strategy.md` §4 Nginx plan
+- `docs/seo/` (furtail-landing) — canonical URL strategy for apex `/vaccination`

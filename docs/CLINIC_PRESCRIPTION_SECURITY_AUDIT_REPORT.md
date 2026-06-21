@@ -1,4 +1,4 @@
-# BPA Clinic — Prescription security audit (full repository sweep)
+# Furtail Clinic — Prescription security audit (full repository sweep)
 
 **Repositories:** `backend-api`, `bpa_web`  
 **Audit date:** 2026-03-21  

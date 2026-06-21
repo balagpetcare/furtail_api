@@ -1,7 +1,7 @@
 # Campaign checkout anchor — production configuration report
 
 **Date:** 2026-06-04  
-**Scope:** BPA campaign paid checkout (branch validation preserved)
+**Scope:** Furtail campaign paid checkout (branch validation preserved)
 
 ## Root cause (resolved)
 
@@ -22,14 +22,14 @@ Production-ready configuration uses **lookup by name/code** (no hardcoded IDs in
 
 Optional env overrides:
 
-- `CAMPAIGN_ORGANIZER_ORG_NAME` (default: `Bangladesh Pet Association`)
-- `CAMPAIGN_CHECKOUT_BRANCH_CODE` (default: `BPA-CAMPAIGN-CHECKOUT`)
-- `CAMPAIGN_CHECKOUT_BRANCH_NAME` (default: `BPA Campaign Operations (Central)`)
+- `CAMPAIGN_ORGANIZER_ORG_NAME` (default: `Furtail`)
+- `CAMPAIGN_CHECKOUT_BRANCH_CODE` (default: `Furtail-CAMPAIGN-CHECKOUT`)
+- `CAMPAIGN_CHECKOUT_BRANCH_NAME` (default: `Furtail Campaign Operations (Central)`)
 
 ### What the seed does
 
-1. Ensures **APPROVED** BPA organization (creates or updates; does not delete data).
-2. Ensures **ACTIVE** branch under that org (`BPA-CAMPAIGN-CHECKOUT`).
+1. Ensures **APPROVED** Furtail organization (creates or updates; does not delete data).
+2. Ensures **ACTIVE** branch under that org (`Furtail-CAMPAIGN-CHECKOUT`).
 3. Sets `campaign.organizerId` for any campaign still unlinked.
 
 Re-run is safe (idempotent).
@@ -38,12 +38,12 @@ Re-run is safe (idempotent).
 
 | Field | Value |
 |-------|--------|
-| **Organization** | Bangladesh Pet Association |
+| **Organization** | Furtail |
 | **Organization ID** | `1` |
 | **Organization status** | `APPROVED` |
-| **Branch** | BPA Campaign Operations (Central) |
+| **Branch** | Furtail Campaign Operations (Central) |
 | **Branch ID** | `1` |
-| **Branch code** | `BPA-CAMPAIGN-CHECKOUT` |
+| **Branch code** | `Furtail-CAMPAIGN-CHECKOUT` |
 | **Branch status** | `ACTIVE` |
 | **Branch orgId** | `1` |
 
@@ -83,7 +83,7 @@ sequenceDiagram
 | Check | Result |
 |-------|--------|
 | Organization exists & APPROVED | Pass |
-| ACTIVE branch for BPA org | Pass |
+| ACTIVE branch for Furtail org | Pass |
 | All campaigns have `organizerId` = org | Pass |
 | Checkout session created | Pass |
 | Order linked to session | Pass |

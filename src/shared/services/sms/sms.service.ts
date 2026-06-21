@@ -1,5 +1,5 @@
 /**
- * Central BPA/WPA SMS service — BulkSMSBD gateway, BullMQ queue, unified logging.
+ * Central Furtail/Furtail SMS service — BulkSMSBD gateway, BullMQ queue, unified logging.
  */
 import axios from "axios";
 import { Queue } from "bullmq";

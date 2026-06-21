@@ -9,7 +9,7 @@ describe("BulkSmsBdProvider", () => {
 
   beforeEach(() => {
     process.env.BULKSMSBD_API_TOKEN = "abc-token";
-    process.env.BULKSMSBD_SENDER_ID = "BPA";
+    process.env.BULKSMSBD_SENDER_ID = "Furtail";
     process.env.BULKSMSBD_BASE_URL = "https://app.bulksmsbd.xyz";
     process.env.BULKSMSBD_API_MODE = "rest_v3";
     mockedAxios.post.mockReset();
@@ -50,7 +50,7 @@ describe("BulkSmsBdProvider", () => {
   it("sendOtp uses OTP template message", async () => {
     process.env.SMS_PROVIDER = "bulksmsbd";
     process.env.SMS_API_KEY = "otp-key";
-    process.env.SMS_SENDER_ID = "BPA";
+    process.env.SMS_SENDER_ID = "Furtail";
     mockedAxios.get.mockResolvedValue({ status: 200, data: { response_code: 202, message_id: "otp-1" } });
 
     const result = await provider.sendOtp!("01712345678", "123456");

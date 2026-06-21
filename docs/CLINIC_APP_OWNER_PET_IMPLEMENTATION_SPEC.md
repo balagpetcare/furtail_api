@@ -1,4 +1,4 @@
-# BPA Clinic + App Owner/Pet Identity — Implementation Spec
+# Furtail Clinic + App Owner/Pet Identity — Implementation Spec
 
 **Purpose:** Step-by-step implementation guide for the unified owner/pet identity system. Follow BPA_STANDARD.md (no deletion of working code, merge only).
 

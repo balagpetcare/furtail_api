@@ -255,7 +255,7 @@ async function registerWalkIn(req: WalkInRequest, staffUserId: number) {
       slot: 'Walk-in',
       location: booking.location.name,
       petNames: req.pets.map(p => p.name).join(', '),
-      qrUrl: `https://vacc.bpa.com.bd/c/${qrToken}`,
+      qrUrl: `https://vacc.furtail.com.bd/c/${qrToken}`,
     },
   });
   
@@ -659,7 +659,7 @@ async function recordVaccination(
     variables: {
       petName: campaignPet.name,
       vaccineName: vaccineType.name,
-      certificateUrl: `https://vacc.bpa.com.bd/verify/${certificateToken}`,
+      certificateUrl: `https://vacc.furtail.com.bd/verify/${certificateToken}`,
       nextDueDate: format(nextDueDate, 'dd MMM yyyy'),
     },
   });
@@ -682,8 +682,8 @@ async function recordVaccination(
     vaccination,
     certificate: {
       token: certificateToken,
-      url: `https://vacc.bpa.com.bd/verify/${certificateToken}`,
-      pdfUrl: `https://api.bpa.com.bd/api/v1/campaign-certificate/${certificateToken}/pdf`,
+      url: `https://vacc.furtail.com.bd/verify/${certificateToken}`,
+      pdfUrl: `https://api.furtail.com.bd/api/v1/campaign-certificate/${certificateToken}/pdf`,
     },
     booking: {
       allPetsCompleted: remainingPets === 0,
@@ -808,8 +808,8 @@ async function generateCertificatePdf(data: CertificateData): Promise<Buffer> {
   
   // Footer
   doc.moveDown(2);
-  doc.fontSize(8).text('This certificate is issued by Bangladesh Pet Alliance (BPA).', { align: 'center' });
-  doc.text(`Verify at: https://vacc.bpa.com.bd/verify/${data.vaccination.certificateToken}`, { align: 'center' });
+  doc.fontSize(8).text('This certificate is issued by Bangladesh Pet Alliance (Furtail).', { align: 'center' });
+  doc.text(`Verify at: https://vacc.furtail.com.bd/verify/${data.vaccination.certificateToken}`, { align: 'center' });
   
   doc.end();
   
@@ -853,7 +853,7 @@ async function getCertificatePdf(token: string): Promise<Buffer> {
   }
   
   const qrCodeBuffer = await generateQrCode(
-    `https://vacc.bpa.com.bd/verify/${token}`
+    `https://vacc.furtail.com.bd/verify/${token}`
   );
   
   const pdf = await generateCertificatePdf({

@@ -1,7 +1,7 @@
 # Location & Coverage Zone Seed Audit
 
 **Date:** 2026-06-07  
-**Repository:** `backend-api` (primary), with consumer references in `bpa_web`, `bpa_app`, `vaccination_2026`  
+**Repository:** `backend-api` (primary), with consumer references in `bpa_web`, `furtail_app`, `vaccination_2026`  
 **Scope:** Analysis only — **no code changes**
 
 ---
@@ -20,7 +20,7 @@
 
 ## 2. Architecture — three location layers
 
-BPA uses **three related but distinct** location concepts:
+Furtail uses **three related but distinct** location concepts:
 
 ```mermaid
 flowchart TB
@@ -204,7 +204,7 @@ Modern mobile/web BD pickers use **`bd_areas`** via `/api/v1/common/bd/*` or `/a
 | `bpa_web` — area sub-dropdown | `GET /api/v1/campaign/admin/coverage-zones/:zoneId/bd-areas?q=` | `listBdAreasForCoverageZone()` |
 | `vaccination_2026` — public booking | `GET /api/v1/campaign/public/coverage-zones` | Same `listAdminCoverageZones()` |
 | `vaccination_2026` — areas by zone | `GET /api/v1/campaign/public/coverage-zones/:zoneId/bd-areas` | Same |
-| `bpa_app` (mobile) | Uses Dhaka corp flow: `/campaign/public/dhaka/city-corporations` | `dhakaBooking.service.ts` (not coverage dropdown) |
+| `furtail_app` (mobile) | Uses Dhaka corp flow: `/campaign/public/dhaka/city-corporations` | `dhakaBooking.service.ts` (not coverage dropdown) |
 
 **Query logic for zones** (`coverageAdmin.service.ts`):
 
@@ -236,9 +236,9 @@ If zones exist but mappings failed (missing BdArea codes), zone dropdown works b
 | Consumer | Endpoint pattern | Backend |
 |----------|------------------|---------|
 | `bpa_web` `LocationPicker.jsx` | `/api/v1/locations/divisions`, `/districts?divisionId=`, `/upazilas?districtId=`, `/bd-areas?upazilaId=` | `locations.routes.ts` → `locations.controller.ts` → `locations.service.ts` |
-| `bpa_app` | `/api/v1/common/bd/divisions`, `/districts`, `/upazilas`, `/areas` | `common.controller.ts` |
-| `bpa_app` (Dhaka CC tree) | `/api/v1/common/bd/city-corporations`, `/zones`, `/cc-areas` | `common.controller.ts` (queries `bd_areas` by `type`) |
-| `bpa_app` (alt) | `/api/v1/location-master/divisions`, etc. | `src/modules/location/location.routes.ts` |
+| `furtail_app` | `/api/v1/common/bd/divisions`, `/districts`, `/upazilas`, `/areas` | `common.controller.ts` |
+| `furtail_app` (Dhaka CC tree) | `/api/v1/common/bd/city-corporations`, `/zones`, `/cc-areas` | `common.controller.ts` (queries `bd_areas` by `type`) |
+| `furtail_app` (alt) | `/api/v1/location-master/divisions`, etc. | `src/modules/location/location.routes.ts` |
 
 ### 6.3 Campaign public Dhaka booking (no coverage zone UI)
 
@@ -415,7 +415,7 @@ Interpretation:
 | **bpa_web** admin campaigns | Coverage Zone + BdArea in `CampaignLocationEditor` | Admin coverage API |
 | **bpa_web** owner org forms | Division → District → Upazila → BdArea via `LocationPicker` | `/api/v1/locations/*` |
 | **vaccination_2026** | Public booking uses corp + area OR legacy zone picker | Public coverage API + Dhaka corp API |
-| **bpa_app** | `bdDivisions` / corp / zone / cc-area providers | `/api/v1/common/bd/*` + location-master |
+| **furtail_app** | `bdDivisions` / corp / zone / cc-area providers | `/api/v1/common/bd/*` + location-master |
 
 ---
 

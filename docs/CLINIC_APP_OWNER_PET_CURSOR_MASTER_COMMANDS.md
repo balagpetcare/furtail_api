@@ -1,4 +1,4 @@
-# BPA Clinic + App Owner/Pet Identity — Cursor AI Master Implementation Commands
+# Furtail Clinic + App Owner/Pet Identity — Cursor AI Master Implementation Commands
 
 **Purpose:** Copy-paste prompts for Cursor AI to execute implementation phases. Each block is self-contained; confirm touch points from the Implementation Spec before running.
 

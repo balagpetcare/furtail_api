@@ -29,7 +29,7 @@ export async function createIntent(req: PaymentIntentRequest): Promise<PaymentIn
     ipn_url: cfg.ipnUrl,
     cus_name: req.metadata?.name || "Guest",
     cus_phone: req.metadata?.phone || "01700000000",
-    cus_email: req.metadata?.email || "guest@bpa.com.bd",
+    cus_email: req.metadata?.email || "guest@furtail.com.bd",
     product_name: req.metadata?.description || "Vaccination Campaign",
     product_category: "Healthcare",
     product_profile: "general",

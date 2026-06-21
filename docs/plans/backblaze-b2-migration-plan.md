@@ -9,7 +9,7 @@
 
 ## Executive summary
 
-The BPA backend uses a **single S3-compatible client** (`@aws-sdk/client-s3`) backed by **MinIO in development** (Docker service `bpa-storage`) and documented **Backblaze B2 placeholders in `.env.example`** that are **not wired into runtime code**. All primary uploads flow through `media.service.ts` → `PutObject` → PostgreSQL `media` table (`url` + `key`).
+The Furtail backend uses a **single S3-compatible client** (`@aws-sdk/client-s3`) backed by **MinIO in development** (Docker service `furtail-storage`) and documented **Backblaze B2 placeholders in `.env.example`** that are **not wired into runtime code**. All primary uploads flow through `media.service.ts` → `PutObject` → PostgreSQL `media` table (`url` + `key`).
 
 **Backblaze B2 can serve as a near drop-in replacement** at the SDK layer because the codebase already uses path-style S3 API calls with a configurable endpoint. However, migration is **not env-only**: public URL semantics, bucket policy setup, dual env-var naming (`AWS_*` vs `S3_*`), local-disk org documents, and client `MEDIA_BASE_URL` / `MINIO_PUBLIC_URL` alignment must be addressed.
 
@@ -24,7 +24,7 @@ The BPA backend uses a **single S3-compatible client** (`@aws-sdk/client-s3`) ba
 ```mermaid
 flowchart TB
   subgraph clients["Clients"]
-    APP["bpa_app (Flutter)"]
+    APP["furtail_app (Flutter)"]
     WEB["bpa_web panels"]
     LAND["vaccination_2026"]
   end
@@ -42,7 +42,7 @@ flowchart TB
   end
 
   subgraph storage["Object storage"]
-    MINIO["MinIO bpa-storage :9000<br/>(dev/docker)"]
+    MINIO["MinIO furtail-storage :9000<br/>(dev/docker)"]
     B2["Backblaze B2 S3 API<br/>(documented, not wired)"]
   end
 
@@ -161,7 +161,7 @@ B2 integration does **not** require a full provider framework for MVP. Mapping p
 | `@aws-sdk/s3-request-presigner` | Yes | Yes | Yes |
 | Public bucket via `PutBucketPolicy` | `init-minio.ts` | Supported but **B2 console / lifecycle differs** | Partial — test in staging |
 | Public URL shape | `{host}/{bucket}/{key}` | Same path-style **or** B2 native `fXXX.backblazeb2.com/file/...` | Requires `MINIO_PUBLIC_URL` / CDN choice |
-| Docker dev MinIO | `bpa-storage` service | N/A for dev | Keep MinIO locally |
+| Docker dev MinIO | `furtail-storage` service | N/A for dev | Keep MinIO locally |
 
 ### 3.2 B2-specific considerations
 
@@ -193,7 +193,7 @@ B2 integration does **not** require a full provider framework for MVP. Mapping p
 | File | Role |
 |------|------|
 | `src/config/appConfig.ts` | Maps `AWS_*`, `MINIO_PUBLIC_URL`, `STORAGE_USE_COUNTRY_PREFIX` |
-| `src/infrastructure/storage/s3Client.ts` | Singleton `S3Client`; Docker `bpa-storage` → `localhost` rewrite |
+| `src/infrastructure/storage/s3Client.ts` | Singleton `S3Client`; Docker `furtail-storage` → `localhost` rewrite |
 | `src/infrastructure/storage/s3Upload.ts` | Legacy `uploadBuffer()` — **no callers** |
 | `src/shared/storage/publicMediaUrl.ts` | `buildPublicMediaUrl`, `resolveClientMediaUrl` |
 | `src/api/v1/modules/media/media.service.ts` | Primary upload/delete/HeadObject/dedupe |
@@ -209,7 +209,7 @@ B2 integration does **not** require a full provider framework for MVP. Mapping p
 | `scripts/audit-media-urls.mjs` | DB + HTTP HEAD audit |
 | `scripts/list-minio-objects.mjs` | Object listing |
 | `scripts/test-minio-upload.mjs` | E2E upload test |
-| `docker-compose.yml` | `bpa-storage` MinIO service; `minio:init` on API boot |
+| `docker-compose.yml` | `furtail-storage` MinIO service; `minio:init` on API boot |
 | `.env.example` | Storage env documentation |
 
 ### 4.2 Upload consumers (via `uploadAndCreateMedia`)
@@ -275,8 +275,8 @@ B2 integration does **not** require a full provider framework for MVP. Mapping p
 
 | Repo | File | Notes |
 |------|------|-------|
-| `bpa_app` | `lib/core/media/media_url.dart` | `MEDIA_BASE_URL` dart-define; rewrites localhost/minio hosts |
-| `bpa_app` | `lib/core/config/app_config.dart` | `MEDIA_BASE_URL` |
+| `furtail_app` | `lib/core/media/media_url.dart` | `MEDIA_BASE_URL` dart-define; rewrites localhost/minio hosts |
+| `furtail_app` | `lib/core/config/app_config.dart` | `MEDIA_BASE_URL` |
 | `bpa_web` | Panels loading `<img src="/api/v1/files/...">` | API proxy unchanged; public media URLs change |
 | `vaccination_2026` | Landing/booking | Uses API-returned media URLs |
 
@@ -289,7 +289,7 @@ B2 integration does **not** require a full provider framework for MVP. Mapping p
 | Variable | Default | Used in | Purpose |
 |----------|---------|---------|---------|
 | `AWS_REGION` | `us-east-1` | `appConfig`, scripts | S3 client region |
-| `AWS_BUCKET_NAME` | `bpa-pets` | `appConfig`, `media.service`, `files.controller`, scripts | Bucket name |
+| `AWS_BUCKET_NAME` | `furtail-pets` | `appConfig`, `media.service`, `files.controller`, scripts | Bucket name |
 | `AWS_ENDPOINT` | `http://localhost:9000` | `appConfig`, `s3Client`, scripts | Internal API → storage endpoint |
 | `MINIO_PUBLIC_URL` | `""` | `appConfig`, `publicMediaUrl`, repair script | Client-facing URL base (stored in DB + API responses) |
 | `AWS_ACCESS_KEY_ID` | `admin` | `appConfig`, scripts | Credentials |
@@ -327,7 +327,7 @@ Map B2 credentials onto existing `AWS_*` keys (no code change for MVP):
 ```env
 # Production — Backblaze B2 via S3-compatible API
 AWS_REGION=us-east-005
-AWS_BUCKET_NAME=bpa-production-media
+AWS_BUCKET_NAME=furtail-production-media
 AWS_ENDPOINT=https://s3.us-east-005.backblazeb2.com
 AWS_ACCESS_KEY_ID=<b2_application_key_id>
 AWS_SECRET_ACCESS_KEY=<b2_application_key>
@@ -335,8 +335,8 @@ AWS_FORCE_PATH_STYLE=true
 
 # Public URL for clients (NOT the S3 API endpoint)
 # Use B2 download URL base or CDN, e.g.:
-# MINIO_PUBLIC_URL=https://fXXXX.backblazeb2.com/file/bpa-production-media
-# or: MINIO_PUBLIC_URL=https://media.bpa.org.bd
+# MINIO_PUBLIC_URL=https://fXXXX.backblazeb2.com/file/furtail-production-media
+# or: MINIO_PUBLIC_URL=https://media.furtail.org.bd
 MINIO_PUBLIC_URL=<public_download_base>
 
 STORAGE_USE_COUNTRY_PREFIX=true
@@ -349,10 +349,10 @@ Wire `STORAGE_PROVIDER` and `S3_*` aliases in `appConfig.ts` so `.env.example` m
 ### 5.5 Development (unchanged)
 
 ```env
-AWS_ENDPOINT=http://bpa-storage:9000    # inside Docker
+AWS_ENDPOINT=http://furtail-storage:9000    # inside Docker
 # or http://localhost:9000 on host
 MINIO_PUBLIC_URL=http://<LAN-IP>:9000
-AWS_BUCKET_NAME=bpa-pets
+AWS_BUCKET_NAME=furtail-pets
 AWS_ACCESS_KEY_ID=minioadmin
 AWS_SECRET_ACCESS_KEY=minioadmin
 ```
@@ -463,9 +463,9 @@ model Media {
 ### Phase 0 — Preparation (no production traffic change)
 
 1. **Rotate credentials** if B2 keys were exposed in `.env.example`.
-2. **Create B2 bucket** `bpa-production-media` (or chosen name) in target region.
+2. **Create B2 bucket** `furtail-production-media` (or chosen name) in target region.
 3. **Enable public read** for objects that must be directly accessible (feed, avatars) via B2 console or tested S3 bucket policy.
-4. **Configure CORS** on B2 bucket for production origins (`bpa.org.bd`, app domains, admin panels).
+4. **Configure CORS** on B2 bucket for production origins (`furtail.org.bd`, app domains, admin panels).
 5. **Choose public URL strategy:**
    - Path A: B2 friendly URL (`fXXX.backblazeb2.com/file/{bucket}/...`)
    - Path B: Custom domain + Cloudflare CDN (recommended for production scale)
@@ -487,10 +487,10 @@ model Media {
 
    ```bash
    # Example with rclone (configure both remotes first)
-   rclone sync minio:bpa-pets b2:bpa-production-media --progress
+   rclone sync minio:furtail-pets b2:furtail-production-media --progress
 
    # Or AWS CLI-compatible
-   aws s3 sync s3://bpa-pets s3://bpa-production-media \
+   aws s3 sync s3://furtail-pets s3://furtail-production-media \
      --endpoint-url https://s3.us-east-005.backblazeb2.com
    ```
 

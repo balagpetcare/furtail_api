@@ -1,7 +1,7 @@
-# BPA Push Summary
+# Furtail Push Summary
 
 **Date:** 2026-06-05  
-**Operation:** Safe commit and push to `main` on all BPA git repositories  
+**Operation:** Safe commit and push to `main` on all Furtail git repositories  
 **Constraints enforced:** No force push, no history rewrite, no branch/tag deletion, no secrets committed
 
 ---
@@ -10,17 +10,17 @@
 
 | Repository | GitHub URL | Branch | Commit Hash | Push Status | Notes |
 |---|---|---|---|---|---|
-| backend-api | https://github.com/balagpetcare/bpa_app_api.git | `main` | `5a623a6` | **SUCCESS** | Fast-forward merged `release/V-A1.0.7` (33 commits) + audit docs |
-| bpa_app | https://github.com/balagpetcare/bpa_app.git | `main` | `9255aa8` | **SUCCESS** | Committed 231 files, fast-forward merged `v.10.0.0.1` (4 commits) |
+| backend-api | https://github.com/balagpetcare/furtail_api.git | `main` | `5a623a6` | **SUCCESS** | Fast-forward merged `release/V-A1.0.7` (33 commits) + audit docs |
+| furtail_app | https://github.com/balagpetcare/furtail_app.git | `main` | `9255aa8` | **SUCCESS** | Committed 231 files, fast-forward merged `v.10.0.0.1` (4 commits) |
 | bpa_web | https://github.com/balagpetcare/next_v1.git | `main` | `740835a` | **SUCCESS** | Fast-forward merged `release/V-A1.0.8` (62 commits) |
 | vaccination_2026 | https://github.com/balagpetcare/vaccination_2026.git | `main` | `a3a22fe` | **SUCCESS** | Committed 38 landing page changes |
-| bpa-landing | — | — | — | **SKIPPED** | Not a git repository |
+| furtail-landing | — | — | — | **SKIPPED** | Not a git repository |
 
 ---
 
 ## Commits Created
 
-### bpa_app (`9255aa8`)
+### furtail_app (`9255aa8`)
 
 ```
 feat: vaccination campaign booking, UI standardization, and deployment prep
@@ -62,7 +62,7 @@ For each repository:
 
 1. Committed uncommitted changes (where applicable)
 2. `git checkout main`
-3. `git merge <release-branch> --ff-only` (backend-api, bpa_app, bpa_web)
+3. `git merge <release-branch> --ff-only` (backend-api, furtail_app, bpa_web)
 4. `git pull origin main --rebase`
 5. `git push origin main`
 
@@ -77,7 +77,7 @@ All four repositories confirmed in sync with `origin/main` (0 ahead / 0 behind):
 | Repository | Local `main` | `origin/main` | Match |
 |---|---|---|---|
 | backend-api | `5a623a6` | `5a623a6` | Yes |
-| bpa_app | `9255aa8` | `9255aa8` | Yes |
+| furtail_app | `9255aa8` | `9255aa8` | Yes |
 | bpa_web | `740835a` | `740835a` | Yes |
 | vaccination_2026 | `a3a22fe` | `a3a22fe` | Yes |
 
@@ -87,10 +87,10 @@ All four repositories confirmed in sync with `origin/main` (0 ahead / 0 behind):
 
 | Repository | Item | Reason |
 |---|---|---|
-| bpa_app | `app_v7.zip` | Build artifact — intentionally excluded |
-| bpa_app | `??` untracked zip only | No other uncommitted source changes |
+| furtail_app | `app_v7.zip` | Build artifact — intentionally excluded |
+| furtail_app | `??` untracked zip only | No other uncommitted source changes |
 | vaccination_2026 | `tsconfig.tsbuildinfo` (modified) | Build cache — intentionally excluded |
-| bpa-landing | Entire directory | No `.git` — requires manual `git init` and remote setup |
+| furtail-landing | Entire directory | No `.git` — requires manual `git init` and remote setup |
 
 ---
 
@@ -106,8 +106,8 @@ git checkout main
 
 | Service | Clone URL |
 |---|---|
-| API Backend | `https://github.com/balagpetcare/bpa_app_api.git` |
-| Flutter Mobile App | `https://github.com/balagpetcare/bpa_app.git` |
+| API Backend | `https://github.com/balagpetcare/furtail_api.git` |
+| Flutter Mobile App | `https://github.com/balagpetcare/furtail_app.git` |
 | Next.js Web App | `https://github.com/balagpetcare/next_v1.git` |
 | Vaccination Landing | `https://github.com/balagpetcare/vaccination_2026.git` |
 

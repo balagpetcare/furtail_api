@@ -1,4 +1,4 @@
-# BPA/WPA Gap Analysis Against Centralized Location Master
+# Furtail/Furtail Gap Analysis Against Centralized Location Master
 
 ## Repository Analyzed
 
@@ -14,7 +14,7 @@ Centralized Bangladesh master hierarchy shared by all modules:
 - Union
 - Area/Ward (optional)
 
-## 1) Current BPA Location State
+## 1) Current Furtail Location State
 
 ## A. Existing Bangladesh hierarchy tables
 
@@ -119,7 +119,7 @@ Current validation often checks existence only, not full hierarchy consistency (
 2. No universally shared location query library for all business services.
 3. Location-aware filtering in module domains is not centrally standardized.
 
-## 4) Why This Matters For BPA/WPA
+## 4) Why This Matters For Furtail/Furtail
 
 Without consolidation:
 

@@ -7,7 +7,7 @@
 
 ## Summary
 
-Vaccination booking is converted from **venue-first** (campaign location + date + slot) to **zone-interest** (coverage zone + BdArea/booking area). Venue, date, and time are assigned later by BPA staff; customers are notified by **SMS**.
+Vaccination booking is converted from **venue-first** (campaign location + date + slot) to **zone-interest** (coverage zone + BdArea/booking area). Venue, date, and time are assigned later by Furtail staff; customers are notified by **SMS**.
 
 **Campaign locations are not removed** — they remain in Location Master for admin assignment and legacy venue-based flows.
 
@@ -15,7 +15,7 @@ Vaccination booking is converted from **venue-first** (campaign location + date 
 
 ## Business rule
 
-| Phase | Customer | BPA |
+| Phase | Customer | Furtail |
 |-------|----------|-----|
 | Booking | Select **zone** + **area**, cats, mobile, payment | Collect demand |
 | Planning | — | View zone/area demand (analytics only; no auto-venues) |

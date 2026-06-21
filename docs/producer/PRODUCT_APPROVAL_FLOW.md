@@ -1,4 +1,4 @@
-# Producer Product Approval Flow (BPA Standard)
+# Producer Product Approval Flow (Furtail Standard)
 
 ## Expected flow
 

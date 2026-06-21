@@ -1,4 +1,4 @@
-# BPA App Linking Design Document
+# Furtail Linking Design Document
 
 ## 2026 Cat Flu + Rabies Vaccination Campaign
 
@@ -6,18 +6,18 @@
 
 ## 1. Overview
 
-This document outlines how campaign data (pets, vaccinations, certificates) will be linked to the main BPA app (`bpa_app`) for users who later register for the full BPA experience.
+This document outlines how campaign data (pets, vaccinations, certificates) will be linked to the main Furtail app (`furtail_app`) for users who later register for the full Furtail experience.
 
 ### 1.1 Key Principle
 
-> Mobile number is the universal identifier for linking campaign data to BPA accounts.
+> Mobile number is the universal identifier for linking campaign data to Furtail accounts.
 
 ### 1.2 Linking Scenarios
 
 | Scenario | User Journey |
 |----------|--------------|
-| New BPA User | Campaign participant later downloads BPA app and registers |
-| Existing BPA User | User with BPA account books through campaign site |
+| New Furtail User | Campaign participant later downloads Furtail app and registers |
+| Existing Furtail User | User with Furtail account books through campaign site |
 | Post-Campaign Discovery | User verifies certificate and decides to download app |
 
 ---
@@ -38,7 +38,7 @@ CampaignBooking
     └── vaccinationId (existing Vaccination record)
 ```
 
-### 2.2 BPA-Side Data
+### 2.2 Furtail-Side Data
 
 ```
 User
@@ -59,7 +59,7 @@ User
 model CampaignBooking {
   // ... existing fields
   
-  // Linking to BPA user (set when user registers)
+  // Linking to Furtail user (set when user registers)
   userId        Int?
   user          User?         @relation(fields: [userId], references: [id])
   linkedAt      DateTime?     // When the account was linked
@@ -69,8 +69,8 @@ model CampaignBooking {
 }
 
 enum LinkSource {
-  APP_REGISTRATION    // User registered in BPA app after campaign
-  EXISTING_USER       // User already had BPA account
+  APP_REGISTRATION    // User registered in Furtail app after campaign
+  EXISTING_USER       // User already had Furtail account
   CERTIFICATE_CLAIM   // Claimed via certificate verification
   MANUAL_LINK        // Staff manually linked accounts
 }
@@ -90,12 +90,12 @@ model CampaignPet {
 
 ## 3. Linking Flows
 
-### 3.1 Flow A: New BPA App Registration
+### 3.1 Flow A: New Furtail Registration
 
 ```
 ┌───────────────────────────────────────────────────────────────────────────┐
 │                                                                           │
-│   CAMPAIGN SITE                BPA BACKEND              BPA APP          │
+│   CAMPAIGN SITE                Furtail BACKEND              Furtail APP          │
 │                                                                           │
 │   ┌─────────────┐                                                        │
 │   │ User books  │                                                        │
@@ -112,7 +112,7 @@ model CampaignPet {
 │          │                                                                │
 │          │    Months later...                         ┌─────────────┐    │
 │          │                                            │ User installs│    │
-│          │                                            │ BPA app     │    │
+│          │                                            │ Furtail app     │    │
 │          │                                            └──────┬──────┘    │
 │          │                                                   │           │
 │          │                                                   ▼           │
@@ -145,12 +145,12 @@ model CampaignPet {
 └───────────────────────────────────────────────────────────────────────────┘
 ```
 
-### 3.2 Flow B: Existing BPA User on Campaign Site
+### 3.2 Flow B: Existing Furtail User on Campaign Site
 
 ```
 ┌───────────────────────────────────────────────────────────────────────────┐
 │                                                                           │
-│   CAMPAIGN SITE                BPA BACKEND                               │
+│   CAMPAIGN SITE                Furtail BACKEND                               │
 │                                                                           │
 │   ┌─────────────┐                                                        │
 │   │ User enters │                                                        │
@@ -195,9 +195,9 @@ User receives certificate SMS
     ↓
 Opens verification URL
     ↓
-Sees "Claim in BPA App" button
+Sees "Claim in Furtail" button
     ↓
-Deep link opens BPA app
+Deep link opens Furtail app
     ↓
 If not logged in: Prompt login/register
     ↓
@@ -302,7 +302,7 @@ async function linkExistingPet(
 ### 4.3 Post-Registration Linking
 
 ```typescript
-// Called after new user registration in BPA app
+// Called after new user registration in Furtail app
 async function linkCampaignRecordsToNewUser(userId: number, phone: string): Promise<LinkResult> {
   // Find all unlinked campaign bookings for this phone
   const unlinkedBookings = await prisma.campaignBooking.findMany({
@@ -353,7 +353,7 @@ async function linkCampaignRecordsToNewUser(userId: number, phone: string): Prom
         });
         
         if (!pet) {
-          // Create new pet in BPA system
+          // Create new pet in Furtail system
           pet = await tx.pet.create({
             data: {
               userId,
@@ -367,7 +367,7 @@ async function linkCampaignRecordsToNewUser(userId: number, phone: string): Prom
           result.pets++;
         }
         
-        // Link campaign pet to BPA pet
+        // Link campaign pet to Furtail pet
         await tx.campaignPet.update({
           where: { id: campaignPet.id },
           data: {
@@ -376,7 +376,7 @@ async function linkCampaignRecordsToNewUser(userId: number, phone: string): Prom
           },
         });
         
-        // If vaccination exists, update it to point to the BPA pet
+        // If vaccination exists, update it to point to the Furtail pet
         if (campaignPet.vaccination) {
           await tx.vaccination.update({
             where: { id: campaignPet.vaccination.id },
@@ -394,14 +394,14 @@ async function linkCampaignRecordsToNewUser(userId: number, phone: string): Prom
 
 ---
 
-## 5. BPA App UI for Linking
+## 5. Furtail UI for Linking
 
 ### 5.1 Post-Registration Link Prompt
 
 ```
 ┌─────────────────────────────────────────┐
 │                                         │
-│    🎉 Welcome to BPA!                   │
+│    🎉 Welcome to Furtail!                   │
 │                                         │
 │    We found records from the            │
 │    2026 Vaccination Campaign            │
@@ -413,7 +413,7 @@ async function linkCampaignRecordsToNewUser(userId: number, phone: string): Prom
 │    💉 3 Vaccinations                    │
 │                                         │
 │    Would you like to import these       │
-│    into your BPA account?               │
+│    into your Furtail account?               │
 │                                         │
 │    ┌───────────────────────────────┐    │
 │    │     Yes, Import Records       │    │
@@ -432,7 +432,7 @@ async function linkCampaignRecordsToNewUser(userId: number, phone: string): Prom
 ├─────────────────────────────────────────┤
 │                                         │
 │   The following will be added to your   │
-│   BPA account:                          │
+│   Furtail account:                          │
 │                                         │
 │   ─────────────────────────────────     │
 │                                         │
@@ -479,7 +479,7 @@ async function linkCampaignRecordsToNewUser(userId: number, phone: string): Prom
 │   ─────────────────────────────────     │
 │                                         │
 │   ┌───────────────────────────────┐     │
-│   │ ⚪ Mittens (from BPA)         │     │
+│   │ ⚪ Mittens (from Furtail)         │     │
 │   │    Persian • 2 years          │     │
 │   │    Last visit: March 2026     │     │
 │   └───────────────────────────────┘     │
@@ -510,16 +510,16 @@ async function linkCampaignRecordsToNewUser(userId: number, phone: string): Prom
 ### 6.1 Certificate to App Link
 
 ```typescript
-// Certificate verification page shows "View in BPA App" button
+// Certificate verification page shows "View in Furtail" button
 const appLink = generateAppDeepLink(certificateToken);
 
 function generateAppDeepLink(certToken: string): string {
-  const androidLink = `bpa://certificate/${certToken}`;
-  const iosLink = `bpa://certificate/${certToken}`;
-  const webFallback = `https://app.bpa.com.bd/certificate/${certToken}`;
+  const androidLink = `furtail://certificate/${certToken}`;
+  const iosLink = `furtail://certificate/${certToken}`;
+  const webFallback = `https://app.furtail.com.bd/certificate/${certToken}`;
   
   // For smart banner / universal link
-  return `https://bpa.link/cert/${certToken}`;
+  return `https://furtail.link/cert/${certToken}`;
 }
 ```
 
@@ -604,7 +604,7 @@ router.post('/campaign-link/import',
 );
 
 // POST /api/v1/campaign-link/pet/:campaignPetId
-// Link campaign pet to existing BPA pet
+// Link campaign pet to existing Furtail pet
 router.post('/campaign-link/pet/:campaignPetId',
   authenticate,
   async (req, res) => {

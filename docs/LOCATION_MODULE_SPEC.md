@@ -1,6 +1,6 @@
 # Location Module Spec - Custom Map & Drag-and-Drop Picker (No Google)
 
-**BPA Standard - Production-ready plan**
+**Furtail Standard - Production-ready plan**
 
 *(Aligned with [BPA_STANDARD.md](../BPA_STANDARD.md), [PROJECT_CONTEXT.md](../PROJECT_CONTEXT.md), [GLOBAL_COUNTRY_WISE_DESIGN_BLUEPRINT.md](./GLOBAL_COUNTRY_WISE_DESIGN_BLUEPRINT.md) section 4 and 12.2.)*
 
@@ -111,7 +111,7 @@ DB-তে শুধু রাখবেন:
 
 ---
 
-## 7. BPA প্রোজেক্টে বাস্তবায়ন প্ল্যান
+## 7. Furtail প্রোজেক্টে বাস্তবায়ন প্ল্যান
 
 ### MVP (Minimum)
 

@@ -1,6 +1,6 @@
 # Booking Flow Simplification — Implementation Plan
 
-**Project:** BPA 2026 Vaccination Campaign  
+**Project:** Furtail 2026 Vaccination Campaign  
 **Date:** June 3, 2026  
 **Status:** Planning (no code changes yet)  
 **Goal:** Reduce booking friction and maximize conversion by replacing the 7-step flow with a 3-step flow.
@@ -33,7 +33,7 @@ Future booking lookup uses **Mobile + Booking ID + Verification Code** (no OTP).
 | API & data | `backend-api/src/api/v1/modules/campaign/` | Bookings, OTP, payment, SMS, rollout |
 | Admin | `bpa_web/app/admin/(larkon)/campaigns/[id]/` | Rollout, locations, slots, pricing |
 | Staff | `bpa_web/app/staff/(larkon)/campaign/` | Check-in, vaccination |
-| Mobile app | `bpa_app/lib/features/campaign/` | Post-booking link/view only (not booking UI) |
+| Mobile app | `furtail_app/lib/features/campaign/` | Post-booking link/view only (not booking UI) |
 
 ### 2.2 Current 7-Step Flow
 
@@ -83,7 +83,7 @@ Phone (+ optional ref) → OTP (VIEW_BOOKING) → JWT → GET /booking/my or /bo
 | Rollout area check | `rollout.service.ts` → `checkAreaActive()` | Used on landing only; **not enforced at booking** |
 | Admin rollout CRUD | `bpa_web/.../rollout/page.tsx` + admin API | Division + city; district/upazila in schema but partial UI |
 | BD geo APIs | `GET /rollout/divisions`, `/districts`, `/upazilas` | Already public |
-| No account required | `CampaignBooking.ownerUserId` nullable | Auto-links if phone matches BPA user |
+| No account required | `CampaignBooking.ownerUserId` nullable | Auto-links if phone matches Furtail user |
 
 ### 2.6 Gaps vs Target Flow
 
@@ -295,7 +295,7 @@ Staff portal already supports editing pet details at check-in/vaccination.
 New/updated template variables for `BOOKING_CONFIRMED`:
 
 ```
-BPA Vaccination: Paid! Booking ID: {{bookingRef}}. Code: {{verificationCode}}.
+Furtail Vaccination: Paid! Booking ID: {{bookingRef}}. Code: {{verificationCode}}.
 {{catCount}} cat(s) — {{areaName}}. View: {{claimUrl}}
 ```
 
@@ -333,8 +333,8 @@ Remove dependency on pet name / slot time in simplified flow (or use area + “s
   "catCount": 2,
   "couponCode": "BPA2026",
   "paymentMethod": "BKASH",
-  "returnUrl": "https://vaccination.bpa.bd/book/success",
-  "cancelUrl": "https://vaccination.bpa.bd/book/payment/failed"
+  "returnUrl": "https://vaccination.furtail.bd/book/success",
+  "cancelUrl": "https://vaccination.furtail.bd/book/payment/failed"
 }
 ```
 
@@ -733,7 +733,7 @@ See also: `docs/vaccination-campaign-2026/05-ROLLBACK-PLAN.md`
 | 3 | Allow claim with alternate phone? | **No** — primary mobile only |
 | 4 | Coupon on step 1 or step 2? | Step 2 (payment screen) |
 | 5 | Rocket payment method? | Keep if gateway supports; same as today |
-| 6 | bpa_app changes? | None for booking; linking by phone still works post-import |
+| 6 | furtail_app changes? | None for booking; linking by phone still works post-import |
 
 ---
 

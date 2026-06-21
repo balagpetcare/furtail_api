@@ -382,7 +382,7 @@ async function runWarehouseProcurementScenario(ctx: {
 }
 
 async function main() {
-  console.log("=== simulateStockFlow — BPA stock request lifecycle ===\n");
+  console.log("=== simulateStockFlow — Furtail stock request lifecycle ===\n");
 
   const orgId = num(process.env.FLOW_ORG_ID);
   let normalBranchId = num(process.env.FLOW_NORMAL_BRANCH_ID);

@@ -36,7 +36,7 @@
 
 ## 1. Executive Summary
 
-The BPA/WPA system currently has a functioning but **incomplete branch-type-aware staff invitation system**. The core architecture — `StaffInvite` table, token lifecycle, invite/accept flow, `branchRoleMatrix.ts` — is sound and reusable. However, there are **critical gaps** between:
+The Furtail/Furtail system currently has a functioning but **incomplete branch-type-aware staff invitation system**. The core architecture — `StaffInvite` table, token lifecycle, invite/accept flow, `branchRoleMatrix.ts` — is sound and reusable. However, there are **critical gaps** between:
 
 - The `BranchType` codes seeded into the database (`CLINIC`, `PET_SHOP`, `DELIVERY_HUB`, `WAREHOUSE_DC`, `GROOMING_SPA`, `BOARDING_DAYCARE`, `FOSTER_SHELTER`, `TRAINING_BEHAVIOR`, `PHARMACY_DIAGNOSTICS`)
 - The codes recognized in `branchRoleMatrix.ts` (`SHOP`, `PET_SHOP`, `CLINIC`, `DELIVERY_HUB`, `DELIVERY`, `HUB`, `WAREHOUSE`, `CENTRAL_WAREHOUSE`, `PHARMACY`)

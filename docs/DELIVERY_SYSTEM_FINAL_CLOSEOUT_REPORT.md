@@ -1,7 +1,7 @@
 # Delivery System — Final Closeout Report
 
 > **Date:** 2026-04-11
-> **Scope:** Validation of the BPA request-based delivery program against planning artifacts (`DELIVERY_SYSTEM_CODE_TRUTH_AUDIT`, `GAP_ANALYSIS`, `MASTER_EXECUTION_PLAN`, `BUILD_BLUEPRINT`, `IMPLEMENTATION_PROGRESS`).
+> **Scope:** Validation of the Furtail request-based delivery program against planning artifacts (`DELIVERY_SYSTEM_CODE_TRUTH_AUDIT`, `GAP_ANALYSIS`, `MASTER_EXECUTION_PLAN`, `BUILD_BLUEPRINT`, `IMPLEMENTATION_PROGRESS`).
 > **Method:** Document cross-check (code truth + gaps + stated progress). No full E2E browser execution was run for this report unless noted.
 
 ---

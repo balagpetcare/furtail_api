@@ -2,7 +2,7 @@
  * Pure timezone/schedule time helpers (no DB). Used by clinicScheduleTime.service and slot generation.
  */
 
-/** Default timezone for BPA Clinic branches when branch timezone is not configured. */
+/** Default timezone for Furtail Clinic branches when branch timezone is not configured. */
 export const DEFAULT_CLINIC_TIMEZONE = "Asia/Dhaka";
 
 /** Known IANA timezone -> offset in minutes (ahead of UTC). */

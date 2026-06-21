@@ -2,7 +2,7 @@
 
 ## Objective
 
-Ensure the centralized location system remains safe, correct, and performant under multi-module BPA/WPA usage.
+Ensure the centralized location system remains safe, correct, and performant under multi-module Furtail/Furtail usage.
 
 ## 1) Security Requirements
 

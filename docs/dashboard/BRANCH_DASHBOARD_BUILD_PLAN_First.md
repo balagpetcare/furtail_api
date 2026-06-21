@@ -1,5 +1,5 @@
 # BRANCH_DASHBOARD_BUILD_PLAN.md
-> Project: BPA / Multi-tenant Branch Dashboard (Staff App Port 3100)
+> Project: Furtail / Multi-tenant Branch Dashboard (Staff App Port 3100)
 > API: http://localhost:3000/api/v1 (DO NOT CHANGE PORT 3000)
 > UI: WowDash Admin Template style (cards, tables, tabs, badges, alerts)
 > Rule: No breaking changes, merge only, do not delete existing code.

@@ -1,6 +1,6 @@
 # Clinic Appointment & Queue Standard
 
-This document describes the BPA Clinic appointment, queue, and visit lifecycles, permission matrix, API summary, and QA checklist.
+This document describes the Furtail Clinic appointment, queue, and visit lifecycles, permission matrix, API summary, and QA checklist.
 
 ---
 

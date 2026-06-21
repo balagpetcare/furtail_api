@@ -1,4 +1,4 @@
-# Production Seed Execution Plan (BPA / WPA)
+# Production Seed Execution Plan (Furtail / Furtail)
 
 **Date:** 2026-06-06  
 **Repository:** `backend-api`  
@@ -179,7 +179,7 @@ cross-env TS_NODE_TRANSPILE_ONLY=1 node -r ts-node/register -e "require('dotenv/
 ### Phase 7 — Super Admin bootstrap (mandatory for admin panel login)
 
 ```powershell
-cross-env SUPER_ADMIN_EMAIL=admin@example.com SUPER_ADMIN_PASSWORD="<strong-password>" SUPER_ADMIN_NAME="BPA Super Admin" npm run admin:bootstrap
+cross-env SUPER_ADMIN_EMAIL=admin@example.com SUPER_ADMIN_PASSWORD="<strong-password>" SUPER_ADMIN_NAME="Furtail Super Admin" npm run admin:bootstrap
 ```
 
 Verify:

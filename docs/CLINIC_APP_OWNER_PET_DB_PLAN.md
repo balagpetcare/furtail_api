@@ -1,4 +1,4 @@
-# BPA Clinic + App Owner/Pet Identity — DB Relation and Migration Plan
+# Furtail Clinic + App Owner/Pet Identity — DB Relation and Migration Plan
 
 **Purpose:** Schema relations, constraints, optional migrations, backward compatibility for unified owner/pet identity.
 

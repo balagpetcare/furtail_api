@@ -84,7 +84,7 @@ Response field:
 
 ## Admin UI
 
-BPA Web: **Campaign → Vaccines included** (`/admin/campaigns/[id]/included-vaccines`)
+Furtail Web: **Campaign → Vaccines included** (`/admin/campaigns/[id]/included-vaccines`)
 
 - Add / edit / delete / reorder (↑↓)
 

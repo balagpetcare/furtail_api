@@ -23,7 +23,7 @@ Production EPS success callbacks (`GET /api/v1/payments/eps/success`) now:
 
 | Item | Action |
 |------|--------|
-| `CAMPAIGN_LANDING_URL` | Set to vaccination production URL (e.g. `https://vaccination.bangladeshpetassociation.com`) |
+| `CAMPAIGN_LANDING_URL` | Set to vaccination production URL (e.g. `https://vaccination.furtail.world`) |
 | `API_PUBLIC_BASE_URL` | Public API base used in EPS dashboard callbacks |
 | `EPS_*` credentials | Match environment where payments are taken (sandbox vs `pgapi.eps.com.bd`) |
 | EPS merchant panel | Success/fail/cancel/webhook URLs → `/api/v1/payments/eps/*` |
@@ -41,7 +41,7 @@ npm ci
 npm run build
 # Review — no new Prisma migration in this fix
 node scripts/check-migration-integrity.js   # if policy requires
-pm2 restart bpa-api   # or your process manager
+pm2 restart furtail-api   # or your process manager
 ```
 
 ---
@@ -89,8 +89,8 @@ Expect: order `COMPLETED`, session `FULFILLED`, booking `COMPLETED`/`CONFIRMED`,
 ### 5. Logs
 
 ```bash
-grep "\[EPS callback\]" /var/log/bpa-api.log
-grep "\[EPS verify\]" /var/log/bpa-api.log
+grep "\[EPS callback\]" /var/log/furtail-api.log
+grep "\[EPS verify\]" /var/log/furtail-api.log
 ```
 
 Look for `verify_fallback` (EPS API 404 but callback processed) vs `webhook_done` with `success: true`.

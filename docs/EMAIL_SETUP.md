@@ -1,4 +1,4 @@
-# Email setup (BPA API)
+# Email setup (Furtail API)
 
 Producer staff invites and other transactional emails use SMTP (nodemailer). Email sending is **optional**: if SMTP is not configured, the API still works and returns invite data; delivery is marked as `SKIPPED` with a clear message.
 
@@ -11,7 +11,7 @@ Producer staff invites and other transactional emails use SMTP (nodemailer). Ema
 | `SMTP_SECURE` | Set to `true` for port 465 (SSL) |
 | `SMTP_USER`   | SMTP username / email |
 | `SMTP_PASS`   | SMTP password or app password |
-| `SMTP_FROM`   | Sender address (e.g. `BPA <noreply@yourdomain.com>`) |
+| `SMTP_FROM`   | Sender address (e.g. `Furtail <noreply@yourdomain.com>`) |
 
 ## Gmail (development)
 
@@ -23,7 +23,7 @@ Producer staff invites and other transactional emails use SMTP (nodemailer). Ema
    - `SMTP_SECURE=false`
    - `SMTP_USER=your@gmail.com`
    - `SMTP_PASS=your-16-char-app-password`
-   - `SMTP_FROM=BPA Dev <your@gmail.com>`
+   - `SMTP_FROM=Furtail Dev <your@gmail.com>`
 
 ## Producer staff invite emails
 
@@ -43,8 +43,8 @@ The `bpa_worker` service in `docker-compose.yml` runs the BullMQ email worker in
 
 - Same image/build as `bpa_api`.
 - Command: `npm run worker:email`.
-- Env: `REDIS_HOST=bpa-redis`, `REDIS_PORT=6379` (and `.env.docker` for `DATABASE_URL`, etc.).
-- Depends on `bpa_db` and `bpa-redis` (healthy).
+- Env: `REDIS_HOST=furtail-redis`, `REDIS_PORT=6379` (and `.env.docker` for `DATABASE_URL`, etc.).
+- Depends on `bpa_db` and `furtail-redis` (healthy).
 
 **Verification:**
 

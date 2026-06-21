@@ -1,4 +1,4 @@
-# BPA/WPA Vaccination Module Current State & Implementation Plan
+# Furtail/Furtail Vaccination Module Current State & Implementation Plan
 
 ## 1. Executive Summary
 
@@ -6,7 +6,7 @@ The vaccination system partially exists.
 
 The backend already has basic Prisma models for `VaccineType`, `Vaccination`, and `DewormingRecord`, plus clinic routes and services to list pet vaccinations, record a simple vaccination, calculate a next due date, look up a certificate token, and manage basic deworming records. The frontend also has a small standalone clinic vaccination page and a read-only staff patient profile vaccine tab.
 
-However, this is not yet a complete BPA/WPA digital vaccination card system. The current implementation does not support branch-administered vaccine records, doctor/staff administered-by tracking, vaccine schedule rules, inventory batch deduction, billing/POS or clinic invoice linkage, real reminder scheduling, customer portal visibility, printable PDF cards, or public QR verification.
+However, this is not yet a complete Furtail/Furtail digital vaccination card system. The current implementation does not support branch-administered vaccine records, doctor/staff administered-by tracking, vaccine schedule rules, inventory batch deduction, billing/POS or clinic invoice linkage, real reminder scheduling, customer portal visibility, printable PDF cards, or public QR verification.
 
 Recommended next step: implement the backend foundation first, with a modular vaccination domain that can read existing records while adding proper branch, inventory, billing, reminder, customer, and audit links.
 

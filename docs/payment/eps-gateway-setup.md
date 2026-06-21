@@ -1,6 +1,6 @@
 # EPS Payment Gateway — Setup Guide
 
-**Project:** BPA Vaccination Campaign 2026  
+**Project:** Furtail Vaccination Campaign 2026  
 **Backend:** `backend-api`  
 **Related audit:** [eps-gateway-audit.md](./eps-gateway-audit.md)
 

@@ -73,7 +73,7 @@ On inspected local DB:
 | Record | Expected | Actual |
 |--------|----------|--------|
 | **`branches` with `status = 'ACTIVE'`** | ≥ 1 (any org if `organizerId` null) | **0 rows** |
-| `campaigns.organizerId` for `uat-free-2026` | Often set to BPA org | **`null`** |
+| `campaigns.organizerId` for `uat-free-2026` | Often set to Furtail org | **`null`** |
 | `campaign_configs.onlinePaymentEnabled` | `true` for paid checkout | **`true`** (not blocking) |
 
 So the **missing record** is: **at least one active branch** used as `orders.branchId` for campaign checkout orders.
@@ -198,7 +198,7 @@ Public campaign payload may include config via `getCampaignConfigOrNull` in `cam
 
 ### Step 1 — Fix branch anchor (fixes **this** error)
 
-**Option A (recommended):** Link campaign to BPA org and ensure an active branch:
+**Option A (recommended):** Link campaign to Furtail org and ensure an active branch:
 
 1. Set `campaigns.organizerId` to the correct `organizations.id`.
 2. Ensure at least one row in `branches` with `status = 'ACTIVE'` and matching `orgId`.

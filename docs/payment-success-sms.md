@@ -1,4 +1,4 @@
-# Payment Success SMS — BPA Vaccination 2026
+# Payment Success SMS — Furtail Vaccination 2026
 
 **Date:** 2026-06-07  
 **Scope:** Backend-only confirmation SMS after paid express checkout fulfillment.
@@ -63,7 +63,7 @@ If a booking is confirmed via `processPaymentWebhook` **without** express checko
 ### Message template (venue / confirmed)
 
 ```
-Bangladesh Pet Association
+Furtail
 
 Your vaccination booking is confirmed.
 

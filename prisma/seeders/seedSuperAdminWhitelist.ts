@@ -8,7 +8,7 @@ function normalizePhoneDigits(v: string) {
  * Seeds Super Admin whitelist from env.
  *
  * Env:
- *  - SUPER_ADMIN_WHITELIST_EMAILS="owner@bpa.com,admin@bpa.com"
+ *  - SUPER_ADMIN_WHITELIST_EMAILS="owner@furtail.com,admin@furtail.com"
  *  - SUPER_ADMIN_WHITELIST_PHONES="88017XXXXXXXX,017XXXXXXXX"
  */
 export default async function seedSuperAdminWhitelist(prisma: PrismaClient) {

@@ -40,7 +40,7 @@
 - `docs/CLINIC_BRANCH_VERIFICATION_ACTIVE_FIX.md`, `docs/CLINIC_BRANCH_VERIFICATION_FINAL_VERIFICATION_PASS.md`
 
 **Frontend (bpa_web):**
-- `src/bpa/admin/components/verification-center/VerificationListPage.tsx` – admin branch list
+- `src/furtail/admin/components/verification-center/VerificationListPage.tsx` – admin branch list
 - `app/owner/(larkon)/branches/page.jsx` – owner branch list
 - `app/owner/(larkon)/organizations/[id]/branches/page.jsx` – org-scoped branch list
 - `app/owner/_components/StatusBadge.jsx`

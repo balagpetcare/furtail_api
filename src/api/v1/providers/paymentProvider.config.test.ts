@@ -18,9 +18,9 @@ describe("paymentProvider.config callback URLs", () => {
   });
 
   it("builds unified callback paths under /api/v1/payments", () => {
-    process.env.API_PUBLIC_BASE_URL = "https://api.bpa.com.bd";
+    process.env.API_PUBLIC_BASE_URL = "https://api.furtail.com.bd";
     const prefix = getUnifiedPaymentApiPrefix();
-    expect(prefix).toBe("https://api.bpa.com.bd/api/v1/payments");
+    expect(prefix).toBe("https://api.furtail.com.bd/api/v1/payments");
     expect(getBkashConfig().callbackUrl).toBe(`${prefix}/webhook`);
     expect(getNagadConfig().callbackUrl).toBe(`${prefix}/webhook`);
     expect(getSslCommerzConfig().ipnUrl).toBe(`${prefix}/webhook`);
@@ -28,7 +28,7 @@ describe("paymentProvider.config callback URLs", () => {
   });
 
   it("validates active provider env keys", () => {
-    process.env.API_PUBLIC_BASE_URL = "https://api.bpa.com.bd";
+    process.env.API_PUBLIC_BASE_URL = "https://api.furtail.com.bd";
     process.env.PAYMENT_PROVIDER = "sslcommerz";
     delete process.env.SSLCOMMERZ_STORE_ID;
     const result = validateActivePaymentProviderConfig();
@@ -43,7 +43,7 @@ describe("paymentProvider.config callback URLs", () => {
   });
 
   it("rejects placeholder EPS credentials", () => {
-    process.env.API_PUBLIC_BASE_URL = "https://api.bpa.com.bd";
+    process.env.API_PUBLIC_BASE_URL = "https://api.furtail.com.bd";
     process.env.PAYMENT_PROVIDER = "eps";
     process.env.EPS_USERNAME = "<sandbox_username>";
     process.env.EPS_PASSWORD = "real_password";
@@ -57,16 +57,16 @@ describe("paymentProvider.config callback URLs", () => {
   });
 
   it("builds EPS callback URLs under /api/v1/payments/eps", () => {
-    process.env.API_PUBLIC_BASE_URL = "https://api.bpa.com.bd";
+    process.env.API_PUBLIC_BASE_URL = "https://api.furtail.com.bd";
     const eps = getEpsConfig();
-    expect(eps.successUrl).toBe("https://api.bpa.com.bd/api/v1/payments/eps/success");
-    expect(eps.failUrl).toBe("https://api.bpa.com.bd/api/v1/payments/eps/fail");
-    expect(eps.cancelUrl).toBe("https://api.bpa.com.bd/api/v1/payments/eps/cancel");
-    expect(eps.callbackUrl).toBe("https://api.bpa.com.bd/api/v1/payments/eps/webhook");
+    expect(eps.successUrl).toBe("https://api.furtail.com.bd/api/v1/payments/eps/success");
+    expect(eps.failUrl).toBe("https://api.furtail.com.bd/api/v1/payments/eps/fail");
+    expect(eps.cancelUrl).toBe("https://api.furtail.com.bd/api/v1/payments/eps/cancel");
+    expect(eps.callbackUrl).toBe("https://api.furtail.com.bd/api/v1/payments/eps/webhook");
   });
 
   it("validates EPS required env when active", () => {
-    process.env.API_PUBLIC_BASE_URL = "https://api.bpa.com.bd";
+    process.env.API_PUBLIC_BASE_URL = "https://api.furtail.com.bd";
     process.env.PAYMENT_PROVIDER = "eps";
     delete process.env.EPS_USERNAME;
     const result = validateActivePaymentProviderConfig();

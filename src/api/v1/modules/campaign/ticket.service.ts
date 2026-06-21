@@ -6,7 +6,7 @@ import prisma from "../../../../infrastructure/db/prismaClient";
 import { generateQrToken } from "./campaign.utils";
 import { generatePetTicketQr } from "./qr.service";
 
-const BASE_URL = process.env.CAMPAIGN_BASE_URL || "https://vaccine.bpa.org.bd";
+const BASE_URL = process.env.CAMPAIGN_BASE_URL || "https://vaccine.furtail.org.bd";
 
 export type CampaignTicketDetails = {
   id: number;

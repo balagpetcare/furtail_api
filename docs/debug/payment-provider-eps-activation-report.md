@@ -1,7 +1,7 @@
 # Payment provider activation report (EPS)
 
 **Date:** 2026-06-04  
-**Decision:** BPA Campaign Checkout uses **EPS Payment Gateway only**.
+**Decision:** Furtail Campaign Checkout uses **EPS Payment Gateway only**.
 
 ---
 

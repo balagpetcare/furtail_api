@@ -1,7 +1,7 @@
-# BPA/WPA Ecosystem — Centralized SEO, Analytics, Tracking & Social Login
+# Furtail/Furtail Ecosystem — Centralized SEO, Analytics, Tracking & Social Login
 
 **Status:** Implemented (2026-06-05)  
-**Scope:** `backend-api`, `bpa-landing`, `vaccination_2026`, `bpa_web`, `bpa_app` (reference), shared packages  
+**Scope:** `backend-api`, `furtail-landing`, `vaccination_2026`, `bpa_web`, `furtail_app` (reference), shared packages  
 **Related:** [PORT_AND_DOMAIN_MAP.md](../infrastructure/PORT_AND_DOMAIN_MAP.md), [AUTH_ARCHITECTURE_SYSTEM_ANALYSIS.md](../AUTH_ARCHITECTURE_SYSTEM_ANALYSIS.md)
 
 ---
@@ -12,15 +12,15 @@ This document defines the centralized infrastructure for:
 
 | Capability | Canonical source | Consumed by |
 |------------|------------------|-------------|
-| **SEO metadata** (OG, Twitter, canonical, robots, sitemap helpers) | `packages/bpa-seo/src/shared/seo` | Next.js apps via sync |
-| **Analytics** (GA4, GTM, Meta Pixel, Clarity) | `packages/bpa-analytics/src` | Next.js apps via sync |
+| **SEO metadata** (OG, Twitter, canonical, robots, sitemap helpers) | `packages/furtail-seo/src/shared/seo` | Next.js apps via sync |
+| **Analytics** (GA4, GTM, Meta Pixel, Clarity) | `packages/furtail-analytics/src` | Next.js apps via sync |
 | **Social OAuth** (Google, Facebook) | `backend-api/src/api/v1/providers/oauth` | Mobile app, web panels (future) |
 
 **Design principles:**
 
 1. **Environment-driven** — all IDs and verification tokens come from env vars; features are disabled when unset.
 2. **Non-breaking auth** — existing JWT + HttpOnly cookie (`access_token`) contract unchanged; `/api/v1/auth/oauth/*` preserved; `/api/v1/auth/social/*` aliases added for mobile app compatibility.
-3. **Sync-over-workspace** — shared packages copy into each app (same pattern as `bpa-analytics`); no monorepo npm workspace required.
+3. **Sync-over-workspace** — shared packages copy into each app (same pattern as `furtail-analytics`); no monorepo npm workspace required.
 4. **Domain registry** — single source for all six production domains.
 
 ---
@@ -31,24 +31,24 @@ This document defines the centralized infrastructure for:
 
 | App | Repo | Port | Production host | SEO surface | Auth |
 |-----|------|------|-----------------|-------------|------|
-| **backend-api** | `backend-api` | 3000 | `api.bangladeshpetassociation.com` | Auth HTML UI only | JWT + OAuth providers |
-| **bpa-landing** | `bpa-landing` | 3101 | `bangladeshpetassociation.com` | **Primary apex SEO** | None (public) |
-| **vaccination_2026** | `vaccination_2026` | 3110 | `vaccination.bangladeshpetassociation.com` | **Primary campaign SEO** | Campaign OTP only |
-| **bpa_web** | `bpa_web` | 3100–3107 | `*.bangladeshpetassociation.com` panels | Owner/producer landing; dashboards `noindex` | Email/phone + password |
-| **bpa_app** | `bpa_app` | — | Mobile (`bpa://`) | None | Google + Facebook via API |
+| **backend-api** | `backend-api` | 3000 | `api.furtail.world` | Auth HTML UI only | JWT + OAuth providers |
+| **furtail-landing** | `furtail-landing` | 3101 | `furtail.world` | **Primary apex SEO** | None (public) |
+| **vaccination_2026** | `vaccination_2026` | 3110 | `vaccination.furtail.world` | **Primary campaign SEO** | Campaign OTP only |
+| **bpa_web** | `bpa_web` | 3100–3107 | `*.furtail.world` panels | Owner/producer landing; dashboards `noindex` | Email/phone + password |
+| **furtail_app** | `furtail_app` | — | Mobile (`furtail://`) | None | Google + Facebook via API |
 
 ### 2.2 Supported domains (registry)
 
 | Key | Domain | Role |
 |-----|--------|------|
-| `BPA_APEX` | `bangladeshpetassociation.com` | Marketing apex, vaccination bridge |
-| `VACCINATION` | `vaccination.bangladeshpetassociation.com` | Campaign booking (canonical) |
+| `BPA_APEX` | `furtail.world` | Marketing apex, vaccination bridge |
+| `VACCINATION` | `vaccination.furtail.world` | Campaign booking (canonical) |
 | `COMMUNITY_PETS_CLINIC` | `communitypetsclinic.com` | Legacy/alternate clinic brand |
 | `COMMUNITY_PET_SHOP` | `communitypetshop.com` | Legacy/alternate shop brand |
-| `PET_SMART_SOLUTION` | `petsmartsolution.com` | WPA product brand |
+| `PET_SMART_SOLUTION` | `petsmartsolution.com` | Furtail product brand |
 | `PRANI_DOCTOR` | `pranidoctor.com` | PraniDoctor telemedicine brand |
 
-Source: `packages/bpa-seo/src/shared/seo/domains.ts` (synced to each Next.js app).
+Source: `packages/furtail-seo/src/shared/seo/domains.ts` (synced to each Next.js app).
 
 ---
 
@@ -57,12 +57,12 @@ Source: `packages/bpa-seo/src/shared/seo/domains.ts` (synced to each Next.js app
 ```mermaid
 flowchart TB
   subgraph packages [Shared packages]
-    SEO["packages/bpa-seo/src/shared/seo"]
-    ANA["packages/bpa-analytics/src"]
+    SEO["packages/furtail-seo/src/shared/seo"]
+    ANA["packages/furtail-analytics/src"]
   end
 
   subgraph frontends [Next.js frontends]
-    LAND["bpa-landing"]
+    LAND["furtail-landing"]
     VAC["vaccination_2026"]
     WEB["bpa_web"]
   end
@@ -79,7 +79,7 @@ flowchart TB
   ANA -->|sync-to-apps.mjs| VAC
   ANA -->|sync-to-apps.mjs| WEB
 
-  APP["bpa_app Flutter"] -->|POST /auth/social/*| AUTH
+  APP["furtail_app Flutter"] -->|POST /auth/social/*| AUTH
   AUTH --> OAUTH
   OAUTH -->|JWT + cookie| APP
 ```
@@ -99,12 +99,12 @@ flowchart TB
 **Sync command:**
 
 ```bash
-node packages/bpa-seo/scripts/sync-to-apps.mjs
+node packages/furtail-seo/scripts/sync-to-apps.mjs
 ```
 
-Targets: `bpa-landing/src/shared/seo`, `vaccination_2026/src/shared/seo`, `bpa_web/src/shared/seo`.
+Targets: `furtail-landing/src/shared/seo`, `vaccination_2026/src/shared/seo`, `bpa_web/src/shared/seo`.
 
-Existing `@/lib/seo/*` paths in bpa-landing re-export from `src/shared/seo` to avoid breaking imports.
+Existing `@/lib/seo/*` paths in furtail-landing re-export from `src/shared/seo` to avoid breaking imports.
 
 ### 3.2 Analytics module (extended)
 
@@ -121,7 +121,7 @@ When GTM is set, it loads the container; GA4/Meta can also be configured inside 
 **Sync command:**
 
 ```bash
-node packages/bpa-analytics/scripts/sync-to-apps.mjs
+node packages/furtail-analytics/scripts/sync-to-apps.mjs
 ```
 
 ### 3.3 OAuth providers (backend-api)
@@ -144,8 +144,8 @@ node packages/bpa-analytics/scripts/sync-to-apps.mjs
 
 ```env
 # Site identity
-NEXT_PUBLIC_SITE_URL=https://bangladeshpetassociation.com
-NEXT_PUBLIC_SITE_NAME=Bangladesh Pet Association
+NEXT_PUBLIC_SITE_URL=https://furtail.world
+NEXT_PUBLIC_SITE_NAME=Furtail
 
 # Google Search Console HTML tag verification
 NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -184,10 +184,10 @@ FACEBOOK_APP_SECRET=
 | Repo | Template file |
 |------|---------------|
 | backend-api | `.env.example` (OAuth section) |
-| bpa-landing | `.env.example` |
+| furtail-landing | `.env.example` |
 | vaccination_2026 | `.env.example` |
 | bpa_web | `.env.example` |
-| bpa_app | `env/example.json` (API URL only; OAuth IDs in native config) |
+| furtail_app | `env/example.json` (API URL only; OAuth IDs in native config) |
 
 ---
 
@@ -197,14 +197,14 @@ Use this when rolling out to production.
 
 ### Phase A — Shared packages
 
-- [x] Create `packages/bpa-seo/src/shared/seo` module
-- [x] Create `packages/bpa-seo/scripts/sync-to-apps.mjs`
-- [x] Extend `packages/bpa-analytics` with GTM support
+- [x] Create `packages/furtail-seo/src/shared/seo` module
+- [x] Create `packages/furtail-seo/scripts/sync-to-apps.mjs`
+- [x] Extend `packages/furtail-analytics` with GTM support
 - [x] Run sync scripts for SEO and analytics
 
 ### Phase B — Frontend integration
 
-- [x] bpa-landing: re-export `lib/seo` from `shared/seo`; wire verification in metadata
+- [x] furtail-landing: re-export `lib/seo` from `shared/seo`; wire verification in metadata
 - [x] vaccination_2026: adopt shared SEO helpers; keep campaign-specific canonical logic
 - [x] bpa_web: add `robots.ts`, `sitemap.ts`, panel `noindex` metadata, AnalyticsShell on public layouts
 - [ ] Add `public/og-image.png` to bpa_web (asset — deploy separately)
@@ -214,9 +214,9 @@ Use this when rolling out to production.
 
 - [x] Extract Google verification to `providers/oauth/google.provider.ts`
 - [x] Implement Facebook token verification + login
-- [x] Add `/api/v1/auth/social/*` route aliases (bpa_app compatibility)
+- [x] Add `/api/v1/auth/social/*` route aliases (furtail_app compatibility)
 - [x] Update `.env.example` with `FACEBOOK_APP_ID`, `FACEBOOK_APP_SECRET`
-- [ ] Verify bpa_app Google/Facebook login against staging API
+- [ ] Verify furtail_app Google/Facebook login against staging API
 
 ### Phase D — Production deploy
 
@@ -241,8 +241,8 @@ For **each** public domain:
 5. Set `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=<content>` in that app's env.
 6. Deploy and click **Verify** in Search Console.
 7. Submit sitemap:
-   - `bangladeshpetassociation.com` → `https://bangladeshpetassociation.com/sitemap.xml`
-   - `vaccination.bangladeshpetassociation.com` → `https://vaccination.bangladeshpetassociation.com/sitemap.xml`
+   - `furtail.world` → `https://furtail.world/sitemap.xml`
+   - `vaccination.furtail.world` → `https://vaccination.furtail.world/sitemap.xml`
 8. Repeat for alternate brands when they go live (`communitypetsclinic.com`, etc.).
 
 ### 6.2 Google Analytics 4
@@ -264,7 +264,7 @@ For **each** public domain:
 5. Inside GTM, add tags:
    - GA4 Configuration (or use direct `NEXT_PUBLIC_GA_MEASUREMENT_ID`)
    - Meta Pixel (or use direct `NEXT_PUBLIC_META_PIXEL_ID`)
-   - Custom events for `data-bpa-track` / `data-bpa-cta` (optional)
+   - Custom events for `data-furtail-track` / `data-furtail-cta` (optional)
 6. Publish container.
 7. Verify with GTM Preview mode on staging.
 
@@ -284,13 +284,13 @@ For **each** public domain:
 1. [Google Cloud Console](https://console.cloud.google.com) → APIs & Services → Credentials.
 2. Create **OAuth 2.0 Client ID** (type: Web application for server; Android/iOS for app).
 3. Set `GOOGLE_CLIENT_ID` in `backend-api` `.env` (Web client ID used for `verifyIdToken`).
-4. For mobile: use platform-specific client IDs in `bpa_app` (Firebase/Google Sign-In config).
+4. For mobile: use platform-specific client IDs in `furtail_app` (Firebase/Google Sign-In config).
 
 **Web panels (future UI):**
 
 1. Create additional Web client ID with authorized JavaScript origins:
-   - `https://owner.bangladeshpetassociation.com`
-   - `https://admin.bangladeshpetassociation.com`
+   - `https://owner.furtail.world`
+   - `https://admin.furtail.world`
    - etc.
 2. Set `NEXT_PUBLIC_GOOGLE_CLIENT_ID` in `bpa_web` `.env`.
 
@@ -313,7 +313,7 @@ curl -X POST http://localhost:3000/api/v1/auth/oauth/google \
 5. Facebook Login → Settings → add Valid OAuth Redirect URIs (for web flows).
 6. App Review → request `email` permission if needed.
 
-**Mobile (bpa_app):**
+**Mobile (furtail_app):**
 
 1. Add Android/iOS platform in Facebook app settings.
 2. Configure `flutter_facebook_auth` with App ID in native config (`AndroidManifest.xml`, `Info.plist`).
@@ -335,7 +335,7 @@ Each public Next.js app implements:
 - `app/robots.ts` → serves `/robots.txt`
 - `app/sitemap.ts` → serves `/sitemap.xml`
 
-**bpa-landing** (apex):
+**furtail-landing** (apex):
 
 - Allow `/`, disallow nothing critical
 - Sitemap: apex pages + `/vaccination` bridge
@@ -366,7 +366,7 @@ Provided by `buildPageMetadata()`:
 | `twitter:site` | `NEXT_PUBLIC_TWITTER_SITE` (optional) |
 | `canonical` | Page path or `canonicalUrl` override (bridge pages) |
 
-**Campaign bridge rule:** `bangladeshpetassociation.com/vaccination` sets `canonicalUrl` → `https://vaccination.bangladeshpetassociation.com` (preserved).
+**Campaign bridge rule:** `furtail.world/vaccination` sets `canonicalUrl` → `https://vaccination.furtail.world` (preserved).
 
 ---
 
@@ -386,10 +386,10 @@ Provided by `buildPageMetadata()`:
 
 ```bash
 # Sync shared SEO module to all Next.js apps
-node packages/bpa-seo/scripts/sync-to-apps.mjs
+node packages/furtail-seo/scripts/sync-to-apps.mjs
 
 # Sync shared analytics module to all Next.js apps
-node packages/bpa-analytics/scripts/sync-to-apps.mjs
+node packages/furtail-analytics/scripts/sync-to-apps.mjs
 
 # Validate backend env
 cd backend-api && npm run validate:env
@@ -402,13 +402,13 @@ cd backend-api && npm run validate:env
 | Area | Path |
 |------|------|
 | Plan (this doc) | `backend-api/docs/setup/SEO_AND_AUTH_SETUP.md` |
-| SEO package | `packages/bpa-seo/src/shared/seo/*` |
-| Analytics package | `packages/bpa-analytics/src/*` (GTM added) |
+| SEO package | `packages/furtail-seo/src/shared/seo/*` |
+| Analytics package | `packages/furtail-analytics/src/*` (GTM added) |
 | OAuth providers | `backend-api/src/api/v1/providers/oauth/*` |
 | OAuth service | `backend-api/src/api/v1/services/oauthLogin.service.ts` |
 | OAuth controller | `backend-api/src/api/v1/modules/auth/oauth.controller.ts` |
 | Auth routes | `backend-api/src/api/v1/modules/auth/auth.routes.ts` |
-| Env templates | `backend-api/.env.example`, `bpa-landing/.env.example`, `vaccination_2026/.env.example`, `bpa_web/.env.example` |
+| Env templates | `backend-api/.env.example`, `furtail-landing/.env.example`, `vaccination_2026/.env.example`, `bpa_web/.env.example` |
 
 ---
 
@@ -427,8 +427,8 @@ See §13 below (updated after code merge).
 | # | Requirement | Status | Location |
 |---|-------------|--------|----------|
 | 1 | Setup documentation | ✅ | `docs/setup/SEO_AND_AUTH_SETUP.md` |
-| 2 | GSC, GA4, GTM, Meta Pixel, OG, Twitter, robots, sitemap | ✅ | `packages/bpa-seo`, `packages/bpa-analytics` |
-| 3 | Reusable SEO module `src/shared/seo` | ✅ | `packages/bpa-seo/src/shared/seo` + sync to 3 Next.js apps |
+| 2 | GSC, GA4, GTM, Meta Pixel, OG, Twitter, robots, sitemap | ✅ | `packages/furtail-seo`, `packages/furtail-analytics` |
+| 3 | Reusable SEO module `src/shared/seo` | ✅ | `packages/furtail-seo/src/shared/seo` + sync to 3 Next.js apps |
 | 4 | Google + Facebook OAuth providers | ✅ | `backend-api/src/api/v1/providers/oauth` |
 | 5 | Environment-driven config | ✅ | `getSeoConfig()`, `getAnalyticsConfig()`, provider env checks |
 | 6 | All six domains supported | ✅ | `domains.ts` in package + `backend-api/src/shared/seo` |
@@ -441,15 +441,15 @@ See §13 below (updated after code merge).
 
 **New packages & scripts**
 
-- `packages/bpa-seo/src/shared/seo/*` (8 modules)
-- `packages/bpa-seo/scripts/sync-to-apps.mjs`
+- `packages/furtail-seo/src/shared/seo/*` (8 modules)
+- `packages/furtail-seo/scripts/sync-to-apps.mjs`
 
 **Analytics extensions**
 
-- `packages/bpa-analytics/src/config.ts` — `NEXT_PUBLIC_GTM_CONTAINER_ID`
-- `packages/bpa-analytics/src/components/AnalyticsProvider.tsx` — GTM loader
-- `packages/bpa-analytics/src/components/AnalyticsShell.tsx` — GTM noscript iframe
-- `packages/bpa-analytics/scripts/sync-to-apps.mjs` — added `bpa_web` target
+- `packages/furtail-analytics/src/config.ts` — `NEXT_PUBLIC_GTM_CONTAINER_ID`
+- `packages/furtail-analytics/src/components/AnalyticsProvider.tsx` — GTM loader
+- `packages/furtail-analytics/src/components/AnalyticsShell.tsx` — GTM noscript iframe
+- `packages/furtail-analytics/scripts/sync-to-apps.mjs` — added `bpa_web` target
 
 **Backend OAuth**
 
@@ -462,8 +462,8 @@ See §13 below (updated after code merge).
 
 **Frontend integration (synced + wired)**
 
-- `bpa-landing/src/shared/seo/*` — synced; `lib/seo/metadata.ts` re-exports
-- `bpa-landing/src/app/robots.ts`, `sitemap.ts` — use shared helpers
+- `furtail-landing/src/shared/seo/*` — synced; `lib/seo/metadata.ts` re-exports
+- `furtail-landing/src/app/robots.ts`, `sitemap.ts` — use shared helpers
 - `vaccination_2026/src/shared/seo/*` — synced; `app/robots.ts`, `sitemap.ts` updated
 - `bpa_web/src/shared/seo/*`, `src/lib/analytics/*` — synced
 - `bpa_web/app/robots.ts`, `sitemap.ts`, `layout.jsx` — SEO + analytics wired
@@ -473,15 +473,15 @@ See §13 below (updated after code merge).
 | Method | Path | Body | Status |
 |--------|------|------|--------|
 | POST | `/api/v1/auth/oauth/google` | `{ idToken }` | Existing — unchanged |
-| POST | `/api/v1/auth/social/google` | `{ idToken }` | **New alias** (bpa_app) |
+| POST | `/api/v1/auth/social/google` | `{ idToken }` | **New alias** (furtail_app) |
 | POST | `/api/v1/auth/oauth/facebook` | `{ accessToken }` | **Implemented** (was 501) |
-| POST | `/api/v1/auth/social/facebook` | `{ accessToken }` | **New alias** (bpa_app) |
+| POST | `/api/v1/auth/social/facebook` | `{ accessToken }` | **New alias** (furtail_app) |
 
 ### Sync commands (run after package edits)
 
 ```bash
-node packages/bpa-seo/scripts/sync-to-apps.mjs
-node packages/bpa-analytics/scripts/sync-to-apps.mjs
+node packages/furtail-seo/scripts/sync-to-apps.mjs
+node packages/furtail-analytics/scripts/sync-to-apps.mjs
 ```
 
 ### Post-deploy actions (operator)
@@ -490,6 +490,6 @@ node packages/bpa-analytics/scripts/sync-to-apps.mjs
 2. Run sync scripts after any package changes.
 3. Complete external console setup (§6).
 4. Submit sitemaps in Search Console per domain.
-5. Test mobile social login: `bpa_app` → `/api/v1/auth/social/google` and `/social/facebook`.
+5. Test mobile social login: `furtail_app` → `/api/v1/auth/social/google` and `/social/facebook`.
 6. Add `public/og-image.png` to `bpa_web` (referenced in OG metadata).
 7. Optional follow-up: Google/Facebook sign-in buttons on `bpa_web` login page.

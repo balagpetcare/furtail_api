@@ -56,7 +56,7 @@ pilot:
     bookings_per_slot: 20
     walk_in_buffer: 10
   participants:
-    - BPA staff members
+    - Furtail staff members
     - Partner organization staff
     - Invited beta testers
   features:
@@ -154,7 +154,7 @@ soft_launch:
     
   promotion:
     channels:
-      - BPA social media (limited)
+      - Furtail social media (limited)
       - Partner clinic announcements
       - Email to existing users
     target_bookings: 500
@@ -240,7 +240,7 @@ expansion:
     - Full social media campaign
     - Radio spots
     - Posters at clinics
-    - SMS to BPA user base
+    - SMS to Furtail user base
 ```
 
 ### 4.2 Scaling Checklist
@@ -312,7 +312,7 @@ full_scale:
 | Radio | 30-sec spots | 3x daily |
 | Newspapers | Quarter-page ads | Weekends |
 | SMS Blast | Booking invitation | Launch day |
-| BPA App | Push notification | Launch day |
+| Furtail | Push notification | Launch day |
 
 ### 5.3 Surge Capacity Plan
 
@@ -424,7 +424,7 @@ interface StaffCertification {
 
 | Stakeholder | Channel | Frequency | Content |
 |-------------|---------|-----------|---------|
-| BPA Leadership | Email report | Daily during launch | Metrics summary |
+| Furtail Leadership | Email report | Daily during launch | Metrics summary |
 | Location Coordinators | WhatsApp group | Real-time | Issues, updates |
 | All Staff | Email | Weekly | Newsletter, tips |
 | Pet Owners | SMS | As booked | Confirmations, reminders |
@@ -437,22 +437,22 @@ interface StaffCertification {
 
 **FOR IMMEDIATE RELEASE**
 
-**Bangladesh Pet Association Launches 2026 Cat Vaccination Campaign**
+**Furtail Launches 2026 Cat Vaccination Campaign**
 
-Dhaka, Bangladesh - The Bangladesh Pet Association (BPA) today announced 
+Dhaka, Bangladesh - The Furtail (Furtail) today announced 
 the launch of its 2026 Cat Flu and Rabies Vaccination Campaign, offering 
 free/subsidized vaccinations to cat owners across the country.
 
 The campaign will operate from [DATE] to [DATE] at [X] locations nationwide, 
 with a target of vaccinating [X] cats.
 
-"Quote from BPA leadership about importance of vaccination..."
+"Quote from Furtail leadership about importance of vaccination..."
 
-Pet owners can book appointments at vacc.bpa.com.bd or visit any 
+Pet owners can book appointments at vacc.furtail.com.bd or visit any 
 participating clinic for walk-in service.
 
-**About BPA**
-[Boilerplate about BPA]
+**About Furtail**
+[Boilerplate about Furtail]
 
 **Contact**
 [Media contact information]

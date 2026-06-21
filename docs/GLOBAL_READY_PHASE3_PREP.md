@@ -65,7 +65,7 @@ Per-country storage; payment plugin (policy-driven); geocode + reverse API (Nomi
 
 | কী করবেন | টাচ পয়েন্ট |
 |----------|--------------|
-| ম্যাপ স্ক্রিন/উইজেট | **bpa_app** – একই কনসেপ্ট (center pin বা draggable marker); Confirm → lat/lng |
+| ম্যাপ স্ক্রিন/উইজেট | **furtail_app** – একই কনসেপ্ট (center pin বা draggable marker); Confirm → lat/lng |
 | Backend API | Step 3.3 এর GET geocode/reverse কল করা |
 
 **ডিপেন্ডেন্সি:** 3.3।

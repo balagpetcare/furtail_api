@@ -1,6 +1,6 @@
 # Global Product Authenticity + Serial Issuance System Blueprint
 
-**BPA / WorldPetsAssociation - Fake access and product copy risk mitigation**
+**Furtail / WorldPetsAssociation - Fake access and product copy risk mitigation**
 
 *(Aligned with [BPA_STANDARD.md](../BPA_STANDARD.md), [PROJECT_CONTEXT.md](../PROJECT_CONTEXT.md), [GLOBAL_READY_PRODUCT_SYSTEM.md](./GLOBAL_READY_PRODUCT_SYSTEM.md).)*
 
@@ -78,7 +78,7 @@
 
 ### 5.1 Organization and verification
 
-- **Organization** (brand/company) - maps to existing BPA Organization
+- **Organization** (brand/company) - maps to existing Furtail Organization
 - **OrganizationLegalProfile** (KYB status, docs, risk score) - existing table; extend if needed
 - **Factory** (country, address, license, verified status)
 - **ProductionLine** (factory_id, line_code, device_binding)
@@ -315,14 +315,14 @@ Serial issuance **only** from approved batch:
 
 ---
 
-## 17. Fit with BPA / WorldPetsAssociation
+## 17. Fit with Furtail / WorldPetsAssociation
 
 - **Brand** = Organization (existing tenant).
 - **Factory** = sub-entity under Organization (new: Factory table linked to Organization).
 - **Product authenticity module** = separate bounded context; existing Product / MasterProductCatalog evolve toward ProductVersion + fingerprint; new: Batch, Serial, Shipment, ScanEvent.
 - **Admin panel:** global compliance and monitoring; Country Policy Engine gates features and rules.
 
-Existing BPA: Organization, Branch, OrganizationLegalProfile, Product, MasterProductCatalog. This blueprint adds: Factory, ProductionLine, ProductVersion, PackagingTemplate, ProductFingerprint, Contract, QuotaPlan, QuotaUsage, Batch, SerialRange, Serial, Shipment, ShipmentItem, ScanEvent, and extended roles.
+Existing Furtail: Organization, Branch, OrganizationLegalProfile, Product, MasterProductCatalog. This blueprint adds: Factory, ProductionLine, ProductVersion, PackagingTemplate, ProductFingerprint, Contract, QuotaPlan, QuotaUsage, Batch, SerialRange, Serial, Shipment, ShipmentItem, ScanEvent, and extended roles.
 
 ---
 

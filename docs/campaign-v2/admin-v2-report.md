@@ -48,11 +48,11 @@ Legacy URLs (`/statistics`, `/edit`, `/pre-registrations`, etc.) **redirect** to
 | File | Role |
 |------|------|
 | `app/admin/(larkon)/campaigns/[id]/layout.tsx` | Sidebar + header wrapper |
-| `src/bpa/campaign/admin/campaignAdminNavConfig.ts` | Single source of truth for nav items + active state |
-| `src/bpa/campaign/admin/CampaignSidebar.tsx` | Renders nav links (Iconify + Bootstrap) |
-| `src/bpa/campaign/admin/CampaignShellHeader.tsx` | Campaign title + lifecycle actions |
-| `src/bpa/campaign/admin/CampaignReportsPanel.tsx` | Merged statistics, on-demand reports, export buttons |
-| `src/bpa/campaign/admin/CampaignDemandHub.tsx` | Tabbed demand hub (`?tab=` query) |
+| `src/furtail/campaign/admin/campaignAdminNavConfig.ts` | Single source of truth for nav items + active state |
+| `src/furtail/campaign/admin/CampaignSidebar.tsx` | Renders nav links (Iconify + Bootstrap) |
+| `src/furtail/campaign/admin/CampaignShellHeader.tsx` | Campaign title + lifecycle actions |
+| `src/furtail/campaign/admin/CampaignReportsPanel.tsx` | Merged statistics, on-demand reports, export buttons |
+| `src/furtail/campaign/admin/CampaignDemandHub.tsx` | Tabbed demand hub (`?tab=` query) |
 | `app/admin/(larkon)/campaigns/[id]/configuration/page.tsx` | Campaign form + `campaignAdminSaveConfig` |
 | `app/admin/(larkon)/campaigns/[id]/payments/page.tsx` | Checkout sessions table |
 | `app/admin/(larkon)/campaigns/[id]/reports/page.tsx` | Hosts `CampaignReportsPanel` |
@@ -62,7 +62,7 @@ Legacy URLs (`/statistics`, `/edit`, `/pre-registrations`, etc.) **redirect** to
 
 | File | Notes |
 |------|--------|
-| `src/bpa/campaign/admin/CampaignNav.tsx` | Marked `@deprecated`; **no imports** in app routes |
+| `src/furtail/campaign/admin/CampaignNav.tsx` | Marked `@deprecated`; **no imports** in app routes |
 
 ---
 

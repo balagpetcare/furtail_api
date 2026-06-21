@@ -1,4 +1,4 @@
-# BPA/WPA Location System Migration Implementation Checklist
+# Furtail/Furtail Location System Migration Implementation Checklist
 
 This checklist is execution-oriented and mapped to the plan documents in this folder.
 

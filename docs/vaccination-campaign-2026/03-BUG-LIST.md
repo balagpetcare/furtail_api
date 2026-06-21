@@ -1,6 +1,6 @@
 # 03 — Bug List
 
-**Campaign:** BPA 2026 Cat Flu + Rabies Vaccination  
+**Campaign:** Furtail 2026 Cat Flu + Rabies Vaccination  
 **Audit date:** 2026-06-02  
 **UAT update:** 2026-06-02 (`UAT-EXECUTION-REPORT.md`)  
 **Status key:** Open · Mitigated · Won't fix (launch) · Fixed
@@ -89,10 +89,10 @@ Priorities: **P0** launch blocker · **P1** major · **P2** minor · **P3** enha
 | ID | Title | Status |
 |----|-------|--------|
 | BUG-301 | Backend coupon validate/apply API | **Fixed** — `POST /campaign/public/coupons/validate` + payment intent |
-| BUG-302 | Pre-fill owner from BPA account on landing | Open |
+| BUG-302 | Pre-fill owner from Furtail account on landing | Open |
 | BUG-303 | Offline staff portal mode | Open |
 | BUG-304 | Full verification log API for admin | Open |
-| BUG-305 | Flutter deep link handler for `bpa://certificate/{token}` | Open |
+| BUG-305 | Flutter deep link handler for `furtail://certificate/{token}` | Open |
 | BUG-306 | Load/performance test suite per QA strategy doc | Open |
 
 ---

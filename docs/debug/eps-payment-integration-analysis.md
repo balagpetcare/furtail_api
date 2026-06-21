@@ -66,7 +66,7 @@ Flow: `getEpsConfig()` in `paymentProvider.config.ts` → used by `eps.provider.
 - `docs/debug/eps-sandbox-endpoint-verification.md`
 - `docs/debug/payment-provider-eps-activation-report.md`
 
-**No EPS gateway URLs** in `bpa_web`, `bpa_app`, or `vaccination_2026` — payment calls go through `backend-api`.
+**No EPS gateway URLs** in `bpa_web`, `furtail_app`, or `vaccination_2026` — payment calls go through `backend-api`.
 
 **Historical typo:** `sandbox-pgapi.eps.com.bd` appears only in docs (as “do not use”) and `verify-eps-endpoint.js` negative test — **not** in current application defaults.
 

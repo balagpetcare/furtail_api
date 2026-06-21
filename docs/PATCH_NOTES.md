@@ -1,6 +1,6 @@
 # PATCH_NOTES
 
-Package: bpa-api-permissions-update-only
+Package: furtail-api-permissions-update-only
 Version: 10.0.1 (RBAC foundation)
 
 ## What changed

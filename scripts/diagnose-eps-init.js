@@ -191,7 +191,7 @@ async function probeBase(base, cfg, amount, initPaths) {
   }
 
   // 2) InitializeEPS across candidate paths + merchantTransactionId formats.
-  //    A/B compares EPS-safe numeric ids vs BPA order-number style (CKO-*).
+  //    A/B compares EPS-safe numeric ids vs Furtail order-number style (CKO-*).
   const numericId = freshMerchantTxnId();
   const ckoId = `CKO-${Math.random().toString(36).slice(2, 10).toUpperCase()}`;
   const mtidCases = [

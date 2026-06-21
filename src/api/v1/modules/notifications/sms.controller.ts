@@ -74,7 +74,7 @@ export async function smsTestHandler(req: Request, res: Response, next: NextFunc
     const normalized = normalizePhone(target);
     const result = await sendSMS({
       phone: normalized,
-      message: "BPA/WPA SMS test — BulkSMSBD gateway is reachable.",
+      message: "Furtail/Furtail SMS test — BulkSMSBD gateway is reachable.",
       template: "SMS_TEST",
       direct: true,
     });

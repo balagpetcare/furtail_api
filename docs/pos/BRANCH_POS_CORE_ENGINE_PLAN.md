@@ -2,7 +2,7 @@
 
 **Scope:** Product-only POS core at `/staff/branch/:branchId/pos`. Services POS is out of scope.
 
-**Baseline:** BPA/WPA repos; API port 3000, Next.js staff 3104; BPA_STANDARD.md and PROJECT_CONTEXT.md apply.
+**Baseline:** Furtail/Furtail repos; API port 3000, Next.js staff 3104; BPA_STANDARD.md and PROJECT_CONTEXT.md apply.
 
 ---
 

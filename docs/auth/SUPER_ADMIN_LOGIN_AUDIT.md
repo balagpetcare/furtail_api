@@ -71,12 +71,12 @@ Super Admin **users exist**, roles are assigned, and the whitelist is configured
 ## 3. Current `.env` configuration (structure)
 
 ```
-SUPER_ADMIN_EMAIL=balag@bangladeshpetassociation.com
+SUPER_ADMIN_EMAIL=balag@furtail.world
 SUPER_ADMIN_PHONE=01777889994
 SUPER_ADMIN_PASSWORD=<set in local .env — not committed>
-SUPER_ADMIN_WHITELIST_EMAILS=balag@bangladeshpetassociation.com
+SUPER_ADMIN_WHITELIST_EMAILS=balag@furtail.world
 SUPER_ADMIN_WHITELIST_PHONES=01777889994
-ADMIN_EMAILS=balag@bangladeshpetassociation.com
+ADMIN_EMAILS=balag@furtail.world
 ADMIN_PHONES=01777889994
 ```
 
@@ -86,8 +86,8 @@ ADMIN_PHONES=01777889994
 
 | User ID | Name | Email | Phone | Global roles | Status | Password set | Whitelist |
 |--------:|------|-------|-------|--------------|--------|--------------|-----------|
-| **2** | Bala G 74 | balag@bangladeshpetassociation.com | 01777889994 | `SUPER_ADMIN`, `PLATFORM_ADMIN` | ACTIVE | Yes | Email + phone |
-| **3** | BPA Super Admin | admin@bangladeshpetassociation.com | 01701022274 | `SUPER_ADMIN` | ACTIVE | Yes (stale*) | Email + phone |
+| **2** | Bala G 74 | balag@furtail.world | 01777889994 | `SUPER_ADMIN`, `PLATFORM_ADMIN` | ACTIVE | Yes | Email + phone |
+| **3** | Furtail Super Admin | admin@furtail.world | 01701022274 | `SUPER_ADMIN` | ACTIVE | Yes (stale*) | Email + phone |
 
 \* User **#3** password does **not** match current `SUPER_ADMIN_PASSWORD` until bootstrap is run with that email/phone in env (see below).
 
@@ -128,7 +128,7 @@ POST /api/v1/admin/auth/login
 Content-Type: application/json
 
 {
-  "email": "balag@bangladeshpetassociation.com",
+  "email": "balag@furtail.world",
   "password": "<SUPER_ADMIN_PASSWORD from .env>"
 }
 ```
@@ -174,7 +174,7 @@ npm run admin:verify
 Add both identities to env and re-run bootstrap, e.g.:
 
 ```env
-SUPER_ADMIN_WHITELIST_EMAILS=balag@bangladeshpetassociation.com,admin@bangladeshpetassociation.com
+SUPER_ADMIN_WHITELIST_EMAILS=balag@furtail.world,admin@furtail.world
 SUPER_ADMIN_WHITELIST_PHONES=01777889994,01701022274
 ```
 

@@ -1,6 +1,6 @@
 # Vendor Invoice Receive + Branch Manager Confirmation + Print Documents + Central Pricing/Discount Governance
 
-**Project:** BPA/WPA warehouse and branch distribution
+**Project:** Furtail/Furtail warehouse and branch distribution
 **Document type:** Full implementation plan (planning only — no code in this step)
 **Date:** 2026-04-04
 **Status:** Draft — ready for technical review

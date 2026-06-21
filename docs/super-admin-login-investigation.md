@@ -75,7 +75,7 @@ Role assignment:
 Queried:
 
 - Phones: `017777889994`, `01701022274`
-- Emails: `balag@bangladeshpetassociation.com`, `admin@bangladeshpetassociation.com`
+- Emails: `balag@furtail.world`, `admin@furtail.world`
 
 Before fix:
 
@@ -84,8 +84,8 @@ Before fix:
 - Existing user email: `null`
 - Password hash existed: yes
 - SUPER_ADMIN role link: no
-- `balag@bangladeshpetassociation.com`: whitelist row existed, no login user.
-- `admin@bangladeshpetassociation.com`: whitelist row existed, no login user.
+- `balag@furtail.world`: whitelist row existed, no login user.
+- `admin@furtail.world`: whitelist row existed, no login user.
 - `017777889994`: no `user_auth` or whitelist match was found.
 - Environment whitelist contained `01777889994`, not `017777889994`.
 - `01701022274`: whitelist row existed.
@@ -117,13 +117,13 @@ Bootstrap behavior:
 Applied result:
 
 - Existing user `userId=2` was updated.
-- Email set to `balag@bangladeshpetassociation.com`.
+- Email set to `balag@furtail.world`.
 - Phone remains `01701022274`.
 - Password hash updated from `SUPER_ADMIN_PASSWORD`.
 - `SUPER_ADMIN` role assigned.
 - Whitelist rows active for:
-  - `balag@bangladeshpetassociation.com`
-  - `admin@bangladeshpetassociation.com`
+  - `balag@furtail.world`
+  - `admin@furtail.world`
   - `01777889994`
   - `01701022274`
 
@@ -131,7 +131,7 @@ Applied result:
 
 `npm run admin:verify` showed:
 
-- `user_auth` row exists for `balag@bangladeshpetassociation.com` / `01701022274`.
+- `user_auth` row exists for `balag@furtail.world` / `01701022274`.
 - User status is `ACTIVE`.
 - Password hash exists.
 - User has `SUPER_ADMIN` role.
@@ -140,7 +140,7 @@ Applied result:
 Direct service login test passed for:
 
 - `01701022274`
-- `balag@bangladeshpetassociation.com`
+- `balag@furtail.world`
 
 Both returned:
 
@@ -186,6 +186,6 @@ curl -i -X POST http://localhost:3000/api/v1/admin/auth/login \
 Use one of the actual login identifiers:
 
 - `01701022274`
-- `balag@bangladeshpetassociation.com`
+- `balag@furtail.world`
 
 Do not submit the comma-separated `SUPER_ADMIN_PHONE` env value as a login phone.

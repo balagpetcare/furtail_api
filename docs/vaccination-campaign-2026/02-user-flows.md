@@ -226,7 +226,7 @@ This document details the step-by-step user journeys for all actors in the vacci
      ├─── Enter Password
      │
      ▼
-[Authentication] ─── Uses existing BPA auth
+[Authentication] ─── Uses existing Furtail auth
      │
      │ (Success)              │ (Failed)
      ▼                        ▼
@@ -539,7 +539,7 @@ This document details the step-by-step user journeys for all actors in the vacci
      ▼
 [Staff Assignment]
      │
-     ├─── Select staff from BPA system
+     ├─── Select staff from Furtail system
      ├─── Assign roles (Check-in/Vaccinator/Admin)
      │
      ▼

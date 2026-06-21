@@ -12,7 +12,7 @@ import { sendSMS } from "../../shared/services/sms/sms.service";
 
 const LOG_PREFIX = "[PAYMENT_SUCCESS_SMS]";
 
-const PAYMENT_SUCCESS_MESSAGE_TEMPLATE = `Bangladesh Pet Association
+const PAYMENT_SUCCESS_MESSAGE_TEMPLATE = `Furtail
 
 Your vaccination booking is confirmed.
 
@@ -23,7 +23,7 @@ Date: {{appointmentDate}}
 
 Thank you.`;
 
-const ZONE_INTEREST_MESSAGE_TEMPLATE = `Bangladesh Pet Association
+const ZONE_INTEREST_MESSAGE_TEMPLATE = `Furtail
 
 Your vaccination interest is registered.
 

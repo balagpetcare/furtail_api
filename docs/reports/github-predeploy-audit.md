@@ -10,7 +10,7 @@
 
 | Repository | Branch | Remote | Working tree | Push | Status |
 |------------|--------|--------|--------------|------|--------|
-| backend-api | `main` | `balagpetcare/bpa_app_api` | Clean | Success | **Pushed** |
+| backend-api | `main` | `balagpetcare/furtail_api` | Clean | Success | **Pushed** |
 | bpa_web | `main` | `balagpetcare/next_v1` | Clean | Success | **Pushed** |
 | vaccination_2026 | `main` | `balagpetcare/vaccination_2026` | Clean | Success | **Pushed** |
 
@@ -26,7 +26,7 @@
 | Item | Value |
 |------|-------|
 | Branch | `main` |
-| Remote | `https://github.com/balagpetcare/bpa_app_api.git` |
+| Remote | `https://github.com/balagpetcare/furtail_api.git` |
 | Pre-audit state | 32 modified + 33 untracked files |
 | Pending commits | 4 (created this session) |
 
@@ -52,7 +52,7 @@
 
 | Repository | Reason |
 |------------|--------|
-| bpa-landing | Out of scope for this audit (dynamic campaign landing work exists locally; not requested for push) |
+| furtail-landing | Out of scope for this audit (dynamic campaign landing work exists locally; not requested for push) |
 
 ---
 
@@ -170,7 +170,7 @@ c4506b1 fix: pin jsvectormap 1.3.2 for bundled country map files
 c3810b1 fix: campaign slug based booking routing
 bbba486 last update 05-06-2026 10:23PM
 a3a22fe feat: landing page CTA system and card refinements
-dcd14d4 updated Vaccination updare BPA
+dcd14d4 updated Vaccination updare Furtail
 12a186f first commit
 ```
 
@@ -180,7 +180,7 @@ dcd14d4 updated Vaccination updare BPA
 
 | Item | Reason |
 |------|--------|
-| `bpa-landing` uncommitted work | Not in repository scope for this push |
+| `furtail-landing` uncommitted work | Not in repository scope for this push |
 | `backend-dev.log` | Already tracked; no new changes; not part of this commit set |
 | `.env` / `.env.local` | Gitignored — never staged |
 
@@ -216,6 +216,6 @@ Per [vaccination-production-validation.md](./vaccination-production-validation.m
 - Configure BulkSMSBD credentials
 - Update production callback URLs
 - Run migration integrity check before deploy
-- Push `bpa-landing` separately if dynamic campaign landing is required on production
+- Push `furtail-landing` separately if dynamic campaign landing is required on production
 
 **No servers were deployed in this operation.**

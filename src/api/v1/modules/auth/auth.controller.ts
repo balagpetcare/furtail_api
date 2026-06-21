@@ -1089,7 +1089,7 @@ exports.acceptInvite = async (req, res) => {
           if (!password || String(password).length < 4) {
             throw Object.assign(new Error("password is required (min 4 chars)"), { statusCode: 400 });
           }
-          const name = String(displayName || staffInvite.displayName || "BPA Staff").trim() || "BPA Staff";
+          const name = String(displayName || staffInvite.displayName || "Furtail Staff").trim() || "Furtail Staff";
           const username = await generateUniqueUsername({ emailNorm: emailNorm || "", phoneNorm: phoneNorm || "", displayName: name });
           const passwordHash = await bcrypt.hash(String(password), 10);
           const created = await tx.user.create({
@@ -1399,7 +1399,7 @@ exports.acceptInvite = async (req, res) => {
         if (!password || String(password).length < 4) {
           throw Object.assign(new Error("password is required (min 4 chars)"), { statusCode: 400 });
         }
-        const name = String(displayName || accessInvite.displayName || "BPA Staff").trim() || "BPA Staff";
+        const name = String(displayName || accessInvite.displayName || "Furtail Staff").trim() || "Furtail Staff";
         const username = await generateUniqueUsername({ emailNorm, phoneNorm: "", displayName: name });
         const passwordHash = await bcrypt.hash(String(password), 10);
         const created = await tx.user.create({

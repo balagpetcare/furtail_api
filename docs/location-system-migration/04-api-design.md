@@ -1,4 +1,4 @@
-# BPA/WPA Centralized Location API Design
+# Furtail/Furtail Centralized Location API Design
 
 ## Objective
 

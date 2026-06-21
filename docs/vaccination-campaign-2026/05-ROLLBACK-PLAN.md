@@ -1,6 +1,6 @@
 # 05 — Rollback Plan
 
-**Campaign:** BPA 2026 Cat Flu + Rabies Vaccination  
+**Campaign:** Furtail 2026 Cat Flu + Rabies Vaccination  
 **Principle:** Roll back **forward deploys** without losing booked/vaccinated data.
 
 ---
@@ -67,7 +67,7 @@ Landing rollback **does not** roll back API — coordinate with backend version 
 
 Staff portal depends on API contract — prefer API rollback first if staff mutations fail.
 
-### 2.5 Flutter app (`bpa_app`)
+### 2.5 Flutter app (`furtail_app`)
 
 | Strategy | Steps |
 |----------|-------|
@@ -140,7 +140,7 @@ App rollback is **lowest priority**; optional for pilot.
 ## 5. Communication templates
 
 **Clinics (SMS/WhatsApp):**  
-> BPA Vaccination Campaign: Online booking is temporarily paused. If you have a confirmed booking ref, please attend as scheduled. Walk-ins accepted subject to capacity. Support: [number].
+> Furtail Vaccination Campaign: Online booking is temporarily paused. If you have a confirmed booking ref, please attend as scheduled. Walk-ins accepted subject to capacity. Support: [number].
 
 **Public (landing banner):**  
 > We’re performing maintenance. Booking will reopen shortly. Thank you for your patience.

@@ -1,11 +1,11 @@
-# BPA Port and Domain Map
+# Furtail Port and Domain Map
 
 **Status:** Documentation only (no runtime changes applied)  
 **Date:** 2026-06-05  
-**Source:** [bpa-vaccination-domain-strategy.md](../architecture/bpa-vaccination-domain-strategy.md), package.json scripts, `infra/nginx/`  
+**Source:** [furtail-vaccination-domain-strategy.md](../architecture/furtail-vaccination-domain-strategy.md), package.json scripts, `infra/nginx/`  
 **Related:** [nginx-production-deployment.md](../nginx-production-deployment.md)
 
-This document is the canonical reference for **local development ports**, **production hostnames**, and **upstream bindings** across the BPA ecosystem.
+This document is the canonical reference for **local development ports**, **production hostnames**, and **upstream bindings** across the Furtail ecosystem.
 
 ---
 
@@ -15,7 +15,7 @@ This document is the canonical reference for **local development ports**, **prod
 |-------|------------------|
 | **Central API** | `3000` (fixed, never change) |
 | **bpa_web panels** | `3100`–`3107` (fixed per `SITE_MODE`) |
-| **bpa-landing** | `3101` (fixed; nginx production upstream) |
+| **furtail-landing** | `3101` (fixed; nginx production upstream) |
 | **vaccination_2026** | `3110` (fixed; campaign app) |
 | **Reserved** | `3111`–`3119` for future standalone frontends |
 | **Production routing** | Host-based nginx → loopback or container upstream |
@@ -24,12 +24,12 @@ This document is the canonical reference for **local development ports**, **prod
 
 | Port | Apps | Severity | Notes |
 |------|------|----------|-------|
-| **3101** | `bpa-landing` **and** `bpa_web` shop (`dev:shop`) | **High** | Both bind `localhost:3101`. Only one can run at a time on a single workstation. |
+| **3101** | `furtail-landing` **and** `bpa_web` shop (`dev:shop`) | **High** | Both bind `localhost:3101`. Only one can run at a time on a single workstation. |
 | — | All other apps | None | Unique ports within the documented map |
 
 **Production:** No bind conflict when each app runs in a **separate process/container** (each may listen on `:3101` on its own network namespace). Nginx routes by `Host` header to the correct upstream.
 
-**Local workaround (until runtime change):** Run `bpa-landing` **or** `bpa_web` shop—not both on 3101. For full-stack local testing with both, temporarily override shop: `cross-env SITE_MODE=shop next dev -p 3108` (documented only; not in `package.json` yet).
+**Local workaround (until runtime change):** Run `furtail-landing` **or** `bpa_web` shop—not both on 3101. For full-stack local testing with both, temporarily override shop: `cross-env SITE_MODE=shop next dev -p 3108` (documented only; not in `package.json` yet).
 
 ---
 
@@ -39,33 +39,33 @@ Loopback ports below are what nginx upstreams target on the app server (`127.0.0
 
 | App | Local port | Production upstream | Production host | Purpose |
 |-----|------------|---------------------|-----------------|---------|
-| **backend-api** | 3000 | `:3000` | `api.bangladeshpetassociation.com` | Central REST API, webhooks, auth |
-| **bpa-landing** | 3101 | `:3101` | `bangladeshpetassociation.com` | Marketing, SEO, apex `/vaccination` bridge |
-| **vaccination_2026** | 3110 | `:3110` | `vaccination.bangladeshpetassociation.com` | Campaign landing, booking, payment return |
-| **bpa_web** mother / staff | 3100 | `:3100` | `staff.bangladeshpetassociation.com` (or path on admin host) | Staff portal, mother shell |
-| **bpa_web** shop | 3101 | `:3101` (separate container) | `shop.bangladeshpetassociation.com` | Pet shop branch panel |
-| **bpa_web** clinic | 3102 | `:3102` | `clinic.bangladeshpetassociation.com` | Clinic branch panel |
-| **bpa_web** admin | 3103 | `:3103` | `admin.bangladeshpetassociation.com` | Platform admin, campaign ops |
-| **bpa_web** owner | 3104 | `:3104` | `owner.bangladeshpetassociation.com` (planned) | Organization owner panel |
-| **bpa_web** producer | 3105 | `:3105` | `producer.bangladeshpetassociation.com` (planned) | Producer panel |
+| **backend-api** | 3000 | `:3000` | `api.furtail.world` | Central REST API, webhooks, auth |
+| **furtail-landing** | 3101 | `:3101` | `furtail.world` | Marketing, SEO, apex `/vaccination` bridge |
+| **vaccination_2026** | 3110 | `:3110` | `vaccination.furtail.world` | Campaign landing, booking, payment return |
+| **bpa_web** mother / staff | 3100 | `:3100` | `staff.furtail.world` (or path on admin host) | Staff portal, mother shell |
+| **bpa_web** shop | 3101 | `:3101` (separate container) | `shop.furtail.world` | Pet shop branch panel |
+| **bpa_web** clinic | 3102 | `:3102` | `clinic.furtail.world` | Clinic branch panel |
+| **bpa_web** admin | 3103 | `:3103` | `admin.furtail.world` | Platform admin, campaign ops |
+| **bpa_web** owner | 3104 | `:3104` | `owner.furtail.world` (planned) | Organization owner panel |
+| **bpa_web** producer | 3105 | `:3105` | `producer.furtail.world` (planned) | Producer panel |
 | **bpa_web** country | 3106 | `:3106` | Internal / country ops (planned) | Country-level admin |
-| **bpa_web** doctor | 3107 | `:3107` | `doctor.bangladeshpetassociation.com` (planned) | Doctor verification panel |
+| **bpa_web** doctor | 3107 | `:3107` | `doctor.furtail.world` (planned) | Doctor verification panel |
 
 **Redirects (production):**
 
 | Host | Behavior |
 |------|----------|
-| `www.bangladeshpetassociation.com` | 301 → apex |
-| `bangladeshpetassociation.com/vaccination` | Bridge page (canonical → subdomain); optional nginx 301 to `vaccination.` |
+| `www.furtail.world` | 301 → apex |
+| `furtail.world/vaccination` | Bridge page (canonical → subdomain); optional nginx 301 to `vaccination.` |
 
 **Staging mirror (recommended):**
 
 | Production | Staging |
 |------------|---------|
-| `api.bangladeshpetassociation.com` | `api-staging.bangladeshpetassociation.com` |
-| `bangladeshpetassociation.com` | `staging.bangladeshpetassociation.com` |
-| `vaccination.bangladeshpetassociation.com` | `vaccination-staging.bangladeshpetassociation.com` |
-| `admin.bangladeshpetassociation.com` | `admin-staging.bangladeshpetassociation.com` |
+| `api.furtail.world` | `api-staging.furtail.world` |
+| `furtail.world` | `staging.furtail.world` |
+| `vaccination.furtail.world` | `vaccination-staging.furtail.world` |
+| `admin.furtail.world` | `admin-staging.furtail.world` |
 
 ---
 
@@ -76,15 +76,15 @@ Loopback ports below are what nginx upstreams target on the app server (`127.0.0
 | Field | Value |
 |-------|-------|
 | **Repository** | `backend-api` |
-| **Domain** | `bangladeshpetassociation.com` (API subdomain) |
+| **Domain** | `furtail.world` (API subdomain) |
 | **Subdomain** | `api` |
 | **Local port** | `3000` |
-| **Production host** | `https://api.bangladeshpetassociation.com` |
+| **Production host** | `https://api.furtail.world` |
 | **Purpose** | Single source of truth: PostgreSQL (Prisma), campaign/booking/payment, auth, clinic ops, SMS, file storage |
 | **Dependencies** | PostgreSQL (`5432`), Redis (`6379`), object storage (MinIO `9000` / B2 in prod), notification worker |
 
 **Key paths:** `/api/v1/*` · Health: `/health` or campaign health endpoints  
-**Env:** `PORT=3000`, `CORS_ORIGINS`, `COOKIE_DOMAIN=.bangladeshpetassociation.com`, `APP_URL`, `API_PUBLIC_BASE_URL`
+**Env:** `PORT=3000`, `CORS_ORIGINS`, `COOKIE_DOMAIN=.furtail.world`, `APP_URL`, `API_PUBLIC_BASE_URL`
 
 ---
 
@@ -93,10 +93,10 @@ Loopback ports below are what nginx upstreams target on the app server (`127.0.0
 | Field | Value |
 |-------|-------|
 | **Repository** | `bpa_web` |
-| **Domain** | `bangladeshpetassociation.com` (per-panel subdomains) |
+| **Domain** | `furtail.world` (per-panel subdomains) |
 | **Subdomains** | `admin`, `shop`, `clinic`, `staff`, `owner`, `producer`, `doctor` (planned) |
 | **Local ports** | See panel table below |
-| **Production hosts** | `https://admin.bangladeshpetassociation.com`, etc. |
+| **Production hosts** | `https://admin.furtail.world`, etc. |
 | **Purpose** | Multi-mode Next.js monorepo: admin, staff, shop, clinic, owner, producer, country, doctor dashboards |
 | **Dependencies** | `backend-api` (`3000`), cookie auth via same-origin `/api/v1` proxy |
 
@@ -116,15 +116,15 @@ Loopback ports below are what nginx upstreams target on the app server (`127.0.0
 
 ---
 
-### bpa-landing
+### furtail-landing
 
 | Field | Value |
 |-------|-------|
-| **Repository** | `bpa-landing` |
-| **Domain** | `bangladeshpetassociation.com` |
+| **Repository** | `furtail-landing` |
+| **Domain** | `furtail.world` |
 | **Subdomain** | `@` (apex) |
 | **Local port** | `3101` |
-| **Production host** | `https://bangladeshpetassociation.com` |
+| **Production host** | `https://furtail.world` |
 | **Purpose** | Public marketing site, SEO (Organization/WebSite JSON-LD), `/vaccination` bridge to campaign subdomain |
 | **Dependencies** | `backend-api` for SSR public reads (`NEXT_PUBLIC_API_URL` → `/api/v1/public/*`); links to `vaccination_2026` for booking CTA |
 
@@ -137,10 +137,10 @@ Loopback ports below are what nginx upstreams target on the app server (`127.0.0
 | Field | Value |
 |-------|-------|
 | **Repository** | `vaccination_2026` |
-| **Domain** | `bangladeshpetassociation.com` |
+| **Domain** | `furtail.world` |
 | **Subdomain** | `vaccination` |
 | **Local port** | `3110` |
-| **Production host** | `https://vaccination.bangladeshpetassociation.com` |
+| **Production host** | `https://vaccination.furtail.world` |
 | **Purpose** | 2026 cat flu + rabies campaign: landing, `/book`, OTP checkout, payment return, certificate verify |
 | **Dependencies** | `backend-api` (`3000`) via Next.js rewrite `/api/*` → API; Redis/SMS/payment handled server-side on API |
 
@@ -165,12 +165,12 @@ Loopback ports below are what nginx upstreams target on the app server (`127.0.0
 ```text
 # Typical campaign stack
 backend-api          http://localhost:3000/api/v1
-bpa-landing          http://localhost:3101
+furtail-landing          http://localhost:3101
 vaccination_2026     http://localhost:3110
 
 # bpa_web (one panel at a time, or dev:all on 3100–3107)
 bpa_web admin        http://localhost:3103/admin
-bpa_web shop         http://localhost:3101/shop   ⚠ conflicts with bpa-landing
+bpa_web shop         http://localhost:3101/shop   ⚠ conflicts with furtail-landing
 ```
 
 **Recommended local profiles:**
@@ -178,8 +178,8 @@ bpa_web shop         http://localhost:3101/shop   ⚠ conflicts with bpa-landing
 | Profile | Processes | Ports |
 |---------|-----------|-------|
 | Campaign only | API + vaccination_2026 | 3000, 3110 |
-| Marketing only | API + bpa-landing | 3000, 3101 |
-| Full BPA panels | API + `npm run dev:all` (bpa_web) | 3000, 3100–3107 (no landing) |
+| Marketing only | API + furtail-landing | 3000, 3101 |
+| Full Furtail panels | API + `npm run dev:all` (bpa_web) | 3000, 3100–3107 (no landing) |
 | Marketing + campaign | API + landing + vaccination | 3000, 3101, 3110 (no shop on 3101) |
 
 ---
@@ -188,15 +188,15 @@ bpa_web shop         http://localhost:3101/shop   ⚠ conflicts with bpa-landing
 
 | Config file | Host | Upstream |
 |-------------|------|----------|
-| `bangladeshpetassociation.com.conf` | apex + www redirect | `bpa_landing:3101` |
-| `vaccination.bangladeshpetassociation.com.conf` | vaccination subdomain | `bpa_vaccination:3110` + API proxy |
+| `furtail.world.conf` | apex + www redirect | `bpa_landing:3101` |
+| `vaccination.furtail.world.conf` | vaccination subdomain | `bpa_vaccination:3110` + API proxy |
 | *(planned)* | `api.`, `admin.`, `shop.`, etc. | Per panel upstream |
 
 ---
 
 ## Pending runtime changes (out of scope for this doc pass)
 
-1. Add `dev:shop:alt` or document permanent shop port override when co-developing with `bpa-landing`.
+1. Add `dev:shop:alt` or document permanent shop port override when co-developing with `furtail-landing`.
 2. Add nginx site configs for `api.`, `admin.`, and other `bpa_web` subdomains.
 3. Align stale references (`:3001` campaign port, `3100-3104`-only docs) — **addressed in this documentation pass**.
 4. Standardize env var naming (`NEXT_PUBLIC_API_URL` vs `NEXT_PUBLIC_API_BASE_URL`).

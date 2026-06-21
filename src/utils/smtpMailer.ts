@@ -4,7 +4,7 @@
  * Env:
  *  SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS
  *  SMTP_SECURE ("true"/"false") optional
- *  SMTP_FROM (e.g. "BPA <noreply@balagpetclinic.com>") optional
+ *  SMTP_FROM (e.g. "Furtail <noreply@balagpetclinic.com>") optional
  */
 
 type SendMailArgs = {
@@ -27,7 +27,7 @@ function getSmtpConfig() {
   const pass = String(process.env.SMTP_PASS || "").trim();
   const secureEnv = String(process.env.SMTP_SECURE || "").trim().toLowerCase();
   const secure = secureEnv ? secureEnv === "true" : port === 465;
-  const from = String(process.env.SMTP_FROM || "").trim() || "BPA <no-reply@localhost>";
+  const from = String(process.env.SMTP_FROM || "").trim() || "Furtail <no-reply@localhost>";
 
   return { host, port, user, pass, secure, from };
 }

@@ -1,4 +1,4 @@
-# BPA Clinic Injection Tokens + Injection Room — Final Stabilization Audit
+# Furtail Clinic Injection Tokens + Injection Room — Final Stabilization Audit
 
 **Date:** 2026-03-14.
 **Scope:** injection-tokens, injection-room, token validation, dose recording, room mismatch, bypass, board filters.

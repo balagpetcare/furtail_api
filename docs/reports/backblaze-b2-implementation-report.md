@@ -65,7 +65,7 @@ Implemented a **storage provider architecture** supporting **MinIO** (developmen
 ```env
 STORAGE_PROVIDER=minio
 AWS_REGION=us-east-1
-AWS_BUCKET_NAME=bpa-pets
+AWS_BUCKET_NAME=furtail-pets
 AWS_ENDPOINT=http://localhost:9000
 STORAGE_PUBLIC_URL=http://192.168.x.x:9000
 AWS_ACCESS_KEY_ID=minioadmin
@@ -79,11 +79,11 @@ AWS_FORCE_PATH_STYLE=true
 STORAGE_PROVIDER=b2
 S3_ENDPOINT=https://s3.us-east-005.backblazeb2.com
 S3_REGION=us-east-005
-S3_BUCKET=bpa-production-media
+S3_BUCKET=furtail-production-media
 S3_ACCESS_KEY=<application_key_id>
 S3_SECRET_KEY=<application_key>
 S3_FORCE_PATH_STYLE=true
-STORAGE_PUBLIC_URL=https://f000.backblazeb2.com/file/bpa-production-media
+STORAGE_PUBLIC_URL=https://f000.backblazeb2.com/file/furtail-production-media
 ```
 
 ---

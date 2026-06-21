@@ -58,7 +58,7 @@ ADMIN_EMAILS=your-admin@example.com,another@example.com
 ADMIN_PHONES=017777889994,01701022274
 
 # অথবা সুপার অ্যাডমিন স্পেসিফিক নামে
-SUPER_ADMIN_WHITELIST_EMAILS=balag@bangladeshpetassociation.com,admin@bangladeshpetassociation.com
+SUPER_ADMIN_WHITELIST_EMAILS=balag@furtail.world,admin@furtail.world
 SUPER_ADMIN_WHITELIST_PHONES=017777889994,01701022274
 
 # অথবা শুধু ইউজার আইডি (নম্বর কমা দিয়ে)

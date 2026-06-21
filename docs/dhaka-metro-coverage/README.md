@@ -1,6 +1,6 @@
 # Dhaka Metro Coverage
 
-Operational BPA coverage for Greater Dhaka, separate from national `bd_*` admin hierarchy.
+Operational Furtail coverage for Greater Dhaka, separate from national `bd_*` admin hierarchy.
 
 ## Structure
 

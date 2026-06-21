@@ -319,8 +319,8 @@ Only after Phases B–C verified in staging:
 
 | ID | Location |
 |----|----------|
-| SR-01 | `bpa_web/src/bpa/campaign/admin/CampaignNav.tsx` |
-| SR-02 | `bpa_web/src/bpa/campaign/admin/SmsCenterPanel.tsx` |
+| SR-01 | `bpa_web/src/furtail/campaign/admin/CampaignNav.tsx` |
+| SR-02 | `bpa_web/src/furtail/campaign/admin/SmsCenterPanel.tsx` |
 | SR-03 | `vaccination_2026/components/booking/steps/StepOtp.tsx` |
 | SR-04 | `StepOwner.tsx`, `StepClinic.tsx`, `StepQuickStart.tsx` |
 | SR-05 | `StepCats.tsx`, `StepPayment.tsx`, `StepConfirm.tsx`, `StepDetailsLight.tsx` |

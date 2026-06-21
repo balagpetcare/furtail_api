@@ -101,7 +101,7 @@ export async function initializeEpsPayment(
   const endpoints = resolveEndpoints(cfg.baseUrl);
 
   // EPS requires a UNIQUE merchantTransactionId per initialization and rejects
-  // reuse with "TransactionId already used". The BPA order number (CKO-*) is fixed
+  // reuse with "TransactionId already used". The Furtail order number (CKO-*) is fixed
   // per checkout, so deriving the merchantTransactionId from referenceId caused
   // every retry/re-init of the same checkout to reuse the id and fail at EPS.
   // Always generate a fresh EPS-safe id; preserve the order number as CustomerOrderId.
@@ -127,7 +127,7 @@ export async function initializeEpsPayment(
     failUrl: cfg.failUrl,
     cancelUrl: req.cancelUrl || cfg.cancelUrl,
     customerName: req.metadata?.name || "Guest",
-    customerEmail: req.metadata?.email || "guest@bpa.com.bd",
+    customerEmail: req.metadata?.email || "guest@furtail.com.bd",
     CustomerAddress: req.metadata?.address || "Dhaka",
     CustomerAddress2: "",
     CustomerCity: req.metadata?.city || "Dhaka",
@@ -148,7 +148,7 @@ export async function initializeEpsPayment(
     ValueD: "",
     ShippingMethod: "NO",
     NoOfItem: "1",
-    ProductName: req.metadata?.description || "BPA Campaign Payment",
+    ProductName: req.metadata?.description || "Furtail Campaign Payment",
     ProductProfile: "general",
     ProductCategory: "Healthcare",
     ProductList: [],

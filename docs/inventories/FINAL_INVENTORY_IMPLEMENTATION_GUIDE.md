@@ -3,7 +3,7 @@
 
 ## Purpose
 This document explains how to FINALIZE the Product, Batch & Inventory system
-based on what is ALREADY IMPLEMENTED in the BPA/WPA system.
+based on what is ALREADY IMPLEMENTED in the Furtail/Furtail system.
 
 This is a closing & stabilization guide.
 

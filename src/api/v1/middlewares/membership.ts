@@ -1,7 +1,7 @@
 
 const prisma = require("../../../infrastructure/db/prismaClient");
 /**
- * Membership helpers for BPA (OrgMember / BranchMember)
+ * Membership helpers for Furtail (OrgMember / BranchMember)
  * - DOES NOT replace existing req.user.role (OWNER/ADMIN/etc)
  * - Adds DB-based membership checks for org/branch staff access
  */

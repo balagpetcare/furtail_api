@@ -1,8 +1,8 @@
-# Data Migration Plan (PraniDoctor-Informed, BPA/WPA Targeted)
+# Data Migration Plan (PraniDoctor-Informed, Furtail/Furtail Targeted)
 
 ## Objective
 
-Migrate BPA/WPA to a centralized Bangladesh location master without breaking existing production flows.
+Migrate Furtail/Furtail to a centralized Bangladesh location master without breaking existing production flows.
 
 ## 1) Migration Approach
 

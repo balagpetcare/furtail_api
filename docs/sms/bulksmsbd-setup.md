@@ -1,6 +1,6 @@
 # BulkSMSBD SMS Gateway — Setup Guide
 
-**Project:** BPA/WPA Vaccination 2026  
+**Project:** Furtail/Furtail Vaccination 2026  
 **Backend:** `backend-api`  
 **Audit:** [bulksmsbd-audit.md](./bulksmsbd-audit.md)
 

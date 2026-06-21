@@ -2,7 +2,7 @@
 
 ## Issue Summary
 
-Two critical issues affecting the BPA backend system:
+Two critical issues affecting the Furtail backend system:
 
 1. **Port Conflict**: EADDRINUSE error on port 3000 during server restart
 2. **Purchase Order Creation Failure**: Foreign key constraint violation on `purchase_orders.warehouseId_fkey`

@@ -1,4 +1,4 @@
-# BPA/WPA Inventory System – Central Warehouse + Branch Requests + Distribution
+# Furtail/Furtail Inventory System – Central Warehouse + Branch Requests + Distribution
 
 **Phase 0: Planning (no code changes until approved)**  
 **Baseline:** `docs/OWNER_PRODUCT_INPUT_REPORT.md`  

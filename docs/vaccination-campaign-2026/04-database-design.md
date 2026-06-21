@@ -7,10 +7,10 @@
 ## 1. Design Principles
 
 ### 1.1 Core Constraints
-- **Reuse existing BPA PostgreSQL database** - No separate database
+- **Reuse existing Furtail PostgreSQL database** - No separate database
 - **Extend existing schema** - Add new tables, minimal changes to existing
 - **Mobile number as primary identity** - Phone-centric design
-- **Future BPA app linking** - Design for migration path
+- **Future Furtail app linking** - Design for migration path
 
 ### 1.2 Naming Conventions
 - Tables: `snake_case` with `campaign_` prefix for new tables
@@ -204,7 +204,7 @@ model Campaign {
   walkInQuotaPercent Int           @default(20)
   
   // Metadata
-  organizerId      Int?            // BPA org managing campaign
+  organizerId      Int?            // Furtail org managing campaign
   metadataJson     Json?
   
   // Timestamps
@@ -370,8 +370,8 @@ model CampaignBooking {
   locationId      Int
   slotId          Int
   
-  // Owner (may or may not have BPA account)
-  ownerUserId     Int?     // NULL if not linked to BPA account
+  // Owner (may or may not have Furtail account)
+  ownerUserId     Int?     // NULL if not linked to Furtail account
   ownerPhone      String   @db.VarChar(15)
   ownerName       String
   ownerAddressJson Json?

@@ -1,6 +1,6 @@
 /**
  * Campaign Payment Service
- * Integrates with existing BPA payment infrastructure
+ * Integrates with existing Furtail payment infrastructure
  * Supports: bKash, Nagad, SSLCommerz
  *
  * Reuses existing Order and OrderPayment models for payment tracking

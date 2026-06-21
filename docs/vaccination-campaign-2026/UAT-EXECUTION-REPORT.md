@@ -1,4 +1,4 @@
-# UAT Execution Report — BPA Vaccination Campaign 2026
+# UAT Execution Report — Furtail Vaccination Campaign 2026
 
 **Executed:** 2026-06-02  
 **Environment:** Local API (`http://localhost:3000/api/v1/campaign`)  
@@ -130,11 +130,11 @@ Production sign-off requires browser-based runs for Scenarios 5, 7 (UI), 8, and 
 
 ---
 
-### Scenario 8 — BPA app linking
+### Scenario 8 — Furtail app linking
 
 | Step | Status | Detail |
 |------|--------|--------|
-| 8.1–8.7 | **SKIP** | Flutter `bpa_app` not run |
+| 8.1–8.7 | **SKIP** | Flutter `furtail_app` not run |
 
 **Scenario verdict:** **NOT EXECUTED** (critical scenario — blocks exit criteria)
 
@@ -163,7 +163,7 @@ Production sign-off requires browser-based runs for Scenarios 5, 7 (UI), 8, and 
 | 10.3 Staff check-in + vaccination | **SKIP** | Staff JWT |
 | 10.4 Certificate verify | **PASS** | Invalid token 404 |
 | 10.5 Admin dashboard | **SKIP** | `bpa_web` |
-| 10.6 Flutter hub | **SKIP** | `bpa_app` |
+| 10.6 Flutter hub | **SKIP** | `furtail_app` |
 
 **Scenario verdict:** **PARTIAL PASS** (4/7 automated items)
 

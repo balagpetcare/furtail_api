@@ -1,6 +1,6 @@
 # Location Usage Matrix
 
-**Scope:** `backend-api`, `bpa_web`, `bpa_app`  
+**Scope:** `backend-api`, `bpa_web`, `furtail_app`  
 **Date:** 2026-06-03  
 **Recommended source:** `/api/v1/location-master` for BD hierarchy reads/writes; `/api/v1/geo` for non-BD dropdowns; `/api/v1/me/location` for user place/GPS.
 

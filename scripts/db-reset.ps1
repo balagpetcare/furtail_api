@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Stop'
 
-Write-Host "== BPA DB RESET (drop + migrate + seed) ==" -ForegroundColor Cyan
+Write-Host "== Furtail DB RESET (drop + migrate + seed) ==" -ForegroundColor Cyan
 
 Write-Host "[1/3] npx prisma generate" -ForegroundColor Yellow
 npx prisma generate

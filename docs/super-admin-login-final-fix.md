@@ -32,7 +32,7 @@ Final user record:
 - `users.id`: `2`
 - `user_auth.id`: `2`
 - `phone`: `01777889994`
-- `email`: `balag@bangladeshpetassociation.com`
+- `email`: `balag@furtail.world`
 - `isActive`: `true`
 
 Organization scope:
@@ -94,8 +94,8 @@ npm run admin:bootstrap
 
 Bootstrap result:
 
-- `userId=2` updated to phone `01777889994`, email `balag@bangladeshpetassociation.com`.
-- `userId=3` created for phone `01701022274`, email `admin@bangladeshpetassociation.com`.
+- `userId=2` updated to phone `01777889994`, email `balag@furtail.world`.
+- `userId=3` created for phone `01701022274`, email `admin@furtail.world`.
 - Both users have `SUPER_ADMIN`.
 - Whitelist rows are active for both phones and both emails.
 
@@ -107,7 +107,7 @@ Service login:
 {
   "success": true,
   "userId": 2,
-  "email": "balag@bangladeshpetassociation.com",
+  "email": "balag@furtail.world",
   "phone": "01777889994",
   "contexts": [
     {
@@ -131,7 +131,7 @@ Real HTTP endpoint login:
   "tokenIssued": true,
   "userId": 2,
   "phone": "01777889994",
-  "email": "balag@bangladeshpetassociation.com",
+  "email": "balag@furtail.world",
   "default_redirect": "/admin"
 }
 ```

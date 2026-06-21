@@ -15,7 +15,7 @@
 
 ## 1. Executive summary
 
-The BPA/WPA supply-chain stack implements **multiple fulfillment families** that must coexist without double-mutating `StockRequestItem.fulfilledQty`: **enterprise allocation → pick → `StockDispatch`**, **flexible owner fulfill (`StockTransfer`)**, **legacy `fulfillAndDispatch`**, **procurement demand → PO → GRN → optional auto-dispatch**, and **unified branch inbound** (dispatch + legacy transfer).
+The Furtail/Furtail supply-chain stack implements **multiple fulfillment families** that must coexist without double-mutating `StockRequestItem.fulfilledQty`: **enterprise allocation → pick → `StockDispatch`**, **flexible owner fulfill (`StockTransfer`)**, **legacy `fulfillAndDispatch`**, **procurement demand → PO → GRN → optional auto-dispatch**, and **unified branch inbound** (dispatch + legacy transfer).
 
 An end-to-end audit shows **substantial consolidation is already in place**: centralized quantity and status derivation (`stockRequestQuantity.service.ts`, `stockRequestStatus.service.ts`), branch classification (`branchTypeResolver.service.ts`), **allocation confirm → `StockRequest` → `APPROVED`** (semantic “ready to fulfill”) in `allocationPlan.service.ts`, **owner warehouse fulfillment queue** and **staff inbound queue** APIs, **controlled receive** via existing `DispatchReceiveSession`, and **legacy-vs-enterprise guards** (`shouldBlockLegacyOwnerFulfillment`).
 

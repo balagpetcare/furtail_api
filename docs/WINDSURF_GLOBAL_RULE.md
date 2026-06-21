@@ -1,4 +1,4 @@
-GLOBAL WORKSPACE RULE — BPA/WPA SYSTEM
+GLOBAL WORKSPACE RULE — Furtail/Furtail SYSTEM
 
 This rule applies to all future tasks in this workspace unless explicitly overridden by the user.
 

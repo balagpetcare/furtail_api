@@ -48,7 +48,7 @@ Legacy URLs redirect to the hub with the correct tab (`?tab=analytics|export|sms
 
 ## 4. Operations Center UI
 
-**Component:** `src/bpa/campaign/admin/CampaignOperationsCenter.tsx`  
+**Component:** `src/furtail/campaign/admin/CampaignOperationsCenter.tsx`  
 **Page:** `app/admin/(larkon)/campaigns/[id]/operations-center/page.tsx`
 
 ### 4.1 Workflow bar

@@ -198,7 +198,7 @@ Already modeled as **multiple `MedicinePresentation` rows** per generic+form wit
 | `.../exports` | `POST /listings` (body filters) → async job or sync file |
 | `.../review` | `GET /queues` (counts), `GET /import-rows?classification=` |
 
-**Contracts:** Standard BPA JSON `{ success, data, message?, code? }`; pagination `page`, `limit`, `total`; confirm destructive actions with `?confirm=true` or body `acknowledge…`.
+**Contracts:** Standard Furtail JSON `{ success, data, message?, code? }`; pagination `page`, `limit`, `total`; confirm destructive actions with `?confirm=true` or body `acknowledge…`.
 
 **Existing** `GET /admin/medicine-catalog/search` and `GET /brands/:id` remain for backward compatibility; new workspace can wrap or deprecate with `Deprecation` header.
 
@@ -267,7 +267,7 @@ Register permissions (examples—align naming with registry conventions):
 | Pages | `app/admin/(larkon)/medicine/...` (dashboard, listings, entities, imports, review, exports) |
 | API client | `lib/adminApi.ts` → `medicineWorkspaceApi` or extend existing |
 | Menu | `src/lib/permissionMenu.ts` — new section + retire orphan import-only placement |
-| Components | `src/bpa/admin/medicine/` or `app/admin/.../_components/` |
+| Components | `src/furtail/admin/medicine/` or `app/admin/.../_components/` |
 
 ### Docs (`backend-api/docs`)
 

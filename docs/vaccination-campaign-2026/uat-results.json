@@ -42,7 +42,7 @@
         {
           "step": "10.6 Flutter hub",
           "status": "SKIP",
-          "detail": "bpa_app"
+          "detail": "furtail_app"
         }
       ],
       "pass": 5,
@@ -188,7 +188,7 @@
       "fail": 0,
       "skip": 1
     },
-    "Scenario 8 — BPA app linking": {
+    "Scenario 8 — Furtail app linking": {
       "steps": [
         {
           "step": "8.1–8.7",

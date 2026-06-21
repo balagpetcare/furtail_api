@@ -1,27 +1,27 @@
-# BPA Vaccination Domain Strategy
+# Furtail Vaccination Domain Strategy
 
 **Status:** Planning + SEO implementation (see §6.6) + monitoring strategy (see docs/architecture/enterprise-monitoring-failover-strategy.md)  
 **Date:** 2026-06-05  
-**Owner:** BPA Platform Architecture  
-**Repos:** `backend-api` · `bpa-landing` · `vaccination_2026` · `bpa_web` · `bpa_app`
+**Owner:** Furtail Platform Architecture  
+**Repos:** `backend-api` · `furtail-landing` · `vaccination_2026` · `bpa_web` · `furtail_app`
 
 ---
 
 ## Executive summary
 
-Bangladesh Pet Association (BPA) operates multiple frontends against one **Central API** (`backend-api`). This plan defines how to publish:
+Furtail (Furtail) operates multiple frontends against one **Central API** (`backend-api`). This plan defines how to publish:
 
 | Surface | Production URL | App | Dev port |
 |---------|----------------|-----|----------|
-| **Primary marketing** | `https://bangladeshpetassociation.com` | `bpa-landing` | 3101 |
-| **Vaccination campaign** | `https://vaccination.bangladeshpetassociation.com` | `vaccination_2026` | 3110 |
-| **SEO convenience path** | `https://bangladeshpetassociation.com/vaccination` | Redirect or edge route → campaign app | — |
-| **Central API** | `https://api.bangladeshpetassociation.com` | `backend-api` | 3000 |
-| **Admin / staff** | `https://admin.bangladeshpetassociation.com` (and staff path/host) | `bpa_web` | 3103+ |
+| **Primary marketing** | `https://furtail.world` | `furtail-landing` | 3101 |
+| **Vaccination campaign** | `https://vaccination.furtail.world` | `vaccination_2026` | 3110 |
+| **SEO convenience path** | `https://furtail.world/vaccination` | Redirect or edge route → campaign app | — |
+| **Central API** | `https://api.furtail.world` | `backend-api` | 3000 |
+| **Admin / staff** | `https://admin.furtail.world` (and staff path/host) | `bpa_web` | 3103+ |
 
 **Non-negotiables**
 
-- `bpa-landing` and `vaccination_2026` remain **separate deployable Next.js applications**.
+- `furtail-landing` and `vaccination_2026` remain **separate deployable Next.js applications**.
 - **Single source of truth** for bookings, payments, campaigns, clinics, and pet records: **PostgreSQL via `backend-api`** (Prisma).
 - Architecture must be **enterprise-grade**, **multi-campaign ready**, **SEO-optimized**, and **PWA-compatible** (future installable web apps per domain).
 
@@ -33,20 +33,20 @@ Bangladesh Pet Association (BPA) operates multiple frontends against one **Centr
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                           BPA Central API (backend-api)                      │
+│                           Furtail Central API (backend-api)                      │
 │                    https://api…/api/v1  ·  Port 3000  ·  Prisma/PostgreSQL   │
 │  Campaign · Booking · Payment · OTP · Clinics (ops) · Pets · Community · SMS  │
 └───────────────┬───────────────────────┬───────────────────────┬─────────────┘
                 │                       │                       │
     ┌───────────▼──────────┐ ┌──────────▼─────────┐ ┌─────────▼──────────┐
-    │     bpa-landing      │ │  vaccination_2026   │ │      bpa_web       │
+    │     furtail-landing      │ │  vaccination_2026   │ │      bpa_web       │
     │  Marketing / SEO     │ │  Campaign + /book     │ │  Admin + Staff     │
     │  Port 3101           │ │  Port 3110            │ │  Ports 3100–3107   │
     │  Direct API axios    │ │  /api/* proxy rewrite │ │  /api/v1/* proxy   │
     └──────────────────────┘ └──────────────────────┘ └────────────────────┘
                 │                       │
     ┌───────────▼──────────┐ ┌──────────▼─────────┐
-    │       bpa_app        │ │  Infra: Redis,     │
+    │       furtail_app        │ │  Infra: Redis,     │
     │  Flutter (optional)  │ │  MinIO, Worker     │
     └──────────────────────┘ └────────────────────┘
 ```
@@ -55,10 +55,10 @@ Bangladesh Pet Association (BPA) operates multiple frontends against one **Centr
 
 | App | API env var | Client pattern | Auth |
 |-----|-------------|----------------|------|
-| `bpa-landing` | `NEXT_PUBLIC_API_URL` (includes `/api/v1`) | Server-side axios, no Next proxy | None (public reads) |
+| `furtail-landing` | `NEXT_PUBLIC_API_URL` (includes `/api/v1`) | Server-side axios, no Next proxy | None (public reads) |
 | `vaccination_2026` | `NEXT_PUBLIC_API_BASE_URL` | Browser `/api/*` → API rewrite | OTP Bearer (sessionStorage) + express checkout |
 | `bpa_web` | `NEXT_PUBLIC_API_BASE_URL` | Cookie-aware `/api/v1` proxy | JWT cookie (`access_token`) |
-| `bpa_app` | `API_BASE_URL` | Direct HTTPS | JWT |
+| `furtail_app` | `API_BASE_URL` | Direct HTTPS | JWT |
 
 ### 1.3 Data ownership (single source of truth)
 
@@ -76,12 +76,12 @@ Frontends **must not** persist booking or payment state locally beyond session/U
 ### 1.4 Gaps blocking production multi-domain
 
 1. **No in-repo nginx/reverse-proxy config** — routing is undocumented at infra layer.
-2. **Port collision locally:** `bpa-landing` and `bpa_web` shop both use **3101**.
+2. **Port collision locally:** `furtail-landing` and `bpa_web` shop both use **3101**.
 3. **Stale docs (partially resolved):** `06-DEPLOYMENT-PLAN.md` previously referenced landing `:3001`; corrected to `:3110` / `:3101` in [PORT_AND_DOMAIN_MAP.md](../infrastructure/PORT_AND_DOMAIN_MAP.md).
 4. **Landing API contracts:** Primary paths `/public/stats`, `/public/clinics`, `/campaigns/active` are **not implemented** on API — landing uses fallbacks.
 5. **Inconsistent env naming** across apps (`NEXT_PUBLIC_API_URL` vs `NEXT_PUBLIC_API_BASE_URL`).
-6. **Production CORS/cookie matrix** not codified for `bangladeshpetassociation.com` + subdomains.
-7. **Three public-facing web surfaces** (`bpa-landing`, `vaccination_2026`, `bpa_web` public panel) — roles must be explicit in DNS/routing.
+6. **Production CORS/cookie matrix** not codified for `furtail.world` + subdomains.
+7. **Three public-facing web surfaces** (`furtail-landing`, `vaccination_2026`, `bpa_web` public panel) — roles must be explicit in DNS/routing.
 
 ---
 
@@ -95,7 +95,7 @@ flowchart TB
     U[Users / Crawlers]
   end
 
-  subgraph DNS["DNS · bangladeshpetassociation.com"]
+  subgraph DNS["DNS · furtail.world"]
     APEX["@ → CDN / LB"]
     VAC["vaccination. → CDN / LB"]
     API["api. → API LB"]
@@ -110,12 +110,12 @@ flowchart TB
   end
 
   subgraph Frontends["Separate frontend deployments"]
-    LAND["bpa-landing<br/>Next.js :3101"]
+    LAND["furtail-landing<br/>Next.js :3101"]
     CAMP["vaccination_2026<br/>Next.js :3110"]
     WEB["bpa_web<br/>Next.js :3103"]
   end
 
-  subgraph Core["BPA Central API"]
+  subgraph Core["Furtail Central API"]
     API_SVC["backend-api :3000"]
     WORKER["notification worker"]
     REDIS[(Redis)]
@@ -164,9 +164,9 @@ The API already supports **slug-based campaigns** (`GET /api/v1/campaign/public/
 
 | Phase | Campaign URL pattern | Config |
 |-------|---------------------|--------|
-| **Now (2026)** | `vaccination.bangladeshpetassociation.com` | `NEXT_PUBLIC_CAMPAIGN_SLUG=cat-flu-rabies-2026` |
-| **Future** | `vaccination.bangladeshpetassociation.com/{slug}` or `2027.vaccination.…` | Per-deploy env or host→slug map in nginx/CDN |
-| **Discovery** | `bangladeshpetassociation.com` links to active campaign | `GET /campaigns/active` or public list (API endpoint to implement) |
+| **Now (2026)** | `vaccination.furtail.world` | `NEXT_PUBLIC_CAMPAIGN_SLUG=cat-flu-rabies-2026` |
+| **Future** | `vaccination.furtail.world/{slug}` or `2027.vaccination.…` | Per-deploy env or host→slug map in nginx/CDN |
+| **Discovery** | `furtail.world` links to active campaign | `GET /campaigns/active` or public list (API endpoint to implement) |
 
 **Rule:** New campaigns = new env slug and/or path — **never** a second booking database or duplicate payment tables.
 
@@ -176,8 +176,8 @@ Each public frontend is a **separate origin** → **separate PWA manifest and se
 
 | App | Manifest host | Scope | Notes |
 |-----|---------------|-------|-------|
-| `bpa-landing` | `bangladeshpetassociation.com` | `/` | Already has `manifest.ts`; extend with icons/screenshots |
-| `vaccination_2026` | `vaccination.bangladeshpetassociation.com` | `/` | Add `manifest.ts`; offline limited to shell + cached static |
+| `furtail-landing` | `furtail.world` | `/` | Already has `manifest.ts`; extend with icons/screenshots |
+| `vaccination_2026` | `vaccination.furtail.world` | `/` | Add `manifest.ts`; offline limited to shell + cached static |
 | Cross-link | — | — | Do not share SW across subdomains |
 
 API remains **non-PWA**; installable surfaces call API over HTTPS only.
@@ -190,25 +190,25 @@ API remains **non-PWA**; installable surfaces call API over HTTPS only.
 
 | Host | Type | Target | Purpose |
 |------|------|--------|---------|
-| `bangladeshpetassociation.com` | `A` / `AAAA` or `CNAME` | CDN / LB IP | Primary landing (`bpa-landing`) |
-| `www.bangladeshpetassociation.com` | `CNAME` | `bangladeshpetassociation.com` | Canonical redirect to apex |
-| `vaccination.bangladeshpetassociation.com` | `CNAME` | CDN / LB (campaign pool) | Campaign app (`vaccination_2026`) |
-| `api.bangladeshpetassociation.com` | `CNAME` | API LB | Central API |
-| `admin.bangladeshpetassociation.com` | `CNAME` | Web LB | `bpa_web` admin mode |
-| `staff.bangladeshpetassociation.com` | `CNAME` | Web LB (or path on admin) | Staff portal (optional separate vhost) |
+| `furtail.world` | `A` / `AAAA` or `CNAME` | CDN / LB IP | Primary landing (`furtail-landing`) |
+| `www.furtail.world` | `CNAME` | `furtail.world` | Canonical redirect to apex |
+| `vaccination.furtail.world` | `CNAME` | CDN / LB (campaign pool) | Campaign app (`vaccination_2026`) |
+| `api.furtail.world` | `CNAME` | API LB | Central API |
+| `admin.furtail.world` | `CNAME` | Web LB | `bpa_web` admin mode |
+| `staff.furtail.world` | `CNAME` | Web LB (or path on admin) | Staff portal (optional separate vhost) |
 
-**Optional (existing BPA panels):**
+**Optional (existing Furtail panels):**
 
 | Host | App |
 |------|-----|
-| `shop.bangladeshpetassociation.com` | `bpa_web` shop (3101) |
-| `clinic.bangladeshpetassociation.com` | `bpa_web` clinic (3102) |
+| `shop.furtail.world` | `bpa_web` shop (3101) |
+| `clinic.furtail.world` | `bpa_web` clinic (3102) |
 
 ### 3.2 Staging (recommended mirror)
 
 | Production | Staging |
 |------------|---------|
-| `bangladeshpetassociation.com` | `staging.bangladeshpetassociation.com` |
+| `furtail.world` | `staging.furtail.world` |
 | `vaccination.…` | `vaccination-staging.…` |
 | `api.…` | `api-staging.…` |
 | `admin.…` | `admin-staging.…` |
@@ -217,7 +217,7 @@ Staging uses **separate** DB, Redis, payment sandbox, and SMS test sender IDs.
 
 ### 3.3 TLS
 
-- **Wildcard cert:** `*.bangladeshpetassociation.com` + apex (Let's Encrypt DNS-01 or CDN-managed).
+- **Wildcard cert:** `*.furtail.world` + apex (Let's Encrypt DNS-01 or CDN-managed).
 - **HSTS** enabled at edge after redirect rules verified (include subdomains when stable).
 - **Certificate pinning:** not required; rely on modern TLS 1.2+ at edge.
 
@@ -227,7 +227,7 @@ Staging uses **separate** DB, Redis, payment sandbox, and SMS test sender IDs.
 |--------|-----|
 | `SPF` | SMS/email providers, transactional mail |
 | `DKIM` | Organization email |
-| `DMARC` | Policy for `@bangladeshpetassociation.com` |
+| `DMARC` | Policy for `@furtail.world` |
 
 ---
 
@@ -269,21 +269,21 @@ upstream bpa_web_admin {
 
 ### 4.3 Server blocks
 
-#### Primary — `bangladeshpetassociation.com`
+#### Primary — `furtail.world`
 
 ```nginx
 server {
     listen 443 ssl http2;
-    server_name bangladeshpetassociation.com www.bangladeshpetassociation.com;
+    server_name furtail.world www.furtail.world;
 
     # ssl_certificate …
 
     # SEO convenience route — RECOMMENDED: permanent redirect to campaign subdomain
     location = /vaccination {
-        return 301 https://vaccination.bangladeshpetassociation.com/;
+        return 301 https://vaccination.furtail.world/;
     }
     location ^~ /vaccination/ {
-        return 301 https://vaccination.bangladeshpetassociation.com$request_uri;
+        return 301 https://vaccination.furtail.world$request_uri;
     }
 
     # Optional: landing server-side API proxy (reduces CORS; aligns with vaccination_2026 pattern)
@@ -306,12 +306,12 @@ server {
 }
 ```
 
-#### Campaign — `vaccination.bangladeshpetassociation.com`
+#### Campaign — `vaccination.furtail.world`
 
 ```nginx
 server {
     listen 443 ssl http2;
-    server_name vaccination.bangladeshpetassociation.com;
+    server_name vaccination.furtail.world;
 
     location /api/ {
         proxy_pass http://bpa_api/api/;
@@ -330,12 +330,12 @@ server {
 }
 ```
 
-#### API — `api.bangladeshpetassociation.com`
+#### API — `api.furtail.world`
 
 ```nginx
 server {
     listen 443 ssl http2;
-    server_name api.bangladeshpetassociation.com;
+    server_name api.furtail.world;
 
     client_max_body_size 25m;
 
@@ -358,7 +358,7 @@ server {
 | **C. Next.js redirect in landing** | No nginx change | Runs after landing boot; less ideal for crawlers | Acceptable fallback |
 | **D. CDN edge redirect** | Fast; no origin load | Vendor-specific config | Good if using Cloudflare/Fastly |
 
-**Canonical URL for campaign SEO:** always `https://vaccination.bangladeshpetassociation.com/…`
+**Canonical URL for campaign SEO:** always `https://vaccination.furtail.world/…`
 
 ### 4.5 Caching
 
@@ -377,8 +377,8 @@ server {
 
 | URL | Application | Internal route | API calls |
 |-----|-------------|----------------|-----------|
-| `/` | `bpa-landing` | `src/app/page.tsx` | SSR: stats, clinics, campaign, community |
-| `/privacy-policy`, `/terms`, `/help` | `bpa-landing` | legal pages | None |
+| `/` | `furtail-landing` | `src/app/page.tsx` | SSR: stats, clinics, campaign, community |
+| `/privacy-policy`, `/terms`, `/help` | `furtail-landing` | legal pages | None |
 | `/vaccination` | **Redirect** | → `vaccination.…/` | — |
 | `vaccination.…/` | `vaccination_2026` | campaign landing | `/api/v1/campaign/public/campaigns/:slug` |
 | `vaccination.…/book` | `vaccination_2026` | booking wizard | checkout, OTP, payment |
@@ -392,31 +392,31 @@ server {
 
 | Source | CTA | Target URL |
 |--------|-----|------------|
-| `bpa-landing` hero / footer | Book vaccination | `https://vaccination.bangladeshpetassociation.com/book` |
-| `bpa-landing` (optional SEO path) | Campaign overview | `https://bangladeshpetassociation.com/vaccination` → 301 → subdomain |
-| `vaccination_2026` header/footer | BPA home | `https://bangladeshpetassociation.com` |
+| `furtail-landing` hero / footer | Book vaccination | `https://vaccination.furtail.world/book` |
+| `furtail-landing` (optional SEO path) | Campaign overview | `https://furtail.world/vaccination` → 301 → subdomain |
+| `vaccination_2026` header/footer | Furtail home | `https://furtail.world` |
 | Payment gateway return | Success/fail | `CAMPAIGN_LANDING_URL` + `/book/payment/...` |
 | SMS deep links | Booking ref | `vaccination.…/booking/{ref}` |
 
 **Env alignment:**
 
 ```env
-# bpa-landing
-NEXT_PUBLIC_SITE_URL=https://bangladeshpetassociation.com
-NEXT_PUBLIC_CAMPAIGN_BOOK_URL=https://vaccination.bangladeshpetassociation.com/book
-NEXT_PUBLIC_API_URL=https://api.bangladeshpetassociation.com/api/v1
+# furtail-landing
+NEXT_PUBLIC_SITE_URL=https://furtail.world
+NEXT_PUBLIC_CAMPAIGN_BOOK_URL=https://vaccination.furtail.world/book
+NEXT_PUBLIC_API_URL=https://api.furtail.world/api/v1
 
 # vaccination_2026
-NEXT_PUBLIC_SITE_URL=https://vaccination.bangladeshpetassociation.com
-NEXT_PUBLIC_API_BASE_URL=https://api.bangladeshpetassociation.com
+NEXT_PUBLIC_SITE_URL=https://vaccination.furtail.world
+NEXT_PUBLIC_API_BASE_URL=https://api.furtail.world
 NEXT_PUBLIC_CAMPAIGN_SLUG=cat-flu-rabies-2026
 
 # backend-api
-APP_URL=https://api.bangladeshpetassociation.com
-API_PUBLIC_BASE_URL=https://api.bangladeshpetassociation.com
-CAMPAIGN_LANDING_URL=https://vaccination.bangladeshpetassociation.com
-CORS_ORIGINS=https://bangladeshpetassociation.com,https://www.bangladeshpetassociation.com,https://vaccination.bangladeshpetassociation.com,https://admin.bangladeshpetassociation.com
-COOKIE_DOMAIN=.bangladeshpetassociation.com
+APP_URL=https://api.furtail.world
+API_PUBLIC_BASE_URL=https://api.furtail.world
+CAMPAIGN_LANDING_URL=https://vaccination.furtail.world
+CORS_ORIGINS=https://furtail.world,https://www.furtail.world,https://vaccination.furtail.world,https://admin.furtail.world
+COOKIE_DOMAIN=.furtail.world
 ```
 
 ### 5.3 Local development routing
@@ -436,13 +436,13 @@ COOKIE_DOMAIN=.bangladeshpetassociation.com
 
 | Content type | Canonical host | Rationale |
 |--------------|----------------|-----------|
-| Brand, ecosystem, clinics, stats | `bangladeshpetassociation.com` | National platform positioning |
-| Campaign landing, booking, certificates | `vaccination.bangladeshpetassociation.com` | Conversion-focused funnel |
+| Brand, ecosystem, clinics, stats | `furtail.world` | National platform positioning |
+| Campaign landing, booking, certificates | `vaccination.furtail.world` | Conversion-focused funnel |
 | `/vaccination` on apex | **Bridge page** with canonical → subdomain | Avoid duplicate content while keeping short URL |
 
 ### 6.2 Metadata & structured data
 
-**`bpa-landing` (apex)**
+**`furtail-landing` (apex)**
 
 - Organization, WebSite, FAQ, MobileApplication JSON-LD (already partially implemented).
 - `sitemap.xml`: `/`, legal pages; **do not** list campaign booking URLs as separate apex pages.
@@ -458,20 +458,20 @@ COOKIE_DOMAIN=.bangladeshpetassociation.com
 
 **Purpose:** Short memorable URL on primary domain for marketing (print, TV, government partners).
 
-**Implemented approach (2026-06-05):** lightweight **bridge page** on apex (`bpa-landing`) rather than a 301 redirect:
+**Implemented approach (2026-06-05):** lightweight **bridge page** on apex (`furtail-landing`) rather than a 301 redirect:
 
-- HTML `rel=canonical` → `https://vaccination.bangladeshpetassociation.com`
+- HTML `rel=canonical` → `https://vaccination.furtail.world`
 - Open Graph / Twitter `og:url` → same primary URL
 - JSON-LD: apex `WebPage` references primary `Event` by `@id` (`#campaign-event`); Event defined only on subdomain
 - Book CTA links out to primary host (no embedded booking on apex)
 
 **Alternative (infra):** nginx 301 from apex `/vaccination` → subdomain remains valid if marketing prefers URL bar change; canonical strategy on subdomain is unchanged.
 
-**Full implementation guide:** `bpa-landing/docs/seo/vaccination-campaign-seo.md`
+**Full implementation guide:** `furtail-landing/docs/seo/vaccination-campaign-seo.md`
 
 ### 6.6 SEO implementation status
 
-| Item | Primary (`vaccination_2026`) | Bridge (`bpa-landing`) |
+| Item | Primary (`vaccination_2026`) | Bridge (`furtail-landing`) |
 |------|------------------------------|------------------------|
 | Canonical | Self (`NEXT_PUBLIC_SITE_URL`) | Points to primary |
 | Open Graph | `app/opengraph-image.tsx` + `lib/campaignSeo.ts` | Uses primary OG image URL |
@@ -487,15 +487,15 @@ COOKIE_DOMAIN=.bangladeshpetassociation.com
 
 ### 6.5 Performance (ranking signal)
 
-- Maintain Lighthouse 95+ on `bpa-landing` (production `next start`, not dev).
+- Maintain Lighthouse 95+ on `furtail-landing` (production `next start`, not dev).
 - Campaign site: optimize LCP on hero; proxy API via same-origin `/api` to avoid CORS preflight on client calls.
-- Preconnect from landing to `api.bangladeshpetassociation.com` when live API enabled.
+- Preconnect from landing to `api.furtail.world` when live API enabled.
 
 ### 6.6 Analytics
 
 - Separate GA4 properties or one property with **hostname dimension**:
-  - `bangladeshpetassociation.com` — awareness
-  - `vaccination.bangladeshpetassociation.com` — conversion funnel
+  - `furtail.world` — awareness
+  - `vaccination.furtail.world` — conversion funnel
 - Cross-domain linker for booking completion events.
 
 ---
@@ -509,7 +509,7 @@ COOKIE_DOMAIN=.bangladeshpetassociation.com
 | Cross-site booking fraud | Server-side checkout validation; rate limits on OTP/checkout |
 | Payment webhook spoofing | HMAC secrets (`CAMPAIGN_PAYMENT_WEBHOOK_SECRET`); IP allowlist where provider supports |
 | Session hijack (OTP Bearer) | Short TTL; HTTPS only; `sessionStorage` (not localStorage) on campaign site |
-| Admin cookie leakage | `HttpOnly`, `Secure`, `SameSite=Lax`, `COOKIE_DOMAIN=.bangladeshpetassociation.com` |
+| Admin cookie leakage | `HttpOnly`, `Secure`, `SameSite=Lax`, `COOKIE_DOMAIN=.furtail.world` |
 | CORS abuse | Strict production `CORS_ORIGINS`; no `*` with credentials |
 | SSRF via API proxy | Next rewrites only to configured `API_BASE_URL` |
 | DDoS | CDN/WAF + nginx `limit_req` on `/api/v1/campaign/auth/request-otp` |
@@ -518,16 +518,16 @@ COOKIE_DOMAIN=.bangladeshpetassociation.com
 
 ```
 Allowed origins:
-  https://bangladeshpetassociation.com
-  https://www.bangladeshpetassociation.com
-  https://vaccination.bangladeshpetassociation.com
-  https://admin.bangladeshpetassociation.com
+  https://furtail.world
+  https://www.furtail.world
+  https://vaccination.furtail.world
+  https://admin.furtail.world
   (+ staff host if separate)
 
 credentials: true (for bpa_web cookie auth only)
 ```
 
-`bpa-landing` SSR should prefer **server-to-server** API calls; if browser calls are added, origin must be in allowlist.
+`furtail-landing` SSR should prefer **server-to-server** API calls; if browser calls are added, origin must be in allowlist.
 
 ### 7.3 Authentication boundaries
 
@@ -558,8 +558,8 @@ Content-Security-Policy: (per-app; allow payment iframe domains explicitly)
 
 ### 7.6 Payment security
 
-- All return URLs use `https://vaccination.bangladeshpetassociation.com/...` (must match `CAMPAIGN_LANDING_URL`).
-- Webhooks hit `https://api.bangladeshpetassociation.com/api/v1/...` only — never frontends.
+- All return URLs use `https://vaccination.furtail.world/...` (must match `CAMPAIGN_LANDING_URL`).
+- Webhooks hit `https://api.furtail.world/api/v1/...` only — never frontends.
 - Idempotent payment verification on return + webhook.
 
 ---
@@ -572,7 +572,7 @@ Content-Security-Policy: (per-app; allow payment iframe domains explicitly)
 ┌─────────────────────────────────────────────────────────┐
 │ VM / K8s / PaaS                                          │
 │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐        │
-│  │ bpa-landing │ │ vaccination │ │  bpa_web    │        │
+│  │ furtail-landing │ │ vaccination │ │  bpa_web    │        │
 │  │  (PM2/k8s)  │ │  (PM2/k8s)  │ │  (PM2/k8s)  │        │
 │  └─────────────┘ └─────────────┘ └─────────────┘        │
 │  ┌─────────────────────────────────────────────┐        │
@@ -597,7 +597,7 @@ Content-Security-Policy: (per-app; allow payment iframe domains explicitly)
 | 2 | `backend-api` + worker | `GET /api/v1/health` or campaigns list 200 |
 | 3 | Configure payment/SMS webhooks to production API URLs | Test callback |
 | 4 | `vaccination_2026` | `/`, `/book`, payment return smoke |
-| 5 | `bpa-landing` | `/`, sitemap, `/vaccination` redirect |
+| 5 | `furtail-landing` | `/`, sitemap, `/vaccination` redirect |
 | 6 | `bpa_web` admin/staff | Campaign admin smoke |
 | 7 | DNS cutover (low TTL beforehand) | External monitoring |
 | 8 | Activate campaign in admin | Public discovery shows ACTIVE |
@@ -606,9 +606,9 @@ Content-Security-Policy: (per-app; allow payment iframe domains explicitly)
 
 | Repo | Build | Artifact | Deploy target |
 |------|-------|----------|---------------|
-| `backend-api` | Docker image | `bpa-api:latest` | API cluster |
+| `backend-api` | Docker image | `furtail-api:latest` | API cluster |
 | `vaccination_2026` | `next build` | Node standalone or Docker | Campaign upstream :3110 |
-| `bpa-landing` | `next build` | Node standalone or Docker | Landing upstream :3101 |
+| `furtail-landing` | `next build` | Node standalone or Docker | Landing upstream :3101 |
 | `bpa_web` | `next build` per `SITE_MODE` | Separate images per mode | Admin :3103 |
 
 ### 8.4 Environment matrix
@@ -641,7 +641,7 @@ Content-Security-Policy: (per-app; allow payment iframe domains explicitly)
 | R5 | Port 3101 collision in local dev | High | Dev friction | Document: landing=3101, shop=alternate when both run |
 | R6 | Cross-app env naming drift | Medium | Misconfiguration | Standardize on `NEXT_PUBLIC_API_BASE_URL` + path helpers (future refactor) |
 | R7 | Webhook exposure on wrong host | Low | Critical | Webhooks only on `api.` subdomain |
-| R8 | Cookie scope too broad | Low | Medium | `COOKIE_DOMAIN=.bangladeshpetassociation.com` only when all subdomains need auth |
+| R8 | Cookie scope too broad | Low | Medium | `COOKIE_DOMAIN=.furtail.world` only when all subdomains need auth |
 | R9 | Campaign surge traffic | Medium | API saturation | CDN for static; rate limits; horizontal API scale; Redis OTP |
 | R10 | Multi-campaign slug confusion | Medium | Wrong pricing/slots | Host→slug map documented; admin enforces one ACTIVE default per rollout phase |
 | R11 | PWA cache stale booking UI | Low | User confusion | Versioned SW; `skipWaiting` policy; scope limited to campaign host |
@@ -669,12 +669,12 @@ When moving from plan to execution, recommended sequence:
 | Document | Path |
 |----------|------|
 | Project context (ports) | `docs/PROJECT_CONTEXT.md` |
-| BPA standard | `docs/BPA_STANDARD.md` |
+| Furtail standard | `docs/BPA_STANDARD.md` |
 | Campaign deployment | `docs/vaccination-campaign-2026/06-DEPLOYMENT-PLAN.md` |
 | Campaign API design | `docs/vaccination-campaign-2026/05-api-design.md` |
 | Payment architecture | `docs/vaccination-campaign-2026/payment-gateway-architecture.md` |
 | Security design | `docs/vaccination-campaign-2026/14-security-design.md` |
-| Landing API contracts | `bpa-landing/src/config/api.ts` |
+| Landing API contracts | `furtail-landing/src/config/api.ts` |
 | Campaign rewrites | `vaccination_2026/next.config.js` |
 | Prisma policy | `docs/PRISMA_MIGRATION_NON_DESTRUCTIVE_POLICY.md` |
 
@@ -683,12 +683,12 @@ When moving from plan to execution, recommended sequence:
 ## Appendix A — Quick reference diagram (DNS + routing)
 
 ```
-bangladeshpetassociation.com          → bpa-landing
-bangladeshpetassociation.com/vaccination → 301 → vaccination.bangladeshpetassociation.com
-vaccination.bangladeshpetassociation.com → vaccination_2026
+furtail.world          → furtail-landing
+furtail.world/vaccination → 301 → vaccination.furtail.world
+vaccination.furtail.world → vaccination_2026
   └─ /api/*                             → backend-api (via Next rewrite or nginx)
-api.bangladeshpetassociation.com      → backend-api (/api/v1/*)
-admin.bangladeshpetassociation.com      → bpa_web (admin)
+api.furtail.world      → backend-api (/api/v1/*)
+admin.furtail.world      → bpa_web (admin)
 ```
 
 **Single source of truth:** All booking and payment records in **PostgreSQL** via **backend-api** only.

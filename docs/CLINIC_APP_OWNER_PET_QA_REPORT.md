@@ -1,4 +1,4 @@
-# BPA Clinic + App Owner/Pet — Frontend Wiring & QA Report
+# Furtail Clinic + App Owner/Pet — Frontend Wiring & QA Report
 
 **Date:** 2026-03-14  
 **Reference:** CLINIC_APP_OWNER_PET_IMPLEMENTATION_REPORT.md (backend behavior and endpoints).

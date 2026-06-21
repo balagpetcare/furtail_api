@@ -54,7 +54,7 @@ function parseCsv(text: string): Row[] {
 }
 
 export async function runDhakaCityCsvSeed(prisma: PrismaClient) {
-  console.log('🌱 BPA Dhaka City CSV seed starting...');
+  console.log('🌱 Furtail Dhaka City CSV seed starting...');
 
   const Division = pickDelegate(prisma, ['bdDivision', 'BdDivision', 'bd_division'], 'Division');
   const District = pickDelegate(prisma, ['bdDistrict', 'BdDistrict', 'bd_district'], 'District');

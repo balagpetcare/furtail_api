@@ -1,6 +1,6 @@
 # Central Warehouse / Delivery Hub Module — Enterprise Design Plan
 
-Complete enterprise-grade Central Warehouse architecture for BPA/WPA, covering procurement, GRN, QC, storage, inventory governance, batch/expiry, allocation, dispatch, delivery, returns, write-off, recall, and audit.
+Complete enterprise-grade Central Warehouse architecture for Furtail/Furtail, covering procurement, GRN, QC, storage, inventory governance, batch/expiry, allocation, dispatch, delivery, returns, write-off, recall, and audit.
 
 ---
 

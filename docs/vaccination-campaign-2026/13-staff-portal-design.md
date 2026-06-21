@@ -759,7 +759,7 @@ export function VaccinationForm({
 
 ```typescript
 // sw.ts
-const CACHE_NAME = 'bpa-staff-v1';
+const CACHE_NAME = 'furtail-staff-v1';
 const OFFLINE_URLS = [
   '/staff/',
   '/staff/scan',
@@ -805,7 +805,7 @@ interface OfflineAction {
   synced: boolean;
 }
 
-const dbPromise = openDB<{ actions: OfflineAction }>('bpa-staff-offline', 1, {
+const dbPromise = openDB<{ actions: OfflineAction }>('furtail-staff-offline', 1, {
   upgrade(db) {
     db.createObjectStore('actions', { keyPath: 'id' });
   },

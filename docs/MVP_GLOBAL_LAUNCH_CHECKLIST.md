@@ -1,6 +1,6 @@
 # MVP Global Launch Checklist
 
-**Purpose:** Pre-launch checklist for going live with Global-Ready (Country-First) BPA.
+**Purpose:** Pre-launch checklist for going live with Global-Ready (Country-First) Furtail.
 
 *(Reference: [GLOBAL_READY_MASTER.md](./GLOBAL_READY_MASTER.md).)*
 
@@ -23,12 +23,12 @@
 
 - [ ] `NEXT_PUBLIC_API_BASE_URL` set for target API.
 - [ ] All API calls go through `lib/api.ts` (or attach `X-Country-Code` via `getApiHeaders()`).
-- [ ] Country context: subdomain or localStorage `bpa_country_code` or default BD.
+- [ ] Country context: subdomain or localStorage `furtail_country_code` or default BD.
 - [ ] Donation/ads UI hidden or disabled when policy features are off (e.g. `usePolicyFeatures()`).
 
 ---
 
-## App (bpa_app)
+## App (furtail_app)
 
 - [ ] API base URL configured (dart-define or env).
 - [ ] First launch: country picker shown; selection persisted; subsequent launches skip picker unless cleared.

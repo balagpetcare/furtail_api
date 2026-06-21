@@ -8,8 +8,8 @@
 
 ### 1.1 Base URL
 ```
-Production: https://api.bpa.com.bd/api/v1
-Staging:    https://api-staging.bpa.com.bd/api/v1
+Production: https://api.furtail.com.bd/api/v1
+Staging:    https://api-staging.furtail.com.bd/api/v1
 ```
 
 ### 1.2 Authentication Methods
@@ -354,7 +354,7 @@ Create a new booking.
       "id": 1001,
       "bookingRef": "VAC-ABC123",
       "qrToken": "a1b2c3d4e5f6g7h8",
-      "qrCodeUrl": "https://cdn.bpa.com.bd/qr/a1b2c3d4e5f6g7h8.png",
+      "qrCodeUrl": "https://cdn.furtail.com.bd/qr/a1b2c3d4e5f6g7h8.png",
       "status": "CONFIRMED",
       "campaign": {
         "id": 1,
@@ -751,7 +751,7 @@ Record a vaccination.
     },
     "certificate": {
       "token": "CERT-XYZ78901",
-      "downloadUrl": "https://api.bpa.com.bd/api/v1/campaign-certificate/CERT-XYZ78901/pdf"
+      "downloadUrl": "https://api.furtail.com.bd/api/v1/campaign-certificate/CERT-XYZ78901/pdf"
     },
     "campaignPet": {
       "id": 1,
@@ -816,7 +816,7 @@ Mark as no-show.
       "status": "NO_SHOW"
     },
     "smsStatus": "SENT",
-    "rescheduleLink": "https://vacc.bpa.com.bd/reschedule/VAC-ABC123"
+    "rescheduleLink": "https://vacc.furtail.com.bd/reschedule/VAC-ABC123"
   }
 }
 ```

@@ -1,6 +1,6 @@
 # Developer Onboarding – Global-Ready (Country-First)
 
-**Audience:** New developers on BPA / WorldPetsAssociation. Env, DoD, and error standards for Global-Ready work.
+**Audience:** New developers on Furtail / WorldPetsAssociation. Env, DoD, and error standards for Global-Ready work.
 
 *(See [GLOBAL_READY_MASTER.md](./GLOBAL_READY_MASTER.md) for philosophy and rules.)*
 
@@ -39,12 +39,12 @@ GOVT_REPORTING_WEBHOOK_URL=https://...
 NEXT_PUBLIC_API_BASE_URL=http://localhost:3000
 ```
 
-- Country is resolved from subdomain (bd., in.) or `localStorage` key `bpa_country_code` or default BD.
+- Country is resolved from subdomain (bd., in.) or `localStorage` key `furtail_country_code` or default BD.
 - All API calls via `lib/api.ts` send `X-Country-Code`.
 
-### App (bpa_app)
+### App (furtail_app)
 
-- Country is set on first launch (CountryPickerScreen) and stored in SharedPreferences `bpa_country_code`.
+- Country is set on first launch (CountryPickerScreen) and stored in SharedPreferences `furtail_country_code`.
 - `ApiClient` adds header `X-Country-Code` to all requests.
 
 ---
@@ -76,14 +76,14 @@ Helpers: `sendPolicyDenied(res, reason_code, message)` in `src/api/v1/utils/poli
 
 - **backend-api:** 3000 (API), Prisma, Redis (policy cache), MinIO
 - **bpa_web:** Next.js 3100–3107 (mother/staff, shop, clinic, admin, owner, producer, country, doctor)
-- **bpa-landing:** 3101 · **vaccination_2026:** 3110 · **API:** 3000 — see [infrastructure/PORT_AND_DOMAIN_MAP.md](./infrastructure/PORT_AND_DOMAIN_MAP.md)
-- **bpa_app:** Flutter (Riverpod), uses same API base URL
+- **furtail-landing:** 3101 · **vaccination_2026:** 3110 · **API:** 3000 — see [infrastructure/PORT_AND_DOMAIN_MAP.md](./infrastructure/PORT_AND_DOMAIN_MAP.md)
+- **furtail_app:** Flutter (Riverpod), uses same API base URL
 
 ---
 
 ## 5. First-Time Setup (Global-Ready)
 
-1. Clone backend-api, bpa_web, bpa_app.
+1. Clone backend-api, bpa_web, furtail_app.
 2. Backend: copy `.env.example` → `.env`, set `DATABASE_URL`, `JWT_SECRET`, `COUNTRY_DEFAULT=BD`.
 3. Run migrations: `npx prisma migrate deploy` (or `migrate dev`).
 4. Run seed: `npx prisma db seed`.

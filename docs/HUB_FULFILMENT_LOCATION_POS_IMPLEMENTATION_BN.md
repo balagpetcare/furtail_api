@@ -1,7 +1,7 @@
 # Hub-based Online Fulfilment + Location-based Offline POS — সম্পূর্ণ ডকুমেন্টেশন (বাংলা)
 
 **Repo/Branch:**  
-- Backend: balagpetcare/bpa_app_api @ ver/V100.0.01.03  
+- Backend: balagpetcare/furtail_api @ ver/V100.0.01.03  
 - Frontend: balagpetcare/web_app @ ver/V100.0.01.03  
 
 **সংক্ষিপ্ত সারসংক্ষেপ:**  
@@ -272,7 +272,7 @@ model InventoryLocation {
   "success": true,
   "data": {
     "id": 42,
-    "orderNumber": "BPA-ABC123-XY",
+    "orderNumber": "Furtail-ABC123-XY",
     "branchId": 1,
     "fulfilmentInventoryLocationId": 5,
     "orderSource": "ONLINE",
@@ -304,7 +304,7 @@ model InventoryLocation {
 
 | id | orderNumber     | branchId | fulfilmentInventoryLocationId | orderSource | status   |
 |----|-----------------|----------|--------------------------------|-------------|----------|
-| 42 | BPA-ABC123-XY   | 1        | 5                               | ONLINE      | CONFIRMED|
+| 42 | Furtail-ABC123-XY   | 1        | 5                               | ONLINE      | CONFIRMED|
 
 **StockLedger (অর্ডার ডিডাক্টের পর):**
 

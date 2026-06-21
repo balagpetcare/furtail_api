@@ -45,8 +45,8 @@ mountWith503("/campaign", "./modules/campaign/campaign.routes");
 | `/public` | None | Campaigns, availability, verify, certificates, payment webhook |
 | `/auth` | None | OTP request/verify |
 | `/booking` | OTP Bearer session | Create/list/cancel booking, payment |
-| `/staff` | BPA JWT + `CampaignStaff` RBAC | Check-in, queue, vaccinations, QR validate |
-| `/admin` | BPA JWT + `campaign.manage` | CRUD, locations, slots, staff, stats |
+| `/staff` | Furtail JWT + `CampaignStaff` RBAC | Check-in, queue, vaccinations, QR validate |
+| `/admin` | Furtail JWT + `campaign.manage` | CRUD, locations, slots, staff, stats |
 
 `campaign.routes.ts` exports both `module.exports = router` and `export default router` for compatibility with `require()`.
 
@@ -141,7 +141,7 @@ Admin/staff inline handlers in `campaign.routes.ts` call `location.service`, `sl
 
 ## 7. RBAC permissions
 
-**Platform (BPA admin):**
+**Platform (Furtail admin):**
 
 - Added to `permissionsRegistry.service.ts`:
   - `campaign.manage` — admin campaign operations
@@ -213,7 +213,7 @@ Admin/staff inline handlers in `campaign.routes.ts` call `location.service`, `sl
 | `campaign.view` | Low | Not enforced separately from `campaign.manage` |
 | Payment webhook auth | Medium | No provider signature check on `/public/payments/webhook` |
 | `puppeteer` for PDF | Low | Optional; JSON certificate works without it |
-| Frontend Phases I–K | N/A | `bpa_web`, `bpa_app`, `vaccination_2026` not wired |
+| Frontend Phases I–K | N/A | `bpa_web`, `furtail_app`, `vaccination_2026` not wired |
 
 ---
 

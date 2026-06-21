@@ -20,7 +20,7 @@
 
 ### Admin panel
 
-Branches can be created via BPA Admin (`bpa_web` admin panel) using existing admin branch APIs. No new public APIs required.
+Branches can be created via Furtail Admin (`bpa_web` admin panel) using existing admin branch APIs. No new public APIs required.
 
 ### Existing seed utilities
 
@@ -50,7 +50,7 @@ Production typically has **zero ACTIVE branches** and **null `campaign.organizer
 |-------------|----------------|
 | Idempotent | Finds org by name; branch by `orgId + code` |
 | No duplicates | Unique lookup before create |
-| Reuse org | Updates existing BPA org to APPROVED |
+| Reuse org | Updates existing Furtail org to APPROVED |
 | Existing branch | Reactivates to ACTIVE if inactive; skips create |
 
 ### Production run
@@ -94,8 +94,8 @@ Bootstrap ensures steps 2 and 3 succeed; env override pins step 1.
 | Variable | Required | Notes |
 |----------|----------|-------|
 | `CAMPAIGN_PAYMENT_BRANCH_ID` | Recommended | Explicit pin after bootstrap |
-| `CAMPAIGN_ORGANIZER_ORG_NAME` | Optional | Default: `Bangladesh Pet Association` |
-| `CAMPAIGN_CHECKOUT_BRANCH_CODE` | Optional | Default: `BPA-CAMPAIGN-CHECKOUT` |
+| `CAMPAIGN_ORGANIZER_ORG_NAME` | Optional | Default: `Furtail` |
+| `CAMPAIGN_CHECKOUT_BRANCH_CODE` | Optional | Default: `Furtail-CAMPAIGN-CHECKOUT` |
 
 ---
 

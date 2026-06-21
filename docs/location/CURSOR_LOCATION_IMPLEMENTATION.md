@@ -1,4 +1,4 @@
-# WPA / BPA Location System – Cursor AI Execution Guide
+# Furtail / Furtail Location System – Cursor AI Execution Guide
 Version: 1.0
 Scope: Complete Global Location System (Backend + Frontend)
 Rule: Follow instructions EXACTLY. Do not improvise.

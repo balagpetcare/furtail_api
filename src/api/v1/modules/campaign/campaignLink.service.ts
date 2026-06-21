@@ -1,5 +1,5 @@
 /**
- * Campaign Link Service — BPA app authenticated access to vaccination campaign data.
+ * Campaign Link Service — Furtail app authenticated access to vaccination campaign data.
  */
 
 import prisma from "../../../../infrastructure/db/prismaClient";
@@ -155,7 +155,7 @@ export async function getVaccinationRecords(userId: number) {
       administeredAt: v.administeredAt,
       nextDueDate: v.nextDueDate,
       certificateToken: v.certificateToken,
-      campaignName: v.vetClinic ?? "BPA",
+      campaignName: v.vetClinic ?? "Furtail",
       location: v.vetClinic,
       bookingRef: null,
     }));
@@ -429,7 +429,7 @@ export async function getPublicCampaignBenefits(slug?: string) {
     benefits: [
       "Official digital vaccination certificate",
       "QR-verifiable proof for travel and boarding",
-      "Linked to your BPA pet profile",
+      "Linked to your Furtail pet profile",
       "SMS reminders for booster due dates",
       "Discounted campaign pricing",
     ],

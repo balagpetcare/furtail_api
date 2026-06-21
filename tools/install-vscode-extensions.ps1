@@ -1,4 +1,4 @@
-# BPA VS Code Extensions Installer (Windows)
+# Furtail VS Code Extensions Installer (Windows)
 # Run: powershell -ExecutionPolicy Bypass -File .\tools\install-vscode-extensions.ps1
 
 $extensions = @(

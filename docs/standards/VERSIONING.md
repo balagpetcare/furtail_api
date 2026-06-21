@@ -1,4 +1,4 @@
-# BPA Versioning (SemVer)
+# Furtail Versioning (SemVer)
 
 We follow **MAJOR.MINOR.PATCH**.
 

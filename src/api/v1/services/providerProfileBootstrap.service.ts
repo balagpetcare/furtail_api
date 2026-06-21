@@ -71,7 +71,7 @@ export function isPlaceholderDisplayName(name: string | null | undefined): boole
     .trim()
     .toLowerCase();
   if (!s) return true;
-  const placeholders = new Set(["new user", "user", "bpa staff"]);
+  const placeholders = new Set(["new user", "user", "furtail staff"]);
   return placeholders.has(s);
 }
 

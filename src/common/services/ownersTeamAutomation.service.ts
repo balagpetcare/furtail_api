@@ -140,7 +140,7 @@ export async function sendAlert(
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          text: `[BPA Owners Automation] ${type}: ${message}`,
+          text: `[Furtail Owners Automation] ${type}: ${message}`,
           blocks: [
             { type: "section", text: { type: "mrkdwn", text: `*${type}*\n${message}` } },
             meta ? { type: "section", text: { type: "mrkdwn", text: "```" + JSON.stringify(meta) + "```" } } : null,

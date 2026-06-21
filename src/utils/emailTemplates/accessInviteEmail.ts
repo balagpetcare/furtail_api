@@ -14,11 +14,11 @@ exports.renderAccessInviteEmail = function renderAccessInviteEmail(p: AccessInvi
   const expiresText = expires ? expires.toLocaleString() : "-";
   const link = String(p.inviteLink || "");
 
-  const subject = `You're invited to join BPA (${scope})`;
+  const subject = `You're invited to join Furtail (${scope})`;
 
   const html = `
   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 24px;">
-    <h2 style="color:#1f2937; margin: 0 0 12px;">BPA Invitation</h2>
+    <h2 style="color:#1f2937; margin: 0 0 12px;">Furtail Invitation</h2>
     <p style="margin: 0 0 12px;">${nameLine}</p>
     <p style="margin: 0 0 16px; color:#374151;">
       You have been invited as <strong>${role}</strong> for <strong>${scope}</strong>.

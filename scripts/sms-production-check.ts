@@ -32,7 +32,7 @@ async function main() {
     process.exit(health.redisEnabled ? 0 : 1);
   }
 
-  const testMessage = `BPA SMS test ${new Date().toISOString()}`;
+  const testMessage = `Furtail SMS test ${new Date().toISOString()}`;
   try {
     const result = await sendSmsViaGateway(phone, testMessage, { template: "PRODUCTION_CHECK" });
     console.log("\nLive send result:", result);

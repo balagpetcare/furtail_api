@@ -1,7 +1,7 @@
-# BPA Git Repository Audit
+# Furtail Git Repository Audit
 
 **Audit date:** 2026-06-05  
-**Scope:** All Bangladesh Pet Association repositories in `D:\BPA_Data`
+**Scope:** All Furtail repositories in `D:\BPA_Data`
 
 ---
 
@@ -9,11 +9,11 @@
 
 | Repository | Git Repo | Current Branch | Origin URL | Clean | Action Required |
 |---|---|---|---|---|---|
-| backend-api | Yes | `release/V-A1.0.7` | `https://github.com/balagpetcare/bpa_app_api.git` | Yes | Merge release → main, push |
-| bpa_app | Yes | `v.10.0.0.1` | `https://github.com/balagpetcare/bpa_app.git` | No | Commit 169 changes, merge → main, push |
+| backend-api | Yes | `release/V-A1.0.7` | `https://github.com/balagpetcare/furtail_api.git` | Yes | Merge release → main, push |
+| furtail_app | Yes | `v.10.0.0.1` | `https://github.com/balagpetcare/furtail_app.git` | No | Commit 169 changes, merge → main, push |
 | bpa_web | Yes | `release/V-A1.0.8` | `https://github.com/balagpetcare/next_v1.git` | Yes | Merge release → main, push |
 | vaccination_2026 | Yes | `main` | `https://github.com/balagpetcare/vaccination_2026.git` | No | Commit 34 changes, push |
-| bpa-landing | **No** | — | — | — | Not initialized as git repository |
+| furtail-landing | **No** | — | — | — | Not initialized as git repository |
 
 ---
 
@@ -26,9 +26,9 @@
 | **Path** | `D:\BPA_Data\backend-api` |
 | **Repository name** | `backend-api` |
 | **Current branch** | `release/V-A1.0.7` |
-| **Remote origin** | `https://github.com/balagpetcare/bpa_app_api.git` |
+| **Remote origin** | `https://github.com/balagpetcare/furtail_api.git` |
 | **origin/HEAD** | `origin/main` |
-| **Last commit** | `862c8ed` — updated Vaccination updare BPA |
+| **Last commit** | `862c8ed` — updated Vaccination updare Furtail |
 | **Uncommitted files** | 0 |
 | **Untracked files** | 0 |
 | **Modified files** | 0 |
@@ -42,14 +42,14 @@
 
 ---
 
-### 2. bpa_app
+### 2. furtail_app
 
 | Field | Value |
 |---|---|
-| **Path** | `D:\BPA_Data\bpa_app` |
-| **Repository name** | `bpa_app` |
+| **Path** | `D:\BPA_Data\furtail_app` |
+| **Repository name** | `furtail_app` |
 | **Current branch** | `v.10.0.0.1` |
-| **Remote origin** | `https://github.com/balagpetcare/bpa_app.git` |
+| **Remote origin** | `https://github.com/balagpetcare/furtail_app.git` |
 | **origin/HEAD** | `origin/main` (implicit) |
 | **Last commit** | `8878f94` — updated Vaccination Campain 2026 |
 | **Uncommitted files** | 169 total |
@@ -80,7 +80,7 @@
 | **Current branch** | `release/V-A1.0.8` |
 | **Remote origin** | `https://github.com/balagpetcare/next_v1.git` |
 | **origin/HEAD** | `origin/main` |
-| **Last commit** | `740835a` — updated Vaccination updare BPA |
+| **Last commit** | `740835a` — updated Vaccination updare Furtail |
 | **Uncommitted files** | 0 |
 | **Untracked files** | 0 |
 | **Modified files** | 0 |
@@ -103,7 +103,7 @@
 | **Current branch** | `main` |
 | **Remote origin** | `https://github.com/balagpetcare/vaccination_2026.git` |
 | **origin/HEAD** | `origin/main` |
-| **Last commit** | `dcd14d4` — updated Vaccination updare BPA |
+| **Last commit** | `dcd14d4` — updated Vaccination updare Furtail |
 | **Uncommitted files** | 34 total |
 | **Modified files** | 18 |
 | **Untracked files** | 16 |
@@ -117,11 +117,11 @@
 
 ---
 
-### 5. bpa-landing
+### 5. furtail-landing
 
 | Field | Value |
 |---|---|
-| **Path** | `D:\BPA_Data\bpa-landing` |
+| **Path** | `D:\BPA_Data\furtail-landing` |
 | **Git repository** | **Not initialized** (no `.git` directory) |
 | **Has `.gitignore`** | Yes (`.env*` ignored) |
 | **Action** | Report only — cannot push without git init and remote setup |

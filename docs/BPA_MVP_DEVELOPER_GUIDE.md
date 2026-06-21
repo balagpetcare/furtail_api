@@ -1,4 +1,4 @@
-# 🔧 BPA MVP Developer Guide
+# 🔧 Furtail MVP Developer Guide
 ## Complete Technical Implementation Guide
 
 *Version: 1.0.0 | Last Updated: January 2026*
@@ -656,14 +656,14 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - DATABASE_URL=postgresql://user:pass@db:5432/bpa
+      - DATABASE_URL=postgresql://user:pass@db:5432/furtail
     depends_on:
       - db
   
   db:
     image: postgres:14
     environment:
-      - POSTGRES_DB=bpa
+      - POSTGRES_DB=furtail
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=pass
     volumes:
@@ -804,7 +804,7 @@ const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'BPA API',
+      title: 'Furtail API',
       version: '1.0.0',
     },
   },
@@ -880,4 +880,4 @@ import { requireAuth, requirePermission } from '@/middleware/auth.middleware';
 
 **Last Updated:** January 2026  
 **Version:** 1.0.0  
-**For Questions:** dev@bpa.com
+**For Questions:** dev@furtail.com

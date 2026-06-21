@@ -2223,7 +2223,7 @@ exports.cancelBranch = async (req, res) => {
 
 
 /* ================================
- * BPA PATCH: Branch Members + Product Change Requests
+ * Furtail PATCH: Branch Members + Product Change Requests
  * ================================ */
 
 const prismaClient = require("../../../../infrastructure/db/prismaClient");
@@ -4201,7 +4201,7 @@ exports.createStaff = async (req, res) => {
 
         const base = String(process.env.PANEL_PUBLIC_URL || process.env.PUBLIC_WEB_URL || "").replace(/\/$/, "");
         const link = `${base}/register?invite=${rawToken}`;
-        const msg = `BPA Invite: You are invited as ${role} for branch "${branch.name}". Complete registration: ${link}`;
+        const msg = `Furtail Invite: You are invited as ${role} for branch "${branch.name}". Complete registration: ${link}`;
 
         let emailPayload = undefined;
         if (channel === "EMAIL") {

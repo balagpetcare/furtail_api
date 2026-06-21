@@ -21,8 +21,8 @@
 | Step | Task | টাচ পয়েন্ট |
 |------|------|----------------|
 | **5.1** | bpa_web: X-Country-Code বা subdomain; API কলে country পাঠানো | bpa_web: API client এ header `X-Country-Code` বা subdomain থেকে country; সব API request এ যুক্ত |
-| **5.2** | bpa_app: country select (first launch); persist; configs apply | Flutter: প্রথম লঞ্চে country picker (auto-detect + manual); persist; terms/currency apply |
-| **5.3** | Donation/Ads policy অনুযায়ী UI লুকানো/নিষ্ক্রিয় | bpa_web + bpa_app: policy থেকে DONATION/ADS off থাকলে সেই ফিচার হাইড বা ডিজেবল; reason_code দেখানো |
+| **5.2** | furtail_app: country select (first launch); persist; configs apply | Flutter: প্রথম লঞ্চে country picker (auto-detect + manual); persist; terms/currency apply |
+| **5.3** | Donation/Ads policy অনুযায়ী UI লুকানো/নিষ্ক্রিয় | bpa_web + furtail_app: policy থেকে DONATION/ADS off থাকলে সেই ফিচার হাইড বা ডিজেবল; reason_code দেখানো |
 
 ---
 
@@ -50,7 +50,7 @@
 ## সংক্ষেপ
 
 - **Phase 4:** Ads মডেল + Govt reporting hook + Global/Country roles + Permission (Scope + Action)
-- **Phase 5:** bpa_web/bpa_app এ country header + country picker + policy-based UI (Donation/Ads hide/disable)
+- **Phase 5:** bpa_web/furtail_app এ country header + country picker + policy-based UI (Donation/Ads hide/disable)
 - **Phase 6:** মাস্টার ডক, অনবোর্ডিং, Policy Engine ডিজাইন, AML/KYC ফ্লো, লঞ্চ চেকলিস্ট, PROJECT_CONTEXT আপডেট, দেশ রোলআউট চেকলিস্ট
 
 পরবর্তী স্প্রিন্টে Phase 4 দিয়ে শুরু করা যেতে পারে; অথবা Phase 5 (Frontend country + policy UI) আগে করলে ইউজার এক্সপেরিয়েন্স দ্রুত ঠিক থাকে।

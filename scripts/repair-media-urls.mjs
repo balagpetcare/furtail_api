@@ -10,8 +10,8 @@ import pg from "pg";
 const provider = String(process.env.STORAGE_PROVIDER || "minio").toLowerCase();
 const bucket =
   provider === "b2"
-    ? process.env.S3_BUCKET || process.env.AWS_BUCKET_NAME || "bpa-production-media"
-    : process.env.AWS_BUCKET_NAME || process.env.S3_BUCKET || "bpa-pets";
+    ? process.env.S3_BUCKET || process.env.AWS_BUCKET_NAME || "furtail-production-media"
+    : process.env.AWS_BUCKET_NAME || process.env.S3_BUCKET || "furtail-pets";
 const base = (
   process.env.STORAGE_PUBLIC_URL ||
   process.env.MINIO_PUBLIC_URL ||

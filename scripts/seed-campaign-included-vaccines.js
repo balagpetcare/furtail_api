@@ -15,7 +15,7 @@ const prisma = new PrismaClient({ adapter: new PrismaPg(pool) });
 const DEFAULT_PACKAGE_FEATURES = [
   "Injection Administration",
   "Syringe & Consumables",
-  "BPA Digital Certificate",
+  "Furtail Digital Certificate",
   "QR Verification",
 ];
 

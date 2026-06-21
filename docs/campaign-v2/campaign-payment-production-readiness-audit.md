@@ -1,4 +1,4 @@
-# BPA Campaign Payment — Production Readiness Audit
+# Furtail Campaign Payment — Production Readiness Audit
 
 **Date:** 2026-06-04  
 **Scope:** Campaign express checkout + unified payments (`/api/v1/payments`) + EPS provider  
@@ -141,7 +141,7 @@ After handler runs, user is redirected to `CAMPAIGN_LANDING_URL` + `/book/succes
 | SEC-02 | **High** (prod) | Redis replay guard **no-ops** when `REDIS_ENABLED=false` or Redis down | Enable Redis in production for `paymentReplay.guard` |
 | SEC-03 | **Medium** | EPS `parseCallbackQuery` fallback trusts query `status` if verify API fails | Monitor verify failures; alert; prefer fail-closed in future |
 | SEC-04 | **Medium** | GET redirect callbacks are unauthenticated (by design); security relies on EPS verify API | Ensure verify always runs (current primary path) |
-| SEC-05 | **Low** | Placeholder PII: `guest@bpa.com.bd`, `01700000000` in providers | Acceptable; replace via metadata when available |
+| SEC-05 | **Low** | Placeholder PII: `guest@furtail.com.bd`, `01700000000` in providers | Acceptable; replace via metadata when available |
 | SEC-06 | **Low** | `paymentMethod` in checkout body ignored for gateway selection — always `PAYMENT_PROVIDER` | Document for ops; prevents client-side provider spoofing (good) |
 | SEC-07 | **Info** | Production `bootstrapPaymentProvider` **throws** if provider misconfigured | Keep enabled for deploy pipeline |
 | SEC-08 | **Info** | No credentials in source | Pass — env only |
@@ -172,7 +172,7 @@ These are **default hosts** when env overrides are absent; production should set
 
 **Not hardcoded:** EPS `RedirectURL` comes from EPS API response.
 
-**Tests only:** `https://api.bpa.com.bd` in `paymentProvider.config.test.ts`.
+**Tests only:** `https://api.furtail.com.bd` in `paymentProvider.config.test.ts`.
 
 ### 3.3 Environment-driven provider configuration
 

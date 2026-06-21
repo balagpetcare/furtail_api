@@ -333,8 +333,8 @@ function InvalidCertificate() {
         <p className="text-sm text-gray-500">
           If you believe this is an error, please contact:
           <br />
-          <a href="mailto:support@bpa.com.bd" className="text-blue-600">
-            support@bpa.com.bd
+          <a href="mailto:support@furtail.com.bd" className="text-blue-600">
+            support@furtail.com.bd
           </a>
         </p>
       </div>
@@ -465,11 +465,11 @@ function QrVerificationScanner() {
       const url = new URL(result);
       
       // Check if it's our verification URL
-      if (url.hostname === 'vacc.bpa.com.bd' && url.pathname.startsWith('/verify/')) {
+      if (url.hostname === 'vacc.furtail.com.bd' && url.pathname.startsWith('/verify/')) {
         const token = url.pathname.split('/verify/')[1];
         router.push(`/verify/${token}`);
       } else {
-        setError('Invalid QR code. Please scan a BPA vaccination certificate.');
+        setError('Invalid QR code. Please scan a Furtail vaccination certificate.');
       }
     } catch {
       // Not a URL, try to extract token directly

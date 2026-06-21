@@ -139,7 +139,7 @@ export async function createBooking(
       throw SlotErrors.BOOKING_CUTOFF_PASSED();
     }
 
-    // Check if owner has BPA account
+    // Check if owner has Furtail account
     const existingUser = await tx.userAuth.findFirst({
       where: { phone: ownerPhone },
       include: { user: true },
@@ -825,7 +825,7 @@ export function mapBookingRecordToDetails(booking: {
     ticketToken?: string | null;
   }>;
 }): BookingDetails {
-  const ticketBase = process.env.CAMPAIGN_BASE_URL || "https://vaccine.bpa.org.bd";
+  const ticketBase = process.env.CAMPAIGN_BASE_URL || "https://vaccine.furtail.org.bd";
   const pendingAssignment =
     booking.bookingMode === "ZONE_INTEREST" && booking.status === "PENDING_ASSIGNMENT";
 

@@ -1,8 +1,8 @@
-# BPA/WPA Bangladesh Location System Migration Overview
+# Furtail/Furtail Bangladesh Location System Migration Overview
 
 ## Goal
 
-Create a single, centralized Bangladesh location master for BPA/WPA that is shared by all business modules and replaces fragmented location usage patterns.
+Create a single, centralized Bangladesh location master for Furtail/Furtail that is shared by all business modules and replaces fragmented location usage patterns.
 
 This document set is plan-only and intentionally avoids implementation changes.
 
@@ -10,7 +10,7 @@ This document set is plan-only and intentionally avoids implementation changes.
 
 - **Reference analysis source:** `D:\PraniDoctor\pranidoctor-backend`
 - **Target implementation project:** `D:\BPA_Data\backend-api`
-- **Primary hierarchy for BPA/WPA:** Division -> District -> Upazila -> Union -> Area/Ward (optional)
+- **Primary hierarchy for Furtail/Furtail:** Division -> District -> Upazila -> Union -> Area/Ward (optional)
 - **Modules that must share the same source of truth:**
   - Pet Owner
   - Doctor
@@ -27,8 +27,8 @@ This document set is plan-only and intentionally avoids implementation changes.
 
 1. `00-overview.md` - overall migration direction
 2. `01-current-pranidoctor-analysis.md` - reference architecture and behavior
-3. `02-bpa-gap-analysis.md` - target repo current state and gaps
-4. `03-database-design.md` - proposed BPA centralized schema and data rules
+3. `02-furtail-gap-analysis.md` - target repo current state and gaps
+4. `03-database-design.md` - proposed Furtail centralized schema and data rules
 5. `04-api-design.md` - proposed API surface and compatibility strategy
 6. `05-nextjs-integration.md` - web integration plan
 7. `06-flutter-integration.md` - mobile integration plan
@@ -42,8 +42,8 @@ This document set is plan-only and intentionally avoids implementation changes.
   - Normalized master (`Division`, `District`, `Upazila`, `Union`, `Village`)
   - Separate `Area` tree used for coverage and filtering
 - PraniDoctor does not implement a separate `Thana` model; sub-district is represented as `Upazila`.
-- BPA already has substantial Bangladesh data (`bd_divisions`, `bd_districts`, `bd_upazilas`, `bd_areas`) but location usage is fragmented across modules and response shapes.
-- BPA currently mixes:
+- Furtail already has substantial Bangladesh data (`bd_divisions`, `bd_districts`, `bd_upazilas`, `bd_areas`) but location usage is fragmented across modules and response shapes.
+- Furtail currently mixes:
   - Relational FKs in a few places
   - JSON snapshots in many places
   - Parallel Dhaka-specific tree representations
@@ -59,7 +59,7 @@ This document set is plan-only and intentionally avoids implementation changes.
 
 ## Recommended End State
 
-- BPA/WPA exposes one canonical location API family for all clients.
+- Furtail/Furtail exposes one canonical location API family for all clients.
 - Every supported module stores a consistent location reference contract.
 - Dhaka-specific legacy patterns are normalized into the central Bangladesh tree.
 - Search, filtering, and assignment logic all resolve from one hierarchy.
@@ -67,6 +67,6 @@ This document set is plan-only and intentionally avoids implementation changes.
 ## How To Read This Pack
 
 - Start with `01-current-pranidoctor-analysis.md` to understand reference behavior.
-- Read `02-bpa-gap-analysis.md` for exact target repo deltas.
+- Read `02-furtail-gap-analysis.md` for exact target repo deltas.
 - Use `03` to `08` for design and execution details.
 - Execute using `09-implementation-checklist.md` as the working runbook.

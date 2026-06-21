@@ -32,7 +32,7 @@ Rate: Up to 100 SMS/second
 
 ## 2. Existing Infrastructure
 
-### 2.1 BPA Notification System
+### 2.1 Furtail Notification System
 
 ```typescript
 // Existing notification service
@@ -74,7 +74,7 @@ Template Code: CAMPAIGN_OTP
 Character Count: ~60
 
 ---
-BPA Vaccination Campaign
+Furtail Vaccination Campaign
 Your OTP: {{otp}}
 Valid for 5 minutes.
 Do not share this code.
@@ -87,7 +87,7 @@ Template Code: BOOKING_CONFIRMED
 Character Count: ~250
 
 ---
-BPA Vaccination Booking Confirmed!
+Furtail Vaccination Booking Confirmed!
 
 Ref: {{bookingRef}}
 Date: {{date}}
@@ -109,7 +109,7 @@ Template Code: BOOKING_RESCHEDULED
 Character Count: ~200
 
 ---
-BPA Vaccination: Booking Updated
+Furtail Vaccination: Booking Updated
 
 Ref: {{bookingRef}}
 NEW Date: {{date}}
@@ -128,7 +128,7 @@ Template Code: BOOKING_CANCELLED
 Character Count: ~150
 
 ---
-BPA Vaccination: Booking Cancelled
+Furtail Vaccination: Booking Cancelled
 
 Ref: {{bookingRef}} has been cancelled.
 
@@ -146,7 +146,7 @@ Template Code: REMINDER_1DAY
 Character Count: ~180
 
 ---
-BPA Vaccination Reminder
+Furtail Vaccination Reminder
 
 Your appointment is TOMORROW!
 
@@ -168,7 +168,7 @@ Template Code: REMINDER_TODAY
 Character Count: ~160
 
 ---
-BPA Vaccination TODAY!
+Furtail Vaccination TODAY!
 
 Ref: {{bookingRef}}
 Time: {{slot}}
@@ -187,7 +187,7 @@ Template Code: VACCINATION_COMPLETE
 Character Count: ~200
 
 ---
-BPA Vaccination Complete!
+Furtail Vaccination Complete!
 
 {{petName}} has been vaccinated with {{vaccineName}}.
 
@@ -207,7 +207,7 @@ Template Code: NO_SHOW_FOLLOWUP
 Character Count: ~150
 
 ---
-BPA Vaccination: Missed Appointment
+Furtail Vaccination: Missed Appointment
 
 We missed you today for {{petNames}}.
 
@@ -224,7 +224,7 @@ Template Code: CAMPAIGN_ANNOUNCEMENT
 Character Count: Variable (max 450)
 
 ---
-BPA Vaccination Campaign Update
+Furtail Vaccination Campaign Update
 
 {{message}}
 
@@ -261,12 +261,12 @@ model CampaignSmsTemplate {
 const DEFAULT_TEMPLATES = [
   {
     code: 'CAMPAIGN_OTP',
-    template: 'BPA Vaccination Campaign\nYour OTP: {{otp}}\nValid for 5 minutes.\nDo not share this code.',
+    template: 'Furtail Vaccination Campaign\nYour OTP: {{otp}}\nValid for 5 minutes.\nDo not share this code.',
     variables: ['otp'],
   },
   {
     code: 'BOOKING_CONFIRMED',
-    template: 'BPA Vaccination Booking Confirmed!\n\nRef: {{bookingRef}}\nDate: {{date}}\nTime: {{slot}}\nLocation: {{location}}\n\nPets: {{petNames}}\n\nShow QR at venue:\n{{qrUrl}}\n\nQuestions? 09612-345678',
+    template: 'Furtail Vaccination Booking Confirmed!\n\nRef: {{bookingRef}}\nDate: {{date}}\nTime: {{slot}}\nLocation: {{location}}\n\nPets: {{petNames}}\n\nShow QR at venue:\n{{qrUrl}}\n\nQuestions? 09612-345678',
     variables: ['bookingRef', 'date', 'slot', 'location', 'petNames', 'qrUrl'],
   },
   // ... other templates
@@ -512,7 +512,7 @@ function formatBdPhone(phone: string): string {
 }
 
 function generateCsmsId(): string {
-  return `BPA${Date.now()}${Math.random().toString(36).substr(2, 4)}`;
+  return `Furtail${Date.now()}${Math.random().toString(36).substr(2, 4)}`;
 }
 ```
 
@@ -587,7 +587,7 @@ async function processD1Reminders() {
         date: format(booking.bookingDate, 'dd MMM yyyy'),
         slot: `${booking.slot.startTime} - ${booking.slot.endTime}`,
         location: booking.location.name,
-        rescheduleUrl: `https://vacc.bpa.com.bd/reschedule/${booking.bookingRef}`,
+        rescheduleUrl: `https://vacc.furtail.com.bd/reschedule/${booking.bookingRef}`,
       },
       priority: 'P2',
     });
@@ -626,7 +626,7 @@ async function processD0Reminders() {
         bookingRef: booking.bookingRef,
         slot: `${booking.slot.startTime} - ${booking.slot.endTime}`,
         location: booking.location.name,
-        qrUrl: `https://vacc.bpa.com.bd/c/${booking.qrToken}`,
+        qrUrl: `https://vacc.furtail.com.bd/c/${booking.qrToken}`,
       },
       priority: 'P2',
     });

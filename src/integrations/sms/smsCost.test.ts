@@ -7,7 +7,7 @@ describe("smsCost", () => {
   });
 
   it("computes single segment for short OTP message", () => {
-    const msg = "Your BPA vaccination code: 123456. Valid for 5 minutes.";
+    const msg = "Your Furtail vaccination code: 123456. Valid for 5 minutes.";
     expect(computeSmsSegments(msg)).toBe(1);
     expect(estimateSmsCostBdt(msg).estimatedCostBdt).toBe(0.25);
   });

@@ -1,10 +1,10 @@
-# Location System Spec – WPA Approach vs Current
+# Location System Spec – Furtail Approach vs Current
 
 **Reference:** [LOCATION_AUDIT.md](./LOCATION_AUDIT.md), [LOCATION_MODULE_SPEC.md](../LOCATION_MODULE_SPEC.md), [GLOBAL_COUNTRY_WISE_DESIGN_BLUEPRINT.md](../GLOBAL_COUNTRY_WISE_DESIGN_BLUEPRINT.md)
 
 ---
 
-## 1. WPA Location Approach (Target)
+## 1. Furtail Location Approach (Target)
 
 চারটি ধারণা দিয়ে লোকেশন সিস্টেম ডিজাইন করা হবে:
 
@@ -17,11 +17,11 @@
 
 ---
 
-## 2. Current State vs WPA
+## 2. Current State vs Furtail
 
 ### 2.1 Place (lat/lng-first)
 
-| Aspect | Current | WPA target |
+| Aspect | Current | Furtail target |
 |--------|---------|------------|
 | **Ground truth** | Mixed: BD/Dhaka hierarchy IDs (bdAreaId, dhakaAreaId) + optional lat/lng on BranchProfileDetails, FundraisingAccount, BdArea, Area. No single “Place” type. | **Place** = canonical (lat, lng) + optional formattedAddress, countryCode, state/city names. Hierarchy is optional overlay. |
 | **Storage** | addressJson blobs (Organization, Branch); latitude/longitude on BranchProfileDetails (not written by owner API); FundraisingAccount has lat/lng + hierarchy. | Normalize to: every stored “location” has at least (lat, lng) when available; address/hierarchy as optional snapshot. |
@@ -30,7 +30,7 @@
 
 ### 2.2 AdminUnit (optional country-specific depth)
 
-| Aspect | Current | WPA target |
+| Aspect | Current | Furtail target |
 |--------|---------|------------|
 | **BD hierarchy** | BdDivision → BdDistrict → BdUpazila → BdArea (with parentId for tree). All have optional latitude/longitude. | Keep as **AdminUnit** for BD: same tables, optional depth (e.g. “up to upazila” or “up to area”). Place can reference adminUnitIds for display/filter. |
 | **Dhaka** | CityCorporation → Area (parent tree). Area has lat/lng. | Keep as AdminUnit for Dhaka; map to Place via center lat/lng when needed. |
@@ -40,7 +40,7 @@
 
 ### 2.3 ServiceArea (radius-based, polygon-ready)
 
-| Aspect | Current | WPA target |
+| Aspect | Current | Furtail target |
 |--------|---------|------------|
 | **Branch coverage** | BranchProfileDetails has coveragePolygon (GeoJSON), latitude, longitude. Not set via owner API. | **ServiceArea**: center = (lat, lng); radius_km (required initially); optional polygon (GeoJSON) later. “Point in service area” = distance ≤ radius or point-in-polygon. |
 | **Storage** | coveragePolygon only; no radius. | Add coverageRadiusKm (Float, km). Keep coveragePolygon for Phase 2. |
@@ -50,7 +50,7 @@
 
 ### 2.4 CountryPolicy (feature + rule control)
 
-| Aspect | Current | WPA target |
+| Aspect | Current | Furtail target |
 |--------|---------|------------|
 | **Policy** | CountryPolicy, StatePolicy; policyEngine.service (getActivePolicy(countryCode), getActiveStatePolicy(countryCode, stateCode)); features, payment methods, rules. | Same: **CountryPolicy** = feature flags + rules per country (and state). No change to model; clarify that “location” (country/state from Place or header) is input to policy. |
 | **Context** | countryContext middleware: X-Country-Code → user country role → org country → default BD. Sets req.countryContext (countryCode, policy, state). | Keep; document that Place.countryCode (or header) drives policy. |
@@ -59,7 +59,7 @@
 
 ---
 
-## 3. Conceptual Model (WPA)
+## 3. Conceptual Model (Furtail)
 
 ```
 Place (lat, lng; optional address, countryCode, state, city)
@@ -93,7 +93,7 @@ CountryPolicy / StatePolicy
 
 ## 5. Summary Table
 
-| WPA concept   | Current alignment | Change direction |
+| Furtail concept   | Current alignment | Change direction |
 |---------------|-------------------|------------------|
 | **Place**     | Partial (lat/lng in some tables; no single type) | Add Place as API/storage notion; ensure branch/org store and return lat/lng; unified place payload. |
 | **AdminUnit** | BD + Dhaka exist; Country/State for policy | Keep as is; document as AdminUnit; optional generic layer later. |

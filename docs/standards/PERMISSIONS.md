@@ -1,4 +1,4 @@
-# BPA Permissions Standard
+# Furtail Permissions Standard
 
 Permission keys use:
 - `domain.action` or `domain.resource.action`

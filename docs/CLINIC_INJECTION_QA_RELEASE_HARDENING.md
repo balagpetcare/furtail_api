@@ -1,4 +1,4 @@
-# BPA Clinic Injection Tokens + Injection Room — QA + Release Hardening
+# Furtail Clinic Injection Tokens + Injection Room — QA + Release Hardening
 
 **Date:** 2026-03-14.  
 **Mode:** Bug-fix only; no new features, no architecture change, no schema change.

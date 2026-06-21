@@ -54,7 +54,7 @@ See [infrastructure/PORT_AND_DOMAIN_MAP.md](./infrastructure/PORT_AND_DOMAIN_MAP
 
 - API: **3000** (`backend-api`)
 - **bpa_web** panels: **3100–3107** (mother/staff, shop, clinic, admin, owner, producer, country, doctor)
-- **bpa-landing:** **3101** (apex marketing; local conflict with bpa_web shop — separate containers in production)
+- **furtail-landing:** **3101** (apex marketing; local conflict with bpa_web shop — separate containers in production)
 - **vaccination_2026:** **3110** (campaign subdomain)
 - Reserved: **3111–3119** (future standalone frontends)
 

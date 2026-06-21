@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * BPA Vaccination Campaign UAT — API-driven execution (Scenarios 1–10 backend paths).
+ * Furtail Vaccination Campaign UAT — API-driven execution (Scenarios 1–10 backend paths).
  * Usage: node scripts/uat-campaign-execute.mjs [--base=http://localhost:3000]
  * Output: docs/vaccination-campaign-2026/uat-results.json
  */
@@ -230,7 +230,7 @@ async function main() {
   record(s6, "6.1–6.6", "SKIP", "Requires admin JWT + campaign.manage permission");
 
   // --- Scenario 8 App linking ---
-  const s8 = "Scenario 8 — BPA app linking";
+  const s8 = "Scenario 8 — Furtail app linking";
   record(s8, "8.1–8.7", "SKIP", "Flutter app — not executed in API runner");
 
   // --- Scenario 9 SMS recovery ---
@@ -255,7 +255,7 @@ async function main() {
   const s7invalid = results.scenarios[s7]?.steps?.find((x) => x.step === "7.3 Invalid token");
   record(s10, "10.4 Certificate verify", s7invalid?.status === "PASS" ? "PASS" : "FAIL", s7invalid?.detail || "");
   record(s10, "10.5 Admin dashboard", "SKIP", "bpa_web");
-  record(s10, "10.6 Flutter hub", "SKIP", "bpa_app");
+  record(s10, "10.6 Flutter hub", "SKIP", "furtail_app");
 
   const outPath = path.join(process.cwd(), "docs/vaccination-campaign-2026/uat-results.json");
   fs.mkdirSync(path.dirname(outPath), { recursive: true });

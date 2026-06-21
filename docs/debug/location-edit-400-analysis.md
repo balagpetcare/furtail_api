@@ -46,7 +46,7 @@ Cookie: (admin session)
 
 ## B. Exact request payload (built by UI)
 
-Produced by `buildPayload` in `bpa_web/src/bpa/campaign/admin/CampaignLocationEditor.tsx` **50–65**, sent on edit at **167–169**.
+Produced by `buildPayload` in `bpa_web/src/furtail/campaign/admin/CampaignLocationEditor.tsx` **50–65**, sent on edit at **167–169**.
 
 ```json
 {

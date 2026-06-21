@@ -46,7 +46,7 @@ async function main() {
   for (const cred of [
     { label: "env_email", email: process.env.SUPER_ADMIN_EMAIL, phone: null },
     { label: "env_phone", email: null, phone: process.env.SUPER_ADMIN_PHONE },
-    { label: "admin_whitelist_email", email: "admin@bangladeshpetassociation.com", phone: null },
+    { label: "admin_whitelist_email", email: "admin@furtail.world", phone: null },
     { label: "admin_whitelist_phone", email: null, phone: "01701022274" },
   ]) {
     const email = cred.email ? String(cred.email).trim().toLowerCase() : null;

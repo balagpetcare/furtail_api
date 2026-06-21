@@ -139,7 +139,7 @@ npm ci
 npm run build
 test -f dist/api/v1/utils/permissions.js
 test -f dist/api/v1/constants/pricingOwnerPermissions.js
-pm2 restart bpa-api
+pm2 restart furtail-api
 ```
 
 ---

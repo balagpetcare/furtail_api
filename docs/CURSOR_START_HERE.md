@@ -15,4 +15,4 @@ Scan the repository and generate:
 3) Key Prisma models overview
 Output only documentation. Do not change any code.
 Save results in docs/REPO_MAP.md
-Follow BPA Standard.
+Follow Furtail Standard.

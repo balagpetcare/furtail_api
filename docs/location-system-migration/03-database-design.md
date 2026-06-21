@@ -1,4 +1,4 @@
-# BPA/WPA Centralized Location Database Design
+# Furtail/Furtail Centralized Location Database Design
 
 ## Design Objective
 
@@ -22,7 +22,7 @@ Use a normalized hierarchical model with explicit tables per level and optional 
 
 Notes:
 
-- `bd_areas` in current BPA should be migrated to explicit union/area semantics.
+- `bd_areas` in current Furtail should be migrated to explicit union/area semantics.
 - If minimizing disruption, keep table name `bd_areas` during transition but split semantics via migration and constraints.
 
 ## B. Common columns (all master levels)
@@ -109,7 +109,7 @@ Any campaign/discovery/rollout tables that currently store partial hierarchy sho
 
 ## 4) Legacy Data Compatibility
 
-## A. Existing BPA structures
+## A. Existing Furtail structures
 
 - Keep existing `BdDivision`, `BdDistrict`, `BdUpazila` data and IDs where possible.
 - Transform current `BdArea` into:

@@ -12,7 +12,7 @@ import { getBookingCheckInBlockReason } from "./campaign.paymentGuards";
 // Configuration
 const QR_SECRET = process.env.CAMPAIGN_QR_SECRET || process.env.JWT_SECRET || "campaign-qr-secret";
 const QR_VERSION = "1"; // Increment when changing QR format
-const BASE_URL = process.env.CAMPAIGN_BASE_URL || "https://vaccine.bpa.org.bd";
+const BASE_URL = process.env.CAMPAIGN_BASE_URL || "https://vaccine.furtail.org.bd";
 
 // ============================================================================
 // QR Data Format

@@ -1,6 +1,6 @@
 # Migration governance report
 
-**Repository:** BPA/WPA backend-api (`prisma/migrations`)  
+**Repository:** Furtail/Furtail backend-api (`prisma/migrations`)  
 **Scope:** Enterprise Prisma + PostgreSQL, 250+ migrations, multi-tenant modules  
 **Last updated:** 2026-05-15
 

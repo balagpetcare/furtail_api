@@ -1,5 +1,5 @@
 {
-  "name": "bpa_app_api",
+  "name": "furtail_api",
   "version": "10.0.0.6",
   "private": true,
   "main": "dist/index.js",
@@ -70,7 +70,7 @@
     "verify:clone-auth": "npx ts-node scripts/verify-clone-auth.ts",
     "validate:env": "cross-env TS_NODE_TRANSPILE_ONLY=1 node -r ts-node/register scripts/validate-env.ts",
     "test:eps-connection": "cross-env TS_NODE_TRANSPILE_ONLY=1 npx ts-node scripts/test-eps-connection.ts",
-    "dev:infra": "docker compose up -d bpa_db bpa-redis bpa-storage",
+    "dev:infra": "docker compose up -d bpa_db furtail-redis furtail-storage",
     "dev:api": "npm run dev",
     "dev:full": "docker compose up",
     "dev:down": "docker compose down",

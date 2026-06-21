@@ -2,7 +2,7 @@
 
 **Date:** 2026-06-04
 **Status:** PLANNING (no code changes)
-**Scope:** Backend (`backend-api`), Web Admin (`bpa_web`), Flutter App (`bpa_app`)
+**Scope:** Backend (`backend-api`), Web Admin (`bpa_web`), Flutter App (`furtail_app`)
 
 ---
 
@@ -168,7 +168,7 @@ The Campaign Configuration Engine centralizes all campaign settings — pricing,
 | SMS Templates manager | `bpa_web` | P2 |
 | Financial Reports page | `bpa_web` | P1 |
 | Export buttons (CSV/Excel/PDF) | `bpa_web` | P1 |
-| Campaign settings view (read-only) in Flutter | `bpa_app` | P2 |
+| Campaign settings view (read-only) in Flutter | `furtail_app` | P2 |
 
 ---
 
@@ -485,7 +485,7 @@ The Configuration Engine controls which flow is active per campaign.
 |------|--------|-------|
 | `vaccination_2026` booking wizard | Read `bookingFlowType` from campaign public API and switch flow | `BookingWizard.tsx` |
 | `vaccination_2026` claim page | Already uses express checkout claim; OTP claim remains as fallback | `app/booking/page.tsx` |
-| `bpa_app` (Flutter) | Read campaign config for display purposes (read-only); no booking changes needed since Flutter doesn't host booking flow | `campaign/` feature module |
+| `furtail_app` (Flutter) | Read campaign config for display purposes (read-only); no booking changes needed since Flutter doesn't host booking flow | `campaign/` feature module |
 
 ### 6.3 Public Campaign API Extension
 
@@ -758,7 +758,7 @@ Reuse existing campaign test data. Create specific test campaigns:
 | React Hook Form + Zod | Standard across admin forms | Config forms |
 | WowDash card/layout components | Standard across admin | Settings cards |
 
-### 10.3 Flutter (Already Exist in `bpa_app`)
+### 10.3 Flutter (Already Exist in `furtail_app`)
 
 | Component | Location | Reuse For |
 |-----------|----------|-----------|
@@ -865,7 +865,7 @@ Reuse existing campaign test data. Create specific test campaigns:
 | E2E testing | 4h |
 | Public campaign API: include config in response | 1h |
 | `vaccination_2026` wizard: read bookingFlowType | 2h |
-| Flutter `bpa_app`: add config to campaign detail (read-only) | 2h |
+| Flutter `furtail_app`: add config to campaign detail (read-only) | 2h |
 | Documentation update | 2h |
 | Code review + fixes | 3h |
 
@@ -932,7 +932,7 @@ Reuse existing campaign test data. Create specific test campaigns:
 | MODIFY | `lib/campaignApi.ts` — add config + report API functions |
 | MODIFY | Campaign nav component — add Settings + Reports tabs |
 
-### Flutter (`bpa_app`)
+### Flutter (`furtail_app`)
 
 | Action | File |
 |--------|------|

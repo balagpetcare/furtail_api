@@ -1,6 +1,6 @@
 # 04 — Launch Checklist
 
-**Campaign:** BPA 2026 Cat Flu + Rabies Vaccination  
+**Campaign:** Furtail 2026 Cat Flu + Rabies Vaccination  
 **Target launch window:** TBD (post-UAT sign-off)
 
 ---

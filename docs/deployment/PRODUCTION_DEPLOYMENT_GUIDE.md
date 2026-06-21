@@ -1,4 +1,4 @@
-# BPA Production Deployment Guide
+# Furtail Production Deployment Guide
 
 **Date:** 2026-06-05  
 **Scope:** Public production stack for three hosts  
@@ -6,9 +6,9 @@
 
 | Host | Application | Origin upstream |
 |------|-------------|-----------------|
-| `https://bangladeshpetassociation.com` | `bpa-landing` | `127.0.0.1:3101` |
-| `https://vaccination.bangladeshpetassociation.com` | `vaccination_2026` | `127.0.0.1:3110` |
-| `https://api.bangladeshpetassociation.com` | `backend-api` | `127.0.0.1:3000` |
+| `https://furtail.world` | `furtail-landing` | `127.0.0.1:3101` |
+| `https://vaccination.furtail.world` | `vaccination_2026` | `127.0.0.1:3110` |
+| `https://api.furtail.world` | `backend-api` | `127.0.0.1:3000` |
 
 **Related VCS configs:** `infra/nginx/` · [PORT_AND_DOMAIN_MAP.md](../infrastructure/PORT_AND_DOMAIN_MAP.md) · [nginx-production-deployment.md](../nginx-production-deployment.md) · [enterprise-monitoring-failover-strategy.md](../architecture/enterprise-monitoring-failover-strategy.md)
 
@@ -41,13 +41,13 @@
 2. Cloudflare terminates user TLS, applies WAF/cache/Brotli, forwards to origin.
 3. Origin nginx terminates **Full (strict)** TLS to Cloudflare, proxies to loopback apps.
 4. Campaign site proxies `/api/*` → `backend-api:3000` (booking funnel).
-5. Landing calls `api.bangladeshpetassociation.com` from browser/SSR (CORS + public reads).
+5. Landing calls `api.furtail.world` from browser/SSR (CORS + public reads).
 
 ---
 
 ## 1. DNS records (Cloudflare)
 
-**Zone:** `bangladeshpetassociation.com`  
+**Zone:** `furtail.world`  
 **Registrar nameservers:** Point to Cloudflare (`*.ns.cloudflare.com`).
 
 Replace `<ORIGIN_IPV4>` with the production VPS/load-balancer public IPv4. Add `AAAA` if origin has native IPv6.
@@ -65,7 +65,7 @@ Replace `<ORIGIN_IPV4>` with the production VPS/load-balancer public IPv4. Add `
 
 | Type | Name | Content | Proxy | Purpose |
 |------|------|---------|-------|---------|
-| `CNAME` | `www` | `bangladeshpetassociation.com` | Proxied | Alternative to `A` www (choose one pattern) |
+| `CNAME` | `www` | `furtail.world` | Proxied | Alternative to `A` www (choose one pattern) |
 | `TXT` | `@` | `v=spf1 …` | DNS only | Mail (if sending from domain) |
 | `TXT` | `_dmarc` | `v=DMARC1; p=none; …` | DNS only | Email auth |
 | `CAA` | `@` | `0 issue "letsencrypt.org"` | DNS only | Restrict cert issuers (optional) |
@@ -94,7 +94,7 @@ Validate staging end-to-end before switching production traffic.
 
 ## 2. Cloudflare settings
 
-Configure in **Cloudflare Dashboard → bangladeshpetassociation.com**.
+Configure in **Cloudflare Dashboard → furtail.world**.
 
 ### 2.1 SSL/TLS
 
@@ -150,10 +150,10 @@ Use **Cache Rules** (or legacy Page Rules) — default **bypass** for dynamic HT
 |-----------|------|-----------|--------------|----------|-------|
 | Bypass API | `api.*` | `*` | Bypass | — | Never cache JSON/auth |
 | Bypass book | `vaccination.*` | `/book*`, `/api/*` | Bypass | — | OTP/checkout |
-| Bypass HTML | `bangladeshpetassociation.com` | `/` except static | Bypass | — | SSR pages |
+| Bypass HTML | `furtail.world` | `/` except static | Bypass | — | SSR pages |
 | Cache static | `*` | `/_next/static/*` | Cache | 1 year | Immutable Next assets |
 | Cache media | `*` | `*.ico,*.svg,*.webp,*.png,*.woff2` | Cache | 7 days | Public files |
-| Cache OG | `bangladeshpetassociation.com` | `/opengraph-image*` | Cache | 1 day | Generated OG images |
+| Cache OG | `furtail.world` | `/opengraph-image*` | Cache | 1 day | Generated OG images |
 
 **Cache key:** Include host header; do not cache responses with `Set-Cookie`.
 
@@ -171,11 +171,11 @@ Use **Cache Rules** (or legacy Page Rules) — default **bypass** for dynamic HT
 
 | Monitor | URL | Interval | Regions |
 |---------|-----|----------|---------|
-| Landing | `https://bangladeshpetassociation.com/` | 60s | 2+ |
-| Vaccination | `https://vaccination.bangladeshpetassociation.com/` | 60s | 2+ |
-| API liveness | `https://api.bangladeshpetassociation.com/health` | 60s | 2+ |
+| Landing | `https://furtail.world/` | 60s | 2+ |
+| Vaccination | `https://vaccination.furtail.world/` | 60s | 2+ |
+| API liveness | `https://api.furtail.world/health` | 60s | 2+ |
 
-Alert on 2 consecutive failures → Slack `#bpa-incidents`.
+Alert on 2 consecutive failures → Slack `#furtail-incidents`.
 
 ---
 
@@ -251,9 +251,9 @@ real_ip_header CF-Connecting-IP;
 real_ip_recursive on;
 ```
 
-### 3.3 Site — apex marketing (`bangladeshpetassociation.com`)
+### 3.3 Site — apex marketing (`furtail.world`)
 
-**File:** `sites-available/bangladeshpetassociation.com.conf` (in VCS)
+**File:** `sites-available/furtail.world.conf` (in VCS)
 
 Key behaviors:
 
@@ -276,7 +276,7 @@ Enable only if `NEXT_PUBLIC_API_URL` on landing is set to same-origin `/api/v1`.
 
 ### 3.4 Site — vaccination campaign
 
-**File:** `sites-available/vaccination.bangladeshpetassociation.com.conf` (in VCS)
+**File:** `sites-available/vaccination.furtail.world.conf` (in VCS)
 
 Key behaviors:
 
@@ -286,23 +286,23 @@ Key behaviors:
 
 ### 3.5 Site — API host (proposed — add to VCS)
 
-**File:** `sites-available/api.bangladeshpetassociation.com.conf`
+**File:** `sites-available/api.furtail.world.conf`
 
 ```nginx
 # Central API — backend-api (upstream :3000)
-# Install: ln -s .../api.bangladeshpetassociation.com.conf /etc/nginx/sites-enabled/
+# Install: ln -s .../api.furtail.world.conf /etc/nginx/sites-enabled/
 
 server {
     listen 443 ssl;
     listen [::]:443 ssl;
     http2 on;
-    server_name api.bangladeshpetassociation.com;
+    server_name api.furtail.world;
 
     include /etc/nginx/snippets/ssl-letsencrypt.conf;
     include /etc/nginx/snippets/security-headers.conf;
 
-    access_log /var/log/nginx/bpa-api.access.log combined buffer=32k flush=5s;
-    error_log  /var/log/nginx/bpa-api.error.log warn;
+    access_log /var/log/nginx/furtail-api.access.log combined buffer=32k flush=5s;
+    error_log  /var/log/nginx/furtail-api.error.log warn;
 
     limit_conn bpa_conn_per_ip 60;
 
@@ -361,9 +361,9 @@ server {
 **File:** `sites-available/00-acme-and-redirect.conf` — add `api` to `server_name`:
 
 ```nginx
-server_name bangladeshpetassociation.com www.bangladeshpetassociation.com
-            vaccination.bangladeshpetassociation.com
-            api.bangladeshpetassociation.com;
+server_name furtail.world www.furtail.world
+            vaccination.furtail.world
+            api.furtail.world;
 ```
 
 ### 3.7 TLS certificate issuance
@@ -372,11 +372,11 @@ server_name bangladeshpetassociation.com www.bangladeshpetassociation.com
 
 ```bash
 sudo certbot certonly --nginx \
-  -d bangladeshpetassociation.com \
-  -d www.bangladeshpetassociation.com \
-  -d vaccination.bangladeshpetassociation.com \
-  -d api.bangladeshpetassociation.com \
-  --email admin@bangladeshpetassociation.com \
+  -d furtail.world \
+  -d www.furtail.world \
+  -d vaccination.furtail.world \
+  -d api.furtail.world \
+  --email admin@furtail.world \
   --agree-tos \
   --no-eff-email
 ```
@@ -394,9 +394,9 @@ sudo certbot renew --dry-run
 
 ```bash
 sudo ln -sf /etc/nginx/sites-available/00-acme-and-redirect.conf /etc/nginx/sites-enabled/
-sudo ln -sf /etc/nginx/sites-available/bangladeshpetassociation.com.conf /etc/nginx/sites-enabled/
-sudo ln -sf /etc/nginx/sites-available/vaccination.bangladeshpetassociation.com.conf /etc/nginx/sites-enabled/
-sudo ln -sf /etc/nginx/sites-available/api.bangladeshpetassociation.com.conf /etc/nginx/sites-enabled/
+sudo ln -sf /etc/nginx/sites-available/furtail.world.conf /etc/nginx/sites-enabled/
+sudo ln -sf /etc/nginx/sites-available/vaccination.furtail.world.conf /etc/nginx/sites-enabled/
+sudo ln -sf /etc/nginx/sites-available/api.furtail.world.conf /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
 ```
 
@@ -486,7 +486,7 @@ sudo apt install -y libnginx-mod-http-brotli-filter libnginx-mod-http-brotli-sta
 
 ### 7.2 Landing ISR / Next cache
 
-`bpa-landing` uses `unstable_cache` with 60–120s revalidation for API-backed sections. Origin must not cache HTML at nginx layer longer than app intent.
+`furtail-landing` uses `unstable_cache` with 60–120s revalidation for API-backed sections. Origin must not cache HTML at nginx layer longer than app intent.
 
 ### 7.3 API caching
 
@@ -510,7 +510,7 @@ Public read endpoints (`/api/v1/campaign/public/*`) may use short edge cache (30
 | **backend-api** | `GET /health` | `200 {"ok":true,"service":"bpa_api"}` | Implemented |
 | **backend-api** | `GET /health/redis` | `200` or `503` | Redis probe |
 | **backend-api** | `GET /api/v1/campaign/public/sms/health` | `200` | SMS provider status |
-| **bpa-landing** | `GET /health` | `200 {"ok":true}` | **Recommended** — add Next.js route |
+| **furtail-landing** | `GET /health` | `200 {"ok":true}` | **Recommended** — add Next.js route |
 | **vaccination_2026** | `GET /health` | `200 {"ok":true}` | **Recommended** — add Next.js route |
 
 **Recommended future:** `GET /health/ready` on API (DB `SELECT 1` + migrations check) — see [enterprise-monitoring-failover-strategy.md](../architecture/enterprise-monitoring-failover-strategy.md).
@@ -521,13 +521,13 @@ Run from **2+ regions** (e.g. Singapore, Mumbai):
 
 | ID | URL | Interval | Fail threshold |
 |----|-----|----------|----------------|
-| U1 | `https://bangladeshpetassociation.com/` | 1 min | 2 consecutive |
-| U2 | `https://bangladeshpetassociation.com/health` | 1 min | 2 consecutive |
-| U3 | `https://vaccination.bangladeshpetassociation.com/` | 1 min | 2 consecutive |
-| U4 | `https://vaccination.bangladeshpetassociation.com/health` | 1 min | 2 consecutive |
-| U5 | `https://vaccination.bangladeshpetassociation.com/book` | 5 min | 2 consecutive |
-| U6 | `https://api.bangladeshpetassociation.com/health` | 1 min | 2 consecutive |
-| U7 | `https://api.bangladeshpetassociation.com/api/v1/campaign/public/campaigns` | 5 min | 2 consecutive |
+| U1 | `https://furtail.world/` | 1 min | 2 consecutive |
+| U2 | `https://furtail.world/health` | 1 min | 2 consecutive |
+| U3 | `https://vaccination.furtail.world/` | 1 min | 2 consecutive |
+| U4 | `https://vaccination.furtail.world/health` | 1 min | 2 consecutive |
+| U5 | `https://vaccination.furtail.world/book` | 5 min | 2 consecutive |
+| U6 | `https://api.furtail.world/health` | 1 min | 2 consecutive |
+| U7 | `https://api.furtail.world/api/v1/campaign/public/campaigns` | 5 min | 2 consecutive |
 | U8 | TLS expiry all hosts | Daily | < 14 days |
 
 ### 8.3 Origin process supervision
@@ -536,7 +536,7 @@ Run from **2+ regions** (e.g. Singapore, Mumbai):
 |---------|------|------------|----------------|
 | `backend-api` | 3000 | systemd / PM2 / Docker | `Restart=always` |
 | `worker:notifications` | — | same | required for OTP/SMS |
-| `bpa-landing` | 3101 | systemd / PM2 | `Restart=always` |
+| `furtail-landing` | 3101 | systemd / PM2 | `Restart=always` |
 | `vaccination_2026` | 3110 | systemd / PM2 | `Restart=always` |
 | `nginx` | 443 | systemd | `Restart=on-failure` |
 | `postgresql` | 5432 | managed / systemd | HA per provider |
@@ -545,9 +545,9 @@ Run from **2+ regions** (e.g. Singapore, Mumbai):
 **Post-deploy smoke:**
 
 ```bash
-curl -fsS https://api.bangladeshpetassociation.com/health
-curl -fsS https://bangladeshpetassociation.com/ | head -c 200
-curl -fsS https://vaccination.bangladeshpetassociation.com/book | head -c 200
+curl -fsS https://api.furtail.world/health
+curl -fsS https://furtail.world/ | head -c 200
+curl -fsS https://vaccination.furtail.world/book | head -c 200
 ```
 
 ---
@@ -622,26 +622,26 @@ Daily mirror to DR bucket (`mc mirror` or provider replication) — see `DISASTE
 |----------|-------------------|
 | `PORT` | `3000` |
 | `NODE_ENV` | `production` |
-| `API_PUBLIC_BASE_URL` | `https://api.bangladeshpetassociation.com` |
-| `APP_URL` | `https://api.bangladeshpetassociation.com` |
-| `CORS_ORIGINS` | `https://bangladeshpetassociation.com,https://vaccination.bangladeshpetassociation.com,https://admin.bangladeshpetassociation.com` |
-| `COOKIE_DOMAIN` | `.bangladeshpetassociation.com` |
+| `API_PUBLIC_BASE_URL` | `https://api.furtail.world` |
+| `APP_URL` | `https://api.furtail.world` |
+| `CORS_ORIGINS` | `https://furtail.world,https://vaccination.furtail.world,https://admin.furtail.world` |
+| `COOKIE_DOMAIN` | `.furtail.world` |
 | `DATABASE_URL` | Vault — managed Postgres |
 | `REDIS_URL` | Vault |
 
-### 10.2 bpa-landing
+### 10.2 furtail-landing
 
 | Variable | Production example |
 |----------|-------------------|
-| `NEXT_PUBLIC_SITE_URL` | `https://bangladeshpetassociation.com` |
-| `NEXT_PUBLIC_API_URL` | `https://api.bangladeshpetassociation.com/api/v1` |
-| `NEXT_PUBLIC_CAMPAIGN_SITE_URL` | `https://vaccination.bangladeshpetassociation.com` |
+| `NEXT_PUBLIC_SITE_URL` | `https://furtail.world` |
+| `NEXT_PUBLIC_API_URL` | `https://api.furtail.world/api/v1` |
+| `NEXT_PUBLIC_CAMPAIGN_SITE_URL` | `https://vaccination.furtail.world` |
 
 ### 10.3 vaccination_2026
 
 | Variable | Production example |
 |----------|-------------------|
-| `NEXT_PUBLIC_SITE_URL` | `https://vaccination.bangladeshpetassociation.com` |
+| `NEXT_PUBLIC_SITE_URL` | `https://vaccination.furtail.world` |
 | API proxy | Same-origin `/api/*` → nginx → `:3000` |
 
 ---
@@ -660,7 +660,7 @@ Daily mirror to DR bucket (`mc mirror` or provider replication) — see `DISASTE
 - [ ] Backup snapshot &lt; 24 h; pre-deploy snapshot taken (§9.2)
 - [ ] `node scripts/check-migration-integrity.js` passes on staging
 - [ ] Rollback git tags created (`release-YYYY-MM-DD`, previous tag noted)
-- [ ] On-call assigned; `#bpa-incidents` channel ready
+- [ ] On-call assigned; `#furtail-incidents` channel ready
 - [ ] Maintenance window communicated (if migration locks expected)
 
 ### Phase 1 — Infrastructure (T-1 h)
@@ -685,7 +685,7 @@ Daily mirror to DR bucket (`mc mirror` or provider replication) — see `DISASTE
 | 1 | **backend-api** | Build + deploy; start `:3000` | `curl /health` 200 |
 | 2 | **worker** | Deploy `worker:notifications` | OTP test (sandbox) |
 | 3 | **vaccination_2026** | `npm run build && npm run start` `:3110` | `/` and `/book` 200 |
-| 4 | **bpa-landing** | `npm run build && npm run start` `:3101` | `/` 200, `/vaccination` 200 |
+| 4 | **furtail-landing** | `npm run build && npm run start` `:3101` | `/` 200, `/vaccination` 200 |
 | 5 | **Campaign** | Admin → ACTIVE campaign + slots | Public list 200 |
 | 6 | **Webhooks** | Payment/SMS URLs → `api.` host | Provider test callback 200 |
 
@@ -734,7 +734,7 @@ Use when smoke tests fail, SEV-1/2 incident, or error budget exceeded. **Prefer 
 
 **Step 1 — Contain (0–5 min)**
 
-- [ ] Announce incident in `#bpa-incidents`
+- [ ] Announce incident in `#furtail-incidents`
 - [ ] Enable Cloudflare **Under Attack** mode only if DDoS; otherwise avoid
 - [ ] **Pause campaign** in admin if booking/payment affected
 - [ ] Optional: serve static maintenance on vaccination `/book` (nginx `return 503` or maintenance page)
@@ -743,8 +743,8 @@ Use when smoke tests fail, SEV-1/2 incident, or error budget exceeded. **Prefer 
 
 ```bash
 # Example — adjust paths/tags
-cd /opt/bpa/bpa-landing && git checkout release-PREV && npm ci && npm run build && pm2 restart bpa-landing
-cd /opt/bpa/vaccination_2026 && git checkout release-PREV && npm ci && npm run build && pm2 restart bpa-vaccination
+cd /opt/furtail/furtail-landing && git checkout release-PREV && npm ci && npm run build && pm2 restart furtail-landing
+cd /opt/furtail/vaccination_2026 && git checkout release-PREV && npm ci && npm run build && pm2 restart furtail-vaccination
 ```
 
 - [ ] Verify `:3101` and `:3110` locally on origin
@@ -753,10 +753,10 @@ cd /opt/bpa/vaccination_2026 && git checkout release-PREV && npm ci && npm run b
 **Step 3 — API rollback (5–15 min)**
 
 ```bash
-cd /opt/bpa/backend-api && git checkout release-PREV && npm ci && npm run build && pm2 restart bpa-api bpa-worker
+cd /opt/furtail/backend-api && git checkout release-PREV && npm ci && npm run build && pm2 restart furtail-api furtail-worker
 ```
 
-- [ ] `curl https://api.bangladeshpetassociation.com/health`
+- [ ] `curl https://api.furtail.world/health`
 - [ ] Campaign public list returns expected payload
 
 **Step 4 — Database rollback (last resort, 30 min – 4 h)**
@@ -814,7 +814,7 @@ Record in deploy ticket:
 | nginx VCS | `infra/nginx/` |
 | Port map | `docs/infrastructure/PORT_AND_DOMAIN_MAP.md` |
 | nginx install guide | `docs/nginx-production-deployment.md` |
-| API gap analysis (landing) | `bpa-landing/docs/api/BPA_LANDING_API_GAP_ANALYSIS.md` |
+| API gap analysis (landing) | `furtail-landing/docs/api/BPA_LANDING_API_GAP_ANALYSIS.md` |
 | Monitoring strategy | `docs/architecture/enterprise-monitoring-failover-strategy.md` |
 | Campaign deploy plan | `docs/vaccination-campaign-2026/06-DEPLOYMENT-PLAN.md` |
 | Prisma policy | `docs/PRISMA_MIGRATION_NON_DESTRUCTIVE_POLICY.md` |

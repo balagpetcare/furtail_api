@@ -1,5 +1,5 @@
 /**
- * Read-only audit of local PostgreSQL for BPA database recovery.
+ * Read-only audit of local PostgreSQL for Furtail database recovery.
  * Tries known credential pairs from project history.
  */
 import pg from "pg";
@@ -11,7 +11,7 @@ const CREDS = [
   { user: "postgres", password: "password123", label: "postgres/password123" },
 ];
 
-const BPA_DB_PATTERN = /bpa|pet|onboarding|wpa|vaccin|campaign/i;
+const BPA_DB_PATTERN = /furtail|pet|onboarding|furtail|vaccin|campaign/i;
 
 const CORE_TABLES = [
   "_prisma_migrations",

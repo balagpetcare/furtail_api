@@ -74,7 +74,7 @@ Recommended safe public response:
         "batchNumber": "safe-if-present"
       },
       "clinic": {
-        "branchName": "BPA Dhanmondi"
+        "branchName": "Furtail Dhanmondi"
       }
     }
   }

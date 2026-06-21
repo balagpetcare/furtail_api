@@ -30,7 +30,7 @@ function getFallbackInviteHtml(v: Record<string, string>): string {
   <p>Invited by: ${v.ownerName || "Owner"}.</p>
   ${v.expiryDate ? `<p>This invite expires on ${v.expiryDate}.</p>` : ""}
   <p><a href="${v.inviteLink || "#"}" style="display:inline-block;padding:12px 24px;background:#2563eb;color:#fff;text-decoration:none;border-radius:6px;">Accept invitation</a></p>
-  <p style="color:#666;font-size:12px;">This is an automated message from BPA.</p>
+  <p style="color:#666;font-size:12px;">This is an automated message from Furtail.</p>
 </body></html>`;
 }
 

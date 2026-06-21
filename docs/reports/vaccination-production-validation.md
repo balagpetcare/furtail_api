@@ -28,11 +28,11 @@
 | Check | Result |
 |-------|--------|
 | Campaign checkout anchor (local DB) | **PASS** — org, ACTIVE branch, session + order with correct `branchId` |
-| Branch configuration | **PASS** — 1 ACTIVE branch (`BPA-CAMPAIGN-CHECKOUT`, orgId=1) |
+| Branch configuration | **PASS** — 1 ACTIVE branch (`Furtail-CAMPAIGN-CHECKOUT`, orgId=1) |
 | Campaign payment config (DB) | **PASS** — `onlinePaymentEnabled=true` for campaigns 1 & 2 |
 | EPS network connectivity | **PASS** — `sandboxpgapi.eps.com.bd` / `pgapi.eps.com.bd` DNS + TLS OK |
-| Production campaign API | **PASS** — `GET https://api.bangladeshpetassociation.com/api/v1/campaign/public/campaigns` → 200 |
-| Production landing | **PASS** — `https://vaccination.bangladeshpetassociation.com` reachable |
+| Production campaign API | **PASS** — `GET https://api.furtail.world/api/v1/campaign/public/campaigns` → 200 |
+| Production landing | **PASS** — `https://vaccination.furtail.world` reachable |
 | Production Redis (SMS queue) | **PASS** — queue health shows Redis enabled, 0 stuck jobs |
 | Frontend integration pattern | **PASS** — `vaccination_2026` uses `checkout/init` + `paymentUrl` redirect (provider-agnostic) |
 | Payment transaction logging (local DB) | **PASS** — 96 rows in `payment_transaction_logs` |
@@ -76,7 +76,7 @@ SMS_API_KEY / SMS_SENDER_ID          ← MISSING
 | Variable / signal | Observed |
 |-------------------|----------|
 | `PAYMENT_PROVIDER` | `eps` (via `/api/v1/payments/callback-urls`) |
-| `API_PUBLIC_BASE_URL` | `https://api.petsmartsolution.com` (note: **different** from `api.bangladeshpetassociation.com`) |
+| `API_PUBLIC_BASE_URL` | `https://api.petsmartsolution.com` (note: **different** from `api.furtail.world`) |
 | EPS `baseUrl` | `https://pgapi.eps.com.bd` (production gateway) |
 | SMS BulkSMSBD | **Not configured** (`smsEnabled: false`) |
 | EPS callback URLs (deployed) | `https://api.petsmartsolution.com/api/v1/payments/payment/eps/callback/success` (**legacy/wrong path**) |
@@ -127,12 +127,12 @@ No `COMPLETED` bookings in snapshot — consistent with no successful EPS callba
 
 ## 3. Warnings
 
-1. **Dual API domains:** Campaign traffic uses `api.bangladeshpetassociation.com`; payment callbacks use `api.petsmartsolution.com`. Ensure EPS dashboard, CORS, and SSL cover both if intentional.
+1. **Dual API domains:** Campaign traffic uses `api.furtail.world`; payment callbacks use `api.petsmartsolution.com`. Ensure EPS dashboard, CORS, and SSL cover both if intentional.
 2. **Production deploy lag:** Repo has corrected EPS paths (`/api/v1/payments/eps/success`); production still advertises `/payments/payment/eps/...`. **Deploy latest backend-api** before go-live.
 3. **REDIS_ENABLED=false** locally — SMS sends synchronously; production has Redis (good).
 4. **Campaign `uat-paid-2026` status PAUSED** — only `uat-free-2026` is ACTIVE locally.
 5. **No rows in `sms_logs`** locally — unified SMS audit trail empty; campaign SMS uses `campaign_sms_logs` (1 row).
-6. **Frontend `.env` not committed** — production landing uses `vaccination.bangladeshpetassociation.com`; ensure `NEXT_PUBLIC_API_BASE_URL` points to live API.
+6. **Frontend `.env` not committed** — production landing uses `vaccination.furtail.world`; ensure `NEXT_PUBLIC_API_BASE_URL` points to live API.
 7. **SMS validation bug fixed in this pass** — `getSmsConfigIssues()` previously skipped credential checks when keys were missing; now correctly fails validation when `SMS_ENABLED=true`.
 
 ---
@@ -144,7 +144,7 @@ No `COMPLETED` bookings in snapshot — consistent with no successful EPS callba
 ```env
 PAYMENT_PROVIDER=eps
 API_PUBLIC_BASE_URL=https://api.petsmartsolution.com
-CAMPAIGN_LANDING_URL=https://vaccination.bangladeshpetassociation.com
+CAMPAIGN_LANDING_URL=https://vaccination.furtail.world
 
 EPS_BASE_URL=https://pgapi.eps.com.bd
 EPS_SANDBOX=false
@@ -273,10 +273,10 @@ npx ts-node scripts/sms-production-check.ts --health-only
 npx ts-node scripts/sms-production-check.ts --phone=017XXXXXXXX
 
 # Production smoke (read-only)
-curl https://api.bangladeshpetassociation.com/api/v1/campaign/public/campaigns
-curl https://api.bangladeshpetassociation.com/api/v1/campaign/public/sms/health
-curl https://api.bangladeshpetassociation.com/api/v1/campaign/public/payments/callback-urls
-curl https://api.bangladeshpetassociation.com/api/v1/payments/callback-urls
+curl https://api.furtail.world/api/v1/campaign/public/campaigns
+curl https://api.furtail.world/api/v1/campaign/public/sms/health
+curl https://api.furtail.world/api/v1/campaign/public/payments/callback-urls
+curl https://api.furtail.world/api/v1/payments/callback-urls
 ```
 
 ---

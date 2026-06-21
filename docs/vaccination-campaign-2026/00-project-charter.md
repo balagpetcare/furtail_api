@@ -9,13 +9,13 @@
 
 ## 1. Executive Summary
 
-The **2026 Cat Flu + Rabies Vaccination Campaign** is a public health initiative to provide subsidized or free vaccinations for cats in Bangladesh. This system will operate as a **standalone frontend** that integrates with the **existing BPA (Bangladesh Pet Alliance) backend infrastructure** and **PostgreSQL database**.
+The **2026 Cat Flu + Rabies Vaccination Campaign** is a public health initiative to provide subsidized or free vaccinations for cats in Bangladesh. This system will operate as a **standalone frontend** that integrates with the **existing Furtail (Bangladesh Pet Alliance) backend infrastructure** and **PostgreSQL database**.
 
 ### Key Principles
-- **No separate backend** - Reuse existing BPA backend API
+- **No separate backend** - Reuse existing Furtail backend API
 - **No separate database** - Extend existing PostgreSQL schema
 - **Mobile number as primary identity** - Phone-first registration for walk-in campaigns
-- **Future BPA app linking** - Designed for seamless migration to BPA user accounts
+- **Future Furtail app linking** - Designed for seamless migration to Furtail user accounts
 
 ---
 
@@ -31,7 +31,7 @@ The **2026 Cat Flu + Rabies Vaccination Campaign** is a public health initiative
 
 ### Secondary Objectives
 1. Collect demographic data for future public health planning
-2. Build a database of cat owners for BPA app conversion
+2. Build a database of cat owners for Furtail app conversion
 3. Test scalable vaccination workflow for future campaigns
 4. Generate reports for government and donor stakeholders
 
@@ -52,7 +52,7 @@ The **2026 Cat Flu + Rabies Vaccination Campaign** is a public health initiative
 | Vaccination Record | Create permanent vaccination records linked to pets |
 | Certificate Generation | PDF certificates with QR codes for verification |
 | Reporting | Campaign analytics, vaccination counts, demographic reports |
-| Future BPA App Linking | Phone-based account linking for BPA app users |
+| Future Furtail Linking | Phone-based account linking for Furtail app users |
 
 ### Out of Scope
 - New backend infrastructure
@@ -67,7 +67,7 @@ The **2026 Cat Flu + Rabies Vaccination Campaign** is a public health initiative
 
 | Stakeholder | Role | Interest |
 |-------------|------|----------|
-| BPA Foundation | Sponsor | Campaign success, data collection |
+| Furtail Foundation | Sponsor | Campaign success, data collection |
 | Veterinary Team | Users | Efficient vaccination workflow |
 | Pet Owners | End Users | Easy booking, proof of vaccination |
 | Government (DLS) | Regulator | Public health data, compliance |
@@ -92,7 +92,7 @@ The **2026 Cat Flu + Rabies Vaccination Campaign** is a public health initiative
 ## 6. Architecture Constraints
 
 ### Must Use
-- Existing BPA backend API (`D:\BPA_Data\backend-api`)
+- Existing Furtail backend API (`D:\BPA_Data\backend-api`)
 - Existing PostgreSQL database
 - Existing notification infrastructure (BullMQ + nodemailer)
 - Existing authentication patterns
@@ -100,7 +100,7 @@ The **2026 Cat Flu + Rabies Vaccination Campaign** is a public health initiative
 ### Campaign Frontend Stack
 - Standalone Next.js application (`D:\BPA_Data\vaccination_2026`)
 - React 19 + Tailwind CSS
-- Connects to BPA backend via REST API
+- Connects to Furtail backend via REST API
 - No local database or backend
 
 ---
@@ -120,7 +120,7 @@ The **2026 Cat Flu + Rabies Vaccination Campaign** is a public health initiative
 
 ## 8. Existing Infrastructure Analysis
 
-### Backend (BPA API)
+### Backend (Furtail API)
 - **Stack**: Node.js, Express, TypeScript, Prisma ORM
 - **Database**: PostgreSQL with 200+ tables
 - **Auth**: JWT-based with phone/email verification
@@ -162,7 +162,7 @@ The **2026 Cat Flu + Rabies Vaccination Campaign** is a public health initiative
 | Database contention | High | Separate campaign-specific indexes |
 | SMS gateway limits | Medium | Pre-arrange bulk SMS quota |
 | Walk-in overload | High | Implement queue management |
-| Data migration complexity | Medium | Design for future BPA linking |
+| Data migration complexity | Medium | Design for future Furtail linking |
 | Staff training | Medium | Simplified staff portal UX |
 
 ---
@@ -183,4 +183,4 @@ The **2026 Cat Flu + Rabies Vaccination Campaign** is a public health initiative
 - `D:\BPA_Data\backend-api\src\api\v1\modules\clinic\vaccination.service.ts` - Vaccination service
 - `D:\BPA_Data\backend-api\src\api\v1\services\notification.service.ts` - Notification service
 - `D:\BPA_Data\bpa_web\package.json` - Web panel reference
-- `D:\BPA_Data\bpa_app\pubspec.yaml` - Mobile app reference
+- `D:\BPA_Data\furtail_app\pubspec.yaml` - Mobile app reference

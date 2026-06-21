@@ -1,4 +1,4 @@
-# BPA Pre-Push Validation Report
+# Furtail Pre-Push Validation Report
 
 **Validation date:** 2026-06-05  
 **Validator:** Automated audit (no force push, no history rewrite)
@@ -10,10 +10,10 @@
 | Repository | Status | Blockers | Warnings |
 |---|---|---|---|
 | backend-api | **PASS** | None | `main` behind release branch (32 commits) — fast-forward merge planned |
-| bpa_app | **PASS** (with exclusions) | None | Large zip excluded; pre-existing tracked zips in repo |
+| furtail_app | **PASS** (with exclusions) | None | Large zip excluded; pre-existing tracked zips in repo |
 | bpa_web | **PASS** | None | `main` behind release branch (62 commits) — fast-forward merge planned |
 | vaccination_2026 | **PASS** (with exclusions) | None | `tsconfig.tsbuildinfo` excluded from commit (build artifact) |
-| bpa-landing | **SKIP** | Not a git repository | — |
+| furtail-landing | **SKIP** | Not a git repository | — |
 
 ---
 
@@ -35,7 +35,7 @@
 
 ---
 
-### bpa_app
+### furtail_app
 
 | Check | Result | Details |
 |---|---|---|
@@ -88,7 +88,7 @@
 
 ---
 
-### bpa-landing
+### furtail-landing
 
 | Check | Result | Details |
 |---|---|---|
@@ -104,7 +104,7 @@ For repositories passing validation:
 
 1. Commit uncommitted changes (where applicable), excluding flagged artifacts
 2. `git checkout main`
-3. Fast-forward merge from active release/feature branch (backend-api, bpa_app, bpa_web)
+3. Fast-forward merge from active release/feature branch (backend-api, furtail_app, bpa_web)
 4. `git pull origin main --rebase`
 5. `git push origin main`
 

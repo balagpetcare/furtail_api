@@ -12,7 +12,7 @@
 |---|--------|-------|
 | 1 | `backend-api` branch includes EPS redirect resolver + `payment.controller` ssl redirect fix | Dev |
 | 2 | `vaccination_2026` includes `/book/success` sessionStorage recovery | Dev |
-| 3 | `CAMPAIGN_LANDING_URL` = production vaccination site (e.g. `https://vaccination.bangladeshpetassociation.com`) | Ops |
+| 3 | `CAMPAIGN_LANDING_URL` = production vaccination site (e.g. `https://vaccination.furtail.world`) | Ops |
 | 4 | `API_PUBLIC_BASE_URL` = production API host | Ops |
 | 5 | EPS merchant panel success URL = `{API}/api/v1/payments/eps/success` (**not** `/webhook/redirect/success`) | Ops |
 | 6 | `SMS_ENABLED=true`, BulkSMSBD credentials set | Ops |
@@ -107,10 +107,10 @@ ORDER BY id DESC LIMIT 10;
 ## Log verification
 
 ```bash
-grep "\[EPS callback\]" /var/log/bpa-api.log | tail -20
-grep "\[EPS redirect\]" /var/log/bpa-api.log | tail -20
-grep "\[CampaignPayment\] fulfill_checkout" /var/log/bpa-api.log | tail -10
-grep "\[checkout\] sms_dispatch" /var/log/bpa-api.log | tail -10
+grep "\[EPS callback\]" /var/log/furtail-api.log | tail -20
+grep "\[EPS redirect\]" /var/log/furtail-api.log | tail -20
+grep "\[CampaignPayment\] fulfill_checkout" /var/log/furtail-api.log | tail -10
+grep "\[checkout\] sms_dispatch" /var/log/furtail-api.log | tail -10
 ```
 
 **Pass patterns:**

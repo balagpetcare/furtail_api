@@ -10,7 +10,7 @@
 
 | Component | Strategy | Environment |
 |-----------|----------|-------------|
-| Backend API | Rolling update | Existing BPA infrastructure |
+| Backend API | Rolling update | Existing Furtail infrastructure |
 | Campaign Website | Static + SSR | New Vercel/CloudFlare deployment |
 | Database | Schema extension | Existing PostgreSQL |
 | Redis | Reuse existing | Existing Redis cluster |
@@ -42,7 +42,7 @@ Week 0:  Campaign go-live
 
 | Component | Specification | Purpose |
 |-----------|---------------|---------|
-| Campaign Website | Vercel Pro | vacc.bpa.com.bd |
+| Campaign Website | Vercel Pro | vacc.furtail.com.bd |
 | CDN | CloudFlare | Static assets, caching |
 | SMS Gateway | SSL Wireless | Campaign SMS |
 
@@ -171,10 +171,10 @@ src/api/v1/modules/
 CAMPAIGN_JWT_SECRET=<secure-random-string>
 CAMPAIGN_OTP_EXPIRY_SECONDS=300
 CAMPAIGN_CERT_SIGNING_KEY=<signing-key>
-CAMPAIGN_SITE_URL=https://vacc.bpa.com.bd
+CAMPAIGN_SITE_URL=https://vacc.furtail.com.bd
 
 # SMS gateway (if using different account)
-CAMPAIGN_SMS_SENDER_ID=BPA-VAC
+CAMPAIGN_SMS_SENDER_ID=Furtail-VAC
 
 # Feature flags
 FEATURE_CAMPAIGN_ENABLED=true
@@ -199,8 +199,8 @@ npm run test:e2e:staging
 ./scripts/deploy-production.sh
 
 # 5. Verify deployment
-curl https://api.bpa.com.bd/health
-curl https://api.bpa.com.bd/api/v1/campaigns
+curl https://api.furtail.com.bd/health
+curl https://api.furtail.com.bd/api/v1/campaigns
 ```
 
 ### 4.4 Blue-Green Deployment Script
@@ -214,7 +214,7 @@ set -e
 echo "Starting blue-green deployment..."
 
 # Current active environment
-CURRENT=$(kubectl get service bpa-api -o jsonpath='{.spec.selector.version}')
+CURRENT=$(kubectl get service furtail-api -o jsonpath='{.spec.selector.version}')
 echo "Current active: $CURRENT"
 
 # New environment
@@ -226,17 +226,17 @@ fi
 echo "Deploying to: $NEW"
 
 # Deploy new version
-kubectl set image deployment/bpa-api-$NEW \
-  bpa-api=bpa/api:$VERSION
+kubectl set image deployment/furtail-api-$NEW \
+  furtail-api=furtail/api:$VERSION
 
 # Wait for rollout
-kubectl rollout status deployment/bpa-api-$NEW --timeout=5m
+kubectl rollout status deployment/furtail-api-$NEW --timeout=5m
 
 # Run smoke tests on new deployment
-./scripts/smoke-test.sh bpa-api-$NEW
+./scripts/smoke-test.sh furtail-api-$NEW
 
 # Switch traffic
-kubectl patch service bpa-api -p \
+kubectl patch service furtail-api -p \
   "{\"spec\":{\"selector\":{\"version\":\"$NEW\"}}}"
 
 echo "Deployment complete. Active: $NEW"
@@ -246,7 +246,7 @@ echo "Old version ($CURRENT) available for rollback for 10 minutes"
 sleep 600
 
 # Scale down old version
-kubectl scale deployment/bpa-api-$CURRENT --replicas=0
+kubectl scale deployment/furtail-api-$CURRENT --replicas=0
 ```
 
 ---
@@ -258,7 +258,7 @@ kubectl scale deployment/bpa-api-$CURRENT --replicas=0
 ```json
 // vercel.json
 {
-  "name": "bpa-vaccination-campaign",
+  "name": "furtail-vaccination-campaign",
   "framework": "nextjs",
   "regions": ["sin1"],
   "env": {
@@ -283,7 +283,7 @@ kubectl scale deployment/bpa-api-$CURRENT --replicas=0
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://api.bpa.com.bd/api/v1/:path*"
+      "destination": "https://api.furtail.com.bd/api/v1/:path*"
     }
   ]
 }
@@ -292,9 +292,9 @@ kubectl scale deployment/bpa-api-$CURRENT --replicas=0
 ### 5.2 Domain Configuration
 
 ```
-vacc.bpa.com.bd -> Vercel (campaign site)
-staff.vacc.bpa.com.bd -> Vercel (staff portal)
-api.bpa.com.bd/api/v1/campaign-* -> Existing API
+vacc.furtail.com.bd -> Vercel (campaign site)
+staff.vacc.furtail.com.bd -> Vercel (staff portal)
+api.furtail.com.bd/api/v1/campaign-* -> Existing API
 ```
 
 ### 5.3 Deployment Steps
@@ -316,7 +316,7 @@ vercel
 vercel --prod
 
 # 6. Verify DNS
-dig vacc.bpa.com.bd
+dig vacc.furtail.com.bd
 ```
 
 ---
@@ -373,8 +373,8 @@ const tests = [
   { name: 'API Health', url: '/health', expect: 200 },
   { name: 'Campaign List', url: '/api/v1/campaigns', expect: 200 },
   { name: 'OTP Request', url: '/api/v1/campaign-otp', method: 'POST', expect: 200 },
-  { name: 'Campaign Page', url: 'https://vacc.bpa.com.bd', expect: 200 },
-  { name: 'Staff Login', url: 'https://staff.vacc.bpa.com.bd/login', expect: 200 },
+  { name: 'Campaign Page', url: 'https://vacc.furtail.com.bd', expect: 200 },
+  { name: 'Staff Login', url: 'https://staff.vacc.furtail.com.bd/login', expect: 200 },
 ];
 
 async function runSmokeTests() {
@@ -452,11 +452,11 @@ groups:
 
 # rollback.sh
 #!/bin/bash
-CURRENT=$(kubectl get service bpa-api -o jsonpath='{.spec.selector.version}')
+CURRENT=$(kubectl get service furtail-api -o jsonpath='{.spec.selector.version}')
 if [ "$CURRENT" == "blue" ]; then
-  kubectl patch service bpa-api -p '{"spec":{"selector":{"version":"green"}}}'
+  kubectl patch service furtail-api -p '{"spec":{"selector":{"version":"green"}}}'
 else
-  kubectl patch service bpa-api -p '{"spec":{"selector":{"version":"blue"}}}'
+  kubectl patch service furtail-api -p '{"spec":{"selector":{"version":"blue"}}}'
 fi
 ```
 

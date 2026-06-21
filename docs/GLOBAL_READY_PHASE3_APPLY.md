@@ -14,7 +14,7 @@
 | Policy Engine paymentMethods | `src/api/v1/services/policyEngine.service.ts` |
 | Payment gateway types | `src/api/v1/services/paymentGateway.types.ts` |
 | Web map picker | **bpa_web** `src/components/MapPicker.tsx` |
-| Flutter map picker | **bpa_app** `lib/features/location/presentation/location_picker_screen.dart`, `pubspec.yaml` (flutter_map, latlong2) |
+| Flutter map picker | **furtail_app** `lib/features/location/presentation/location_picker_screen.dart`, `pubspec.yaml` (flutter_map, latlong2) |
 
 ## Apply steps
 
@@ -35,7 +35,7 @@
    - MapPicker uses Leaflet + OSM; Confirm calls `GET /api/v1/locations/reverse?lat=&lng=` and updates lat/lng.
    - Ensure Leaflet CSS is loaded (e.g. in layout or `import 'leaflet/dist/leaflet.css'` in a client component).
 
-6. **Flutter (bpa_app)**
+6. **Flutter (furtail_app)**
    - `flutter pub get` (adds flutter_map, latlong2).
    - Use `LocationPickerScreen`: `Navigator.push(context, MaterialPageRoute(builder: (_) => LocationPickerScreen(initialLat: 23.81, initialLng: 90.41))).then((LatLng? result) { ... });`
 

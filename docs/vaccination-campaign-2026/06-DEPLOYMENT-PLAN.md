@@ -1,7 +1,7 @@
 # 06 — Deployment Plan
 
-**Campaign:** BPA 2026 Cat Flu + Rabies Vaccination  
-**Systems:** backend-api · bpa_web · vaccination_2026 · bpa_app (optional)
+**Campaign:** Furtail 2026 Cat Flu + Rabies Vaccination  
+**Systems:** backend-api · bpa_web · vaccination_2026 · furtail_app (optional)
 
 ---
 
@@ -26,7 +26,7 @@
      └─────────────┘  └─────────────┘  └────────────┘
               │
      ┌────────▼────┐
-     │   bpa_app   │  Optional; campaign-link JWT
+     │   furtail_app   │  Optional; campaign-link JWT
      │   (Flutter) │
      └─────────────┘
 ```
@@ -37,9 +37,9 @@
 
 | Env | API | Campaign site | Marketing landing | Web admin/staff | Purpose |
 |-----|-----|---------------|-------------------|-----------------|---------|
-| **Local** | `:3000` | `:3110` (`vaccination_2026`) | `:3101` (`bpa-landing`) | `:3100`–`:3107` (`bpa_web`) | Dev |
-| **Staging** | `api-staging.bpa…` | `vaccination-staging.bpa…` | `staging.bpa…` | `admin-staging.bpa…` | UAT, payment/SMS sandbox |
-| **Production** | `api.bpa…` | `vaccination.bpa…` | `bangladeshpetassociation.com` | `admin.bpa…` / staff URL | Live |
+| **Local** | `:3000` | `:3110` (`vaccination_2026`) | `:3101` (`furtail-landing`) | `:3100`–`:3107` (`bpa_web`) | Dev |
+| **Staging** | `api-staging.furtail…` | `vaccination-staging.furtail…` | `staging.furtail…` | `admin-staging.furtail…` | UAT, payment/SMS sandbox |
+| **Production** | `api.furtail…` | `vaccination.furtail…` | `furtail.world` | `admin.furtail…` / staff URL | Live |
 
 Port and domain reference: [../infrastructure/PORT_AND_DOMAIN_MAP.md](../infrastructure/PORT_AND_DOMAIN_MAP.md)
 
@@ -71,7 +71,7 @@ Deploy in this sequence to maintain API contract compatibility:
 | **4** | **Redis + worker** | Deploy `worker:notifications` | OTP test message |
 | **5** | **vaccination_2026** | `npm run build` → deploy | Landing `/` + `/book` |
 | **6** | **bpa_web** | Production build → deploy admin + staff | `/admin/campaigns`, `/staff/campaign` |
-| **7** | **bpa_app** (optional) | `flutter build apk` with `--dart-define-from-file=env/prod.json` | Hub smoke |
+| **7** | **furtail_app** (optional) | `flutter build apk` with `--dart-define-from-file=env/prod.json` | Hub smoke |
 | **8** | **Campaign activate** | Admin → set campaign ACTIVE, publish slots | Public list shows campaign |
 | **9** | **Provider webhooks** | Register payment + SMS callback URLs | Test callback 200 |
 
@@ -127,7 +127,7 @@ NEXT_PUBLIC_PROMO_VIDEO_URL=
 
 Uses same API base as existing admin/staff (`lib/api.ts` / env convention for deployment host).
 
-### bpa_app
+### furtail_app
 
 ```json
 {
@@ -220,7 +220,7 @@ Document results in `02-UAT-CHECKLIST.md`.
 | backend-api | Test `campaign|sms` → build → migrate deploy → deploy API → deploy worker |
 | vaccination_2026 | `npm run build` on PR; deploy on tag |
 | bpa_web | Build + lint; deploy on tag |
-| bpa_app | `flutter analyze lib/features/campaign` on PR; manual store release |
+| furtail_app | `flutter analyze lib/features/campaign` on PR; manual store release |
 
 ---
 

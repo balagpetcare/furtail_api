@@ -1,6 +1,6 @@
 # REALTIME_NOTIFICATIONS_IMPLEMENTATION.md
 Version: 1.0
-Scope: BPA/WPA multi-dashboard (Owner/Admin/Shop/Clinic/Producer/Country/Branch)
+Scope: Furtail/Furtail multi-dashboard (Owner/Admin/Shop/Clinic/Producer/Country/Branch)
 Backend: Express API (port 3000) + PostgreSQL + Prisma
 Frontends: Next.js multi apps (ports 3100+)
 

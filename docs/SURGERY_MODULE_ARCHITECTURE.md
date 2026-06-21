@@ -1,9 +1,9 @@
 ---
-title: BPA Enterprise Surgery Module - Architecture Plan
+title: Furtail Enterprise Surgery Module - Architecture Plan
 source: enterprise_surgery_architecture_5270c501.plan.md
 ---
 
-# BPA Enterprise Surgery Module - Architecture Plan
+# Furtail Enterprise Surgery Module - Architecture Plan
 
 ## 1. Existing Infrastructure Mapping
 

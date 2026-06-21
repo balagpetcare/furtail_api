@@ -1,4 +1,4 @@
-# BPA Vaccination Campaign V2 — Master Architecture Plan
+# Furtail Vaccination Campaign V2 — Master Architecture Plan
 
 **Version:** 2.0 (architecture only)  
 **Date:** 2026-06-04  
@@ -109,7 +109,7 @@ flowchart TB
     EXP[export.service]
   end
 
-  subgraph platform [BPA platform]
+  subgraph platform [Furtail platform]
     LM["/location-master — BD hierarchy"]
     ORD[Order / payments]
     NOTIF[BullMQ SMS worker]
@@ -504,7 +504,7 @@ OTP **must** write `CampaignSmsLog` in V2 (template `CAMPAIGN_OTP`).
 | `CampaignBooking.qrToken` | Booking | Venue check-in QR |
 | `bookingRef` + verification code | Derived from qrToken | Claim / SMS |
 | `CampaignPet.certificateToken` | Per pet | Short cert URL |
-| `Vaccination.certificateToken` | Permanent clinical record | BPA app history |
+| `Vaccination.certificateToken` | Permanent clinical record | Furtail app history |
 
 ### 9.2 Public surfaces
 

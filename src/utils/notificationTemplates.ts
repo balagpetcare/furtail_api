@@ -4,7 +4,7 @@
 export function renderNotificationEmail(type: string, data: { title: string; message: string; actionUrl?: string | null }): { subject: string; html: string; text: string } {
   const { title, message, actionUrl } = data;
   if (type === "OWNER_KYC_SUBMITTED") {
-    const subject = "BPA Owner KYC Submitted – Pending Review";
+    const subject = "Furtail Owner KYC Submitted – Pending Review";
     const body = [
       "Your Owner KYC has been submitted and is under review.",
       "You can continue setting up branches and products while we review.",
@@ -18,7 +18,7 @@ export function renderNotificationEmail(type: string, data: { title: string; mes
     `.trim();
     return { subject, html, text: body };
   }
-  const subject = title || "BPA Notification";
+  const subject = title || "Furtail Notification";
   const text = [message, actionUrl ? `Link: ${actionUrl}` : ""].filter(Boolean).join("\n\n");
   const html = `
     <h2>${escapeHtml(subject)}</h2>

@@ -6,7 +6,7 @@
 
 ## 1. Overview
 
-The Campaign Admin Portal enables BPA administrators to create, manage, and monitor vaccination campaigns. This extends the existing BPA web admin (`bpa_web`) with campaign-specific features.
+The Campaign Admin Portal enables Furtail administrators to create, manage, and monitor vaccination campaigns. This extends the existing Furtail web admin (`bpa_web`) with campaign-specific features.
 
 ---
 
@@ -15,7 +15,7 @@ The Campaign Admin Portal enables BPA administrators to create, manage, and moni
 ### 2.1 Navigation
 
 ```
-BPA Admin Panel
+Furtail Admin Panel
 ├── Dashboard
 ├── Campaigns (NEW)
 │   ├── All Campaigns
@@ -92,7 +92,7 @@ BPA Admin Panel
 │  ┌───────────────────────────────────────────────────────────────────────┐ │
 │  │ cat-flu-rabies-2026                                                   │ │
 │  └───────────────────────────────────────────────────────────────────────┘ │
-│  vacc.bpa.com.bd/campaigns/cat-flu-rabies-2026                            │
+│  vacc.furtail.com.bd/campaigns/cat-flu-rabies-2026                            │
 │                                                                             │
 │  Description                                                                │
 │  ┌───────────────────────────────────────────────────────────────────────┐ │
@@ -288,7 +288,7 @@ export function CampaignForm({
       <div>
         <label className="block text-sm font-medium mb-1">URL Slug *</label>
         <div className="flex items-center">
-          <span className="text-gray-500 text-sm mr-2">vacc.bpa.com.bd/campaigns/</span>
+          <span className="text-gray-500 text-sm mr-2">vacc.furtail.com.bd/campaigns/</span>
           <input
             {...register('slug')}
             className="flex-1 px-3 py-2 border rounded-lg"

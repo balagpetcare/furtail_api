@@ -1,11 +1,11 @@
-# BPA Update-only Patch Workflow
+# Furtail Update-only Patch Workflow
 
 ## Naming
-`bpa-<repo>-vMAJOR.MINOR.PATCH-update-only.zip`
+`furtail-<repo>-vMAJOR.MINOR.PATCH-update-only.zip`
 
 Examples:
-- `bpa-api-v10.0.1-update-only.zip`
-- `bpa-next-v0.1.1-update-only.zip`
+- `furtail-api-v10.0.1-update-only.zip`
+- `furtail-next-v0.1.1-update-only.zip`
 
 ## Contents
 ```

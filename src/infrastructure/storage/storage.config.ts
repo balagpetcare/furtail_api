@@ -38,7 +38,7 @@ function resolveStorageConfig() {
       bucketName: firstNonEmpty(
         process.env.S3_BUCKET,
         process.env.AWS_BUCKET_NAME,
-        "bpa-production-media"
+        "furtail-production-media"
       ),
       endpoint: firstNonEmpty(
         process.env.S3_ENDPOINT,
@@ -65,7 +65,7 @@ function resolveStorageConfig() {
     bucketName: firstNonEmpty(
       process.env.AWS_BUCKET_NAME,
       process.env.S3_BUCKET,
-      "bpa-pets"
+      "furtail-pets"
     ),
     endpoint: firstNonEmpty(
       process.env.AWS_ENDPOINT,

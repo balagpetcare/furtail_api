@@ -2,7 +2,7 @@
 
 **Repository:** `backend-api` (source of truth)  
 **Date:** 2026-06-07  
-**Scope:** BPA/WPA Vaccination 2026 — SMS architecture, BulkSMSBD status, usage analysis, gaps
+**Scope:** Furtail/Furtail Vaccination 2026 — SMS architecture, BulkSMSBD status, usage analysis, gaps
 
 ---
 

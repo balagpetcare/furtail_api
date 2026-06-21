@@ -20,18 +20,18 @@ export function renderTemplate(template: string, vars: TemplateVars): string {
 }
 
 const TEMPLATE_BODIES: Record<SmsTemplateKey, string> = {
-  OTP: "Your BPA OTP is {OTP}",
+  OTP: "Your Furtail OTP is {OTP}",
 
   PAYMENT_SUCCESS: `Dear {CustomerName},
 
-Your BPA Cat Flu & Rabies Vaccination booking has been confirmed.
+Your Furtail Cat Flu & Rabies Vaccination booking has been confirmed.
 
 Booking ID: {BookingId}
 Date: {Date}
 Location: {Location}
 
 Thank you.
-Bangladesh Pet Association`,
+Furtail`,
 
   PAYMENT_FAILED: `Dear {CustomerName},
 
@@ -40,7 +40,7 @@ Please try again.
 
 Booking ID: {BookingId}
 
-Bangladesh Pet Association`,
+Furtail`,
 
   BOOKING_REQUEST: `Dear {CustomerName},
 
@@ -60,17 +60,17 @@ Booking ID: {BookingId}`,
 
   REMINDER_24H: `Reminder:
 
-Your BPA vaccination appointment is tomorrow.
+Your Furtail vaccination appointment is tomorrow.
 
 Date: {Date}
 Time: {Time}
 Location: {Location}`,
 
-  CERTIFICATE_READY: `Your BPA vaccination certificate is ready.
+  CERTIFICATE_READY: `Your Furtail vaccination certificate is ready.
 
 Certificate ID: {CertificateId}
 
-Download from your BPA account.`,
+Download from your Furtail account.`,
 
   CAMPAIGN_ANNOUNCEMENT: "{message}",
 };

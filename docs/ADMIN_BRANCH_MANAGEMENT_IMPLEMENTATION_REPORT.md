@@ -40,7 +40,7 @@ The list page was rendering `b.isActive ? 'Active' : 'Inactive'`, but the `Branc
 
 ### Frontend (Web App)
 
-4. **`src/bpa/admin/lib/branchAdmin.ts`** (new)
+4. **`src/furtail/admin/lib/branchAdmin.ts`** (new)
    - `AdminBranchListRow` type definition
    - `resolveBranchLifecycleStatus()` — maps `BranchStatus` enum to UI label + badge variant
    - `parseCapabilitiesJson()` — handles both object map and legacy array formats

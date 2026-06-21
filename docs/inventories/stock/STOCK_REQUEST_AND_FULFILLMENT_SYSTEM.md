@@ -1,5 +1,5 @@
 # STOCK_REQUEST_AND_FULFILLMENT_SYSTEM.md
-## BPA / WPA — Stock Request → Owner Fulfillment → Dispatch → Branch Receive (Cursor AI Agent Playbook)
+## Furtail / Furtail — Stock Request → Owner Fulfillment → Dispatch → Branch Receive (Cursor AI Agent Playbook)
 **Goal:** Implement the complete “Branch requests stock (Product+Qty) → Owner fulfills with batch/expiry → Dispatch → Branch confirms receive” workflow **by reusing/modifying existing code** (no deletions).
 
 ---
@@ -95,7 +95,7 @@ Prove what is already implemented and what is missing, so we reuse and avoid dup
 
 ### Cursor AI Prompt (run first)
 ```
-You are working on my existing BPA/WPA repos (API + Next.js).
+You are working on my existing Furtail/Furtail repos (API + Next.js).
 
 Rules:
 - DO NOT delete code. Only merge/extend.

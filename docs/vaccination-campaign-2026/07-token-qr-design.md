@@ -115,10 +115,10 @@ function generateQrTokenUUID(): string {
 The QR code encodes a URL for universal scanning:
 
 ```
-https://vacc.bpa.com.bd/c/{qrToken}
+https://vacc.furtail.com.bd/c/{qrToken}
 
 Example:
-https://vacc.bpa.com.bd/c/a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6
+https://vacc.furtail.com.bd/c/a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6
 ```
 
 When scanned:
@@ -145,7 +145,7 @@ async function generateBookingQrCode(
   qrToken: string,
   options?: Partial<QrOptions>
 ): Promise<Buffer> {
-  const url = `https://vacc.bpa.com.bd/c/${qrToken}`;
+  const url = `https://vacc.furtail.com.bd/c/${qrToken}`;
   
   const defaultOptions: QrOptions = {
     width: 300,
@@ -170,7 +170,7 @@ async function generateBookingQrCode(
 
 // Generate as Data URL (for embedding in pages)
 async function generateQrCodeDataUrl(qrToken: string): Promise<string> {
-  const url = `https://vacc.bpa.com.bd/c/${qrToken}`;
+  const url = `https://vacc.furtail.com.bd/c/${qrToken}`;
   return QRCode.toDataURL(url, {
     width: 200,
     margin: 1,
@@ -180,7 +180,7 @@ async function generateQrCodeDataUrl(qrToken: string): Promise<string> {
 
 // Generate as SVG (for printing)
 async function generateQrCodeSvg(qrToken: string): Promise<string> {
-  const url = `https://vacc.bpa.com.bd/c/${qrToken}`;
+  const url = `https://vacc.furtail.com.bd/c/${qrToken}`;
   return QRCode.toString(url, {
     type: 'svg',
     margin: 1,
@@ -201,14 +201,14 @@ async function saveQrCode(qrToken: string): Promise<string> {
   // Upload to MinIO/S3
   const key = `qr/bookings/${qrToken}.png`;
   await s3.putObject({
-    Bucket: 'bpa-campaign',
+    Bucket: 'furtail-campaign',
     Key: key,
     Body: buffer,
     ContentType: 'image/png',
     CacheControl: 'public, max-age=31536000', // 1 year cache
   });
   
-  return `https://cdn.bpa.com.bd/${key}`;
+  return `https://cdn.furtail.com.bd/${key}`;
 }
 ```
 
@@ -278,10 +278,10 @@ function validateCertificateChecksum(token: string): boolean {
 ### 4.3 Certificate QR Code
 
 ```
-https://vacc.bpa.com.bd/verify/{certificateToken}
+https://vacc.furtail.com.bd/verify/{certificateToken}
 
 Example:
-https://vacc.bpa.com.bd/verify/CERT-XYZ789012345
+https://vacc.furtail.com.bd/verify/CERT-XYZ789012345
 ```
 
 ---
@@ -514,7 +514,7 @@ function signQrUrl(qrToken: string): string {
     .digest('hex')
     .slice(0, 8);
   
-  return `https://vacc.bpa.com.bd/c/${qrToken}?s=${signature}`;
+  return `https://vacc.furtail.com.bd/c/${qrToken}?s=${signature}`;
 }
 
 function verifyQrSignature(qrToken: string, signature: string): boolean {
@@ -567,7 +567,7 @@ async function checkScanRateLimit(
 ```
 ┌─────────────────────────────────────────────┐
 │                                             │
-│     BPA VACCINATION CAMPAIGN 2026           │
+│     Furtail VACCINATION CAMPAIGN 2026           │
 │                                             │
 │  ┌───────────────┐                          │
 │  │               │   Booking: VAC-ABC123    │
@@ -589,7 +589,7 @@ async function checkScanRateLimit(
 ### 8.2 SMS Format
 
 ```
-BPA Vaccination Booking Confirmed!
+Furtail Vaccination Booking Confirmed!
 
 Ref: VAC-ABC123
 Date: 15 Jul 2026
@@ -599,7 +599,7 @@ Venue: Dhaka Central Vet
 Pets: Mittens, Whiskers
 
 Show QR at venue:
-vacc.bpa.com.bd/c/a1b2c3d...
+vacc.furtail.com.bd/c/a1b2c3d...
 
 Questions? 09612-345678
 ```

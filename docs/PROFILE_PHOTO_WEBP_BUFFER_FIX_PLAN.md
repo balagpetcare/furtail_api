@@ -51,7 +51,7 @@
 3. Crop + upload **WEBP** source → success when Sharp decodes input; otherwise **400** + clean message.
 4. Retry after failed upload → works; loading state cleared in **`finally`** (existing).
 5. Remove photo → unchanged.
-6. **`bpa:me-refresh`** after success → header/account hub update (existing).
+6. **`furtail:me-refresh`** after success → header/account hub update (existing).
 
 ## Files changed (implementation)
 

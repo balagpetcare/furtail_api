@@ -1,4 +1,4 @@
-# BPA Prisma Schema Package (Clean)
+# Furtail Prisma Schema Package (Clean)
 
 This bundle contains the **final modular Prisma schema** plus **seeders** and **seed data** for Bangladesh locations + Dhaka City.
 

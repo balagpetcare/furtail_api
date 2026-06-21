@@ -84,7 +84,7 @@ async function generateAndSendOtp(phone: string, purpose: string): Promise<void>
   }));
   
   // Send via SMS
-  await smsService.send(phone, `Your BPA vaccination OTP: ${otp}. Valid for 5 minutes.`);
+  await smsService.send(phone, `Your Furtail vaccination OTP: ${otp}. Valid for 5 minutes.`);
 }
 
 async function verifyOtp(phone: string, otp: string, purpose: string): Promise<boolean> {
@@ -152,7 +152,7 @@ function verifyPublicSession(token: string): PublicSessionPayload {
 ### 2.3 Staff Authentication
 
 ```typescript
-// Staff uses existing BPA auth system
+// Staff uses existing Furtail auth system
 interface StaffTokenPayload {
   type: 'staff';
   userId: number;
@@ -168,7 +168,7 @@ interface StaffTokenPayload {
 }
 
 async function authenticateStaff(email: string, password: string): Promise<string> {
-  // Use existing BPA auth
+  // Use existing Furtail auth
   const user = await prisma.user.findFirst({
     where: {
       auth: { email },
@@ -623,8 +623,8 @@ app.use(helmet({
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'"], // For React
       styleSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", "data:", "https://cdn.bpa.com.bd"],
-      connectSrc: ["'self'", "https://api.bpa.com.bd"],
+      imgSrc: ["'self'", "data:", "https://cdn.furtail.com.bd"],
+      connectSrc: ["'self'", "https://api.furtail.com.bd"],
       frameSrc: ["'none'"],
       objectSrc: ["'none'"],
     },
@@ -643,8 +643,8 @@ app.use(helmet({
 // CORS configuration
 app.use(cors({
   origin: [
-    'https://vacc.bpa.com.bd',
-    'https://admin.bpa.com.bd',
+    'https://vacc.furtail.com.bd',
+    'https://admin.furtail.com.bd',
     process.env.NODE_ENV === 'development' && 'http://localhost:3000',
   ].filter(Boolean),
   credentials: true,

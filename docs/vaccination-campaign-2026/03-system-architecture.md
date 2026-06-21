@@ -29,7 +29,7 @@
 ├────────────────────────────────┼────────────────────────────────────────────┤
 │                                │                                            │
 │  ┌─────────────────────────────┼─────────────────────────────────────────┐  │
-│  │                    BPA BACKEND API                                     │  │
+│  │                    Furtail BACKEND API                                     │  │
 │  │                    (backend-api)                                       │  │
 │  │                    Express + TypeScript                                │  │
 │  │  ┌─────────────┬─────────────┬─────────────┬─────────────────────┐   │  │
@@ -89,7 +89,7 @@
 │          │                       │                       │                 │
 │          ▼                       ▼                       ▼                 │
 │  ┌───────────────┐     ┌───────────────┐     ┌───────────────┐            │
-│  │ Campaign Site │     │ Staff Portal  │     │  BPA Web      │            │
+│  │ Campaign Site │     │ Staff Portal  │     │  Furtail Web      │            │
 │  │  (Vercel/     │     │  (Vercel/     │     │  (Vercel)     │            │
 │  │   Docker)     │     │   Docker)     │     │               │            │
 │  │  Port: 443    │     │  Port: 443    │     │  Port: 443    │            │
@@ -99,7 +99,7 @@
 │                                  │                                          │
 │                                  ▼                                          │
 │          ┌─────────────────────────────────────────────────────┐           │
-│          │                 BPA BACKEND API                      │           │
+│          │                 Furtail BACKEND API                      │           │
 │          │              (Docker Container x2)                   │           │
 │          │                                                      │           │
 │          │  Instance 1 ─────────────┬─────────── Instance 2    │           │
@@ -328,7 +328,7 @@ PUBLIC USER FLOW (Pet Owners):
 STAFF USER FLOW:
 ────────────────────────────────
 
-[Email/Password] ──► [BPA Auth System] ──► [Validate Credentials]
+[Email/Password] ──► [Furtail Auth System] ──► [Validate Credentials]
                                                    │
                                                    ▼
                                           [Check Staff Permissions]
@@ -356,7 +356,7 @@ STAFF USER FLOW:
 │                            BOOKING DATA FLOW                                 │
 └─────────────────────────────────────────────────────────────────────────────┘
 
-[User] ──► [Campaign Site] ──► [BPA API] ──► [PostgreSQL]
+[User] ──► [Campaign Site] ──► [Furtail API] ──► [PostgreSQL]
                                     │
                                     ▼
                               [Validation]
@@ -416,7 +416,7 @@ STAFF USER FLOW:
 [Scan QR / Search Phone]
       │
       ▼
-[BPA API] ──► [Validate Booking]
+[Furtail API] ──► [Validate Booking]
       │
       ▼
 [Load Booking + Pets]

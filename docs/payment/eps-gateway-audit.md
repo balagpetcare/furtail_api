@@ -2,7 +2,7 @@
 
 **Repository:** `backend-api` (source of truth)  
 **Date:** 2026-06-07 (updated)  
-**Scope:** BPA/WPA Vaccination 2026 — payment architecture, EPS status, booking flow, gap analysis
+**Scope:** Furtail/Furtail Vaccination 2026 — payment architecture, EPS status, booking flow, gap analysis
 
 ---
 

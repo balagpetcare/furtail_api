@@ -1,4 +1,4 @@
-# BPA Clinic E2E Flow — Remediation Plan (Critical & High-Priority Gaps)
+# Furtail Clinic E2E Flow — Remediation Plan (Critical & High-Priority Gaps)
 
 **Source of truth:** [CLINIC_E2E_FLOW_IMPLEMENTATION_AUDIT.md](./CLINIC_E2E_FLOW_IMPLEMENTATION_AUDIT.md)  
 **Scope:** Close all critical and high-priority gaps so the clinic treatment workflow is fully operational.  

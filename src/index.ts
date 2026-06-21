@@ -1,4 +1,4 @@
-// Single stable entrypoint for BPA API
+// Single stable entrypoint for Furtail API
 // - Loads env via ./config/env
 // - Uses the hardened Express app (src/app.ts)
 // NOTE: Prisma middleware must be attached inside src/app.ts (before routes)
@@ -25,8 +25,8 @@ try {
 } catch (e) {
   console.error("[JOB_INIT] staffInviteCleanup failed", e);
 }
-// [WPA-CLEANUP Phase 3] expiryEngine disabled — imports inventory/ledger.service
-// which is an enterprise inventory module not required by WPA Flutter app.
+// [Furtail-CLEANUP Phase 3] expiryEngine disabled — imports inventory/ledger.service
+// which is an enterprise inventory module not required by Furtail Flutter app.
 // Remove this job entirely in Phase 4 when inventory module is deleted.
 // try {
 //   const { runExpiryEngineJob } = require("./common/jobs/expiryEngine.job");
@@ -39,8 +39,8 @@ try {
 // } catch (e) {
 //   console.error("[JOB_INIT] expiryEngine failed", e);
 // }
-// [WPA-CLEANUP Phase 3] ownersTeamAutomation disabled — enterprise owner/org module
-// not required by WPA Flutter app. Re-enable only if WPA admin panel needs it.
+// [Furtail-CLEANUP Phase 3] ownersTeamAutomation disabled — enterprise owner/org module
+// not required by Furtail Flutter app. Re-enable only if Furtail admin panel needs it.
 // try {
 //   const { startOwnersTeamAutomation } = require("./common/jobs/ownersTeamAutomation.job");
 //   startOwnersTeamAutomation();

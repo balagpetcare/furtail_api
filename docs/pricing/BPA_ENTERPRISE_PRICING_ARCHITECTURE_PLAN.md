@@ -1,4 +1,4 @@
-# BPA Enterprise Pricing Architecture — Master Plan
+# Furtail Enterprise Pricing Architecture — Master Plan
 
 **Status:** Implementation-ready reference
 **Audience:** Engineering, product, operations

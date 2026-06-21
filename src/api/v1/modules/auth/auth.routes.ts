@@ -14,7 +14,7 @@ router.post("/login", authLimiter, auth.login);
 
 // OAuth (Google id_token + Facebook access_token; Apple/Twitter stubbed until configured)
 router.use("/oauth", require("./oauth.routes"));
-// Mobile app aliases (bpa_app uses /auth/social/* — same handlers as /oauth/*)
+// Mobile app aliases (furtail_app uses /auth/social/* — same handlers as /oauth/*)
 router.use("/social", require("./oauth.routes"));
 
 // Staff-specific login and context

@@ -2,7 +2,7 @@ const router = require("express").Router();
 const countryScopeGuard = require("../../middlewares/countryScopeGuard");
 
 // =============================================================================
-// WPA MOBILE API — ACTIVE ROUTES (Phase 3 scope: WPA Flutter app only)
+// Furtail MOBILE API — ACTIVE ROUTES (Phase 3 scope: Furtail Flutter app only)
 // All enterprise modules (clinic, doctor, inventory, warehouse, owner-enterprise,
 // products, pricing, pos, orders, medicine, vendors, ai, producer, governance,
 // workspace) are NOT mounted here. Their module folders remain on disk for Phase 4.
@@ -25,7 +25,7 @@ router.use("/user/pets", require("./modules/pets/pets.routes"));
 router.use("/media", require("./modules/media/media.routes"));
 
 // ── Social (follow, friend requests, profile likes) ──────────────────────────
-// [WPA-FIX] This mount was missing — Flutter social features were returning 404.
+// [Furtail-FIX] This mount was missing — Flutter social features were returning 404.
 // Added in Phase 3 cleanup.
 router.use("/social", require("./modules/social/social.routes"));
 

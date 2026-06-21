@@ -1,5 +1,5 @@
 /**
- * Validates environment variables required for BPA API startup.
+ * Validates environment variables required for Furtail API startup.
  * Run: npm run validate:env
  * Loads .env from project root via dotenv (same as the API).
  */
@@ -257,7 +257,7 @@ function runChecks(): CheckResult[] {
 }
 
 function main(): void {
-  console.log("BPA API — environment validation\n");
+  console.log("Furtail API — environment validation\n");
   console.log(`NODE_ENV=${process.env.NODE_ENV || "development"}`);
   console.log(`PAYMENT_PROVIDER=${getActivePaymentProvider()}`);
   console.log(`STORAGE_PROVIDER=${getStorageProvider()}`);

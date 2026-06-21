@@ -16,7 +16,7 @@
 
 ### 2.1 X-Country-Code
 
-- **lib/countryContext.ts:** `getCountryCode()` (subdomain → localStorage `bpa_country_code` → default BD), `setCountryCode()`, `getApiHeaders()`.
+- **lib/countryContext.ts:** `getCountryCode()` (subdomain → localStorage `furtail_country_code` → default BD), `setCountryCode()`, `getApiHeaders()`.
 - **lib/api.ts:** All `apiGet`, `apiPost`, `apiPatch`, `apiPut`, `apiDelete` add headers from `getApiHeaders()` (includes `X-Country-Code`).
 - Pages that call API via `lib/api.ts` automatically send country. For raw `fetch`, add `headers: { "X-Country-Code": getCountryCode() }` or use `apiGet`/etc.
 
@@ -27,29 +27,29 @@
 
 ---
 
-## 3. bpa_app
+## 3. furtail_app
 
 ### 3.1 Country select (first launch)
 
-- **LocalStorage:** `setCountryCode()`, `getCountryCode()` (key `bpa_country_code`).
+- **LocalStorage:** `setCountryCode()`, `getCountryCode()` (key `furtail_country_code`).
 - **CountryPickerScreen:** First-launch screen; list BD, IN, US, AE; on select save and navigate to home or login.
 - **SplashScreen:** If `getCountryCode()` is null/empty, navigate to CountryPickerScreen; else proceed to token check.
 - **AppRouter:** Route `/country-picker` → CountryPickerScreen.
 
 ### 3.2 API header
 
-- **ApiClient:** In `_headers()`, read `bpa_country_code` from SharedPreferences and set `X-Country-Code` on all requests.
+- **ApiClient:** In `_headers()`, read `furtail_country_code` from SharedPreferences and set `X-Country-Code` on all requests.
 
 ### 3.3 Policy-based UI
 
 - **policy_features_provider.dart:** `policyFeaturesProvider` (FutureProvider) fetches `GET /api/v1/meta/features?countryCode=...` using stored country.
 - **BPACustomDrawer:** Optional `donationEnabled` (default true); when false, hide Donation, Wallet, Start Fund Raising, Payout Methods.
-- **BPAHomeScreen:** Use `Consumer` + `ref.watch(policyFeaturesProvider)` and pass `donationEnabled` to drawer.
+- **FurtailHomeScreen:** Use `Consumer` + `ref.watch(policyFeaturesProvider)` and pass `donationEnabled` to drawer.
 
 ---
 
 ## 4. Checkpoint
 
-1. **Web:** Call any API from a page that uses `lib/api.ts`; verify request includes `X-Country-Code` (e.g. BD). Change `localStorage.bpa_country_code` and confirm header changes.
+1. **Web:** Call any API from a page that uses `lib/api.ts`; verify request includes `X-Country-Code` (e.g. BD). Change `localStorage.furtail_country_code` and confirm header changes.
 2. **App:** Fresh install → country picker → select BD → home/login. Verify API requests include `X-Country-Code: BD`. Drawer shows Donation when policy has DONATION=true; hide when policy has DONATION=false (e.g. test with another country policy).
 3. **Features API:** `GET /api/v1/meta/features?countryCode=BD` returns `{ data: { countryCode: "BD", features: { DONATION: true, ... } } }`.

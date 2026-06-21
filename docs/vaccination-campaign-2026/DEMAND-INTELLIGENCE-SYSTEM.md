@@ -1,10 +1,10 @@
-# Demand Forecasting & Rollout Planning — BPA 2026
+# Demand Forecasting & Rollout Planning — Furtail 2026
 
 ## Overview
 
 Enterprise decision-support for national cat vaccination rollout: executive KPIs, geographic rankings, vaccine forecasting, resource planning, and actionable recommendations.
 
-## Architecture (BPA modular)
+## Architecture (Furtail modular)
 
 | Layer | File |
 |-------|------|
@@ -67,7 +67,7 @@ GET /api/v1/campaign/public/discovery/demand-heatmap?level=division|district|upa
 
 Route: `/admin/campaigns/[id]/demand-intelligence`
 
-Component: `src/bpa/campaign/admin/demand-forecast/DemandForecastDashboard.tsx`
+Component: `src/furtail/campaign/admin/demand-forecast/DemandForecastDashboard.tsx`
 
 Nav: **Demand forecasting**
 

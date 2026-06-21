@@ -41,7 +41,7 @@ Command: `npm run storage:test`
 | Public URL (buildPublicUrl + HEAD) | PASS | 19ms |
 | Delete (DeleteObject) | PASS | 47ms |
 
-**6/6 passed** against `http://192.168.10.111:9000` / bucket `bpa-pets`.
+**6/6 passed** against `http://192.168.10.111:9000` / bucket `furtail-pets`.
 
 ### Backblaze B2 (simulated config — fake credentials)
 
@@ -178,7 +178,7 @@ Used by:
 
 | Check | Status | Detail |
 |-------|--------|--------|
-| MinIO path-style URLs | Pass | `http://host:9000/bpa-pets/BD/media/...` |
+| MinIO path-style URLs | Pass | `http://host:9000/furtail-pets/BD/media/...` |
 | Key-first rewrite | Pass | `resolveClientMediaUrl` rebuilds from `key` |
 | B2 S3 path-style (API endpoint as base) | Pass | If `STORAGE_PUBLIC_URL` is S3 endpoint |
 | **B2 download-friendly URL** | **FAIL** | Double bucket when base already includes bucket |
@@ -188,13 +188,13 @@ Used by:
 When operators set (as documented):
 
 ```env
-STORAGE_PUBLIC_URL=https://f000.backblazeb2.com/file/bpa-production-media
+STORAGE_PUBLIC_URL=https://f000.backblazeb2.com/file/furtail-production-media
 ```
 
 The builder produces:
 
 ```text
-https://f000.backblazeb2.com/file/bpa-production-media/bpa-production-media/BD/...
+https://f000.backblazeb2.com/file/furtail-production-media/furtail-production-media/BD/...
                                       ^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^
                                       in STORAGE_PUBLIC_URL   appended again
 ```

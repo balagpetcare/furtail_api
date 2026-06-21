@@ -373,7 +373,7 @@ tested three `merchantTransactionId` cases:
 ### Why the booking flow failed but the diagnostic passed
 
 - Booking flow `merchantTransactionId` was derived from `req.referenceId`, which is the **fixed**
-  BPA order number `CKO-*` (length ≥ 10):
+  Furtail order number `CKO-*` (length ≥ 10):
 
   ```ts
   // BEFORE (buggy)
@@ -406,7 +406,7 @@ const preferredMerchantTransactionId =
   callerForcedMerchantTransactionId || generateEpsMerchantTransactionId();
 ```
 
-- `CustomerOrderId` still carries the BPA order number (`req.referenceId` = `CKO-*`) so reconciliation,
+- `CustomerOrderId` still carries the Furtail order number (`req.referenceId` = `CKO-*`) so reconciliation,
   webhook lookup, and redirect resolution are preserved (order notes also store `eps_merchant_txn:{id}`).
 - Retry safety net now also triggers on a body‑level "already used" reuse error, not only HTTP 404.
 
@@ -420,6 +420,6 @@ const preferredMerchantTransactionId =
 | Field | Value | Purpose |
 |-------|-------|---------|
 | `merchantTransactionId` | fresh numeric per init (e.g. `202606081843337884217`) | EPS uniqueness; verify/status key |
-| `CustomerOrderId` | BPA order number (`CKO-*`) | BPA reconciliation / webhook / redirect |
+| `CustomerOrderId` | Furtail order number (`CKO-*`) | Furtail reconciliation / webhook / redirect |
 | `orders.notes` `eps_merchant_txn:{id}` | the EPS merchant txn used | webhook/order linkage when EPS echoes only `MerchantTransactionId` |
 

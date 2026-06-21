@@ -9,7 +9,7 @@
 
 ## 1. Executive Summary
 
-The BPA/WPA stock request → allocation → dispatch → transfer → receive flow is **architecturally sound but incomplete and inconsistent in critical handoffs**. The system has THREE overlapping fulfillment paths:
+The Furtail/Furtail stock request → allocation → dispatch → transfer → receive flow is **architecturally sound but incomplete and inconsistent in critical handoffs**. The system has THREE overlapping fulfillment paths:
 
 1. **Legacy Direct Transfer** (`StockTransfer` module - marked deprecated)
 2. **Enterprise Allocation Flow** (StockRequest → AllocationPlan → PickList → StockDispatch)

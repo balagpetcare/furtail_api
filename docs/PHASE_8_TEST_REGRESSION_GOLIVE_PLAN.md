@@ -1,6 +1,6 @@
 # Phase 8 — Final Test, Regression & Go-Live Readiness Plan
 
-**Project:** BPA Warehouse & Internal Delivery System
+**Project:** Furtail Warehouse & Internal Delivery System
 **Phase:** 8 (Final hardening, QA, deployment readiness)
 **Date:** 2026-04-04
 **Related docs:** `VENDOR_RECEIVE_BRANCH_CONFIRMATION_PRICING_GOVERNANCE_PLAN.md`, `WAREHOUSE_INTERNAL_DELIVERY_AUDIT_AND_GAP_REPORT.md`

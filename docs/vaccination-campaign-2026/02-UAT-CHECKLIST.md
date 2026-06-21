@@ -1,6 +1,6 @@
 # 02 — UAT Checklist
 
-**Campaign:** BPA 2026 Cat Flu + Rabies Vaccination  
+**Campaign:** Furtail 2026 Cat Flu + Rabies Vaccination  
 **Audience:** Product owner, operations, clinic staff, sample pet owners  
 **Environment:** Staging (production-like data, real SMS/payment sandbox)
 
@@ -11,7 +11,7 @@
 | Persona | System | Account needed |
 |---------|--------|----------------|
 | Pet owner (new) | Landing | Phone only |
-| Pet owner (BPA app) | Flutter | BPA login + matching phone |
+| Pet owner (Furtail app) | Flutter | Furtail login + matching phone |
 | Clinic staff | Web Staff | Staff login + CampaignStaff row |
 | Campaign admin | Web Admin | Admin + `campaign.manage` |
 | Verifier (public) | Landing / verify URL | None |
@@ -115,12 +115,12 @@
 
 ---
 
-## Scenario 8 — BPA app linking
+## Scenario 8 — Furtail app linking
 
 | Step | Action | Expected result | Pass |
 |------|--------|-----------------|------|
 | 8.1 | Book on landing with phone X | Booking created | [ ] |
-| 8.2 | Login BPA app with same phone X | Hub loads | [ ] |
+| 8.2 | Login Furtail app with same phone X | Hub loads | [ ] |
 | 8.3 | Import banner → Import records | Bookings linked | [ ] |
 | 8.4 | My Campaigns shows booking | Matches ref | [ ] |
 | 8.5 | After vaccination, records + vaccine card | Certificate token visible | [ ] |

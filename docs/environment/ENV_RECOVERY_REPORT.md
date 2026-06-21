@@ -1,4 +1,4 @@
-# BPA Backend — Environment Recovery Report
+# Furtail Backend — Environment Recovery Report
 
 **Date:** 2026-06-05  
 **Project:** `backend-api`  

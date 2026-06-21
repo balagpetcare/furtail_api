@@ -60,4 +60,4 @@ if (bodyBuf.byteLength > 0) opts.body = bodyBuf;
 3. Cancel crop → no upload, no error state.
 4. Retry after failure → works.
 5. Remove photo → works.
-6. Account Hub + header avatar refresh → `bpa:me-refresh` → `useMe` re-fetches.
+6. Account Hub + header avatar refresh → `furtail:me-refresh` → `useMe` re-fetches.

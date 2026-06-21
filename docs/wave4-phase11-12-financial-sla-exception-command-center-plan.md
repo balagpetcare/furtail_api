@@ -327,10 +327,10 @@ Optional: **`ExpenseCharge`** for freight/duty lines tied to `GrnId` or `Purchas
 
 **Shared components:**
 
-- `src/bpa/owner/components/financial/CtsSummaryCards.tsx`
-- `src/bpa/owner/components/financial/CostBreakdownTable.tsx`
-- `src/bpa/shared/components/command-center/ExceptionInboxTable.tsx`
-- `src/bpa/shared/components/command-center/ExceptionDetailDrawer.tsx`
+- `src/furtail/owner/components/financial/CtsSummaryCards.tsx`
+- `src/furtail/owner/components/financial/CostBreakdownTable.tsx`
+- `src/furtail/shared/components/command-center/ExceptionInboxTable.tsx`
+- `src/furtail/shared/components/command-center/ExceptionDetailDrawer.tsx`
 
 **API client:** extend `app/owner/_lib/ownerApi.ts` / `lib/api.ts` with typed clients.
 

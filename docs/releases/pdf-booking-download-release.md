@@ -1,7 +1,7 @@
-# Release: BPA Booking PDF Download with QR Verification (API)
+# Release: Furtail Booking PDF Download with QR Verification (API)
 
 **Date:** 2026-06-07  
-**Project:** BPA Vaccination Campaign 2026  
+**Project:** Furtail Vaccination Campaign 2026  
 **Repository:** `backend-api`
 
 ---
@@ -17,9 +17,9 @@ New authenticated endpoint generates **A4 booking confirmation PDFs** from datab
 - `GET /api/v1/campaign/bookings/:reference/pdf`
 - Verification via query `code` / `verificationCode` **or** JWT `ownerUserId`
 - Rate limit: 10 requests / 15 min per `ref:ip`
-- PDF content: BPA branding, campaign, booking, customer, location, venue, schedule, pet count, payment, QR, BPA contact, footer
+- PDF content: Furtail branding, campaign, booking, customer, location, venue, schedule, pet count, payment, QR, Furtail contact, footer
 - QR payload: booking ID, verification code, verify URL
-- Filename: `BPA-Booking-{BOOKING_REF}.pdf`
+- Filename: `Furtail-Booking-{BOOKING_REF}.pdf`
 
 ---
 
@@ -29,7 +29,7 @@ New authenticated endpoint generates **A4 booking confirmation PDFs** from datab
 |------|--------|
 | `src/api/v1/modules/campaign/bookingPdf.service.ts` | PDF generation + payload loader |
 | `src/api/v1/modules/campaign/bookingPdf.controller.ts` | HTTP handler |
-| `src/api/v1/modules/campaign/bookingPdf.constants.ts` | BPA contact defaults |
+| `src/api/v1/modules/campaign/bookingPdf.constants.ts` | Furtail contact defaults |
 | `src/api/v1/modules/campaign/bookingPdf.service.test.ts` | Unit tests |
 | `src/api/v1/modules/campaign/campaign.routes.ts` | Route + optional auth |
 | `docs/booking-confirmation-pdf.md` | API reference |
@@ -66,8 +66,8 @@ No new dependencies added.
 
 | Variable | Purpose | Default |
 |----------|---------|---------|
-| `CAMPAIGN_LANDING_URL` | QR / verify URL in PDF | `https://vaccination.bangladeshpetassociation.com` |
-| `BPA_WEBSITE_URL` | PDF contact block | `https://bangladeshpetassociation.com` |
+| `CAMPAIGN_LANDING_URL` | QR / verify URL in PDF | `https://vaccination.furtail.world` |
+| `BPA_WEBSITE_URL` | PDF contact block | `https://furtail.world` |
 | `BPA_CONTACT_EMAIL` | PDF contact block | `vetandpetcare@gmail.com` |
 | `BPA_CONTACT_PHONE` | PDF contact block | `01575-008300` |
 | `BPA_CONTACT_ADDRESS` | PDF contact block | DIT Road, Dhaka address |

@@ -2,7 +2,7 @@
  * Idempotent bootstrap for campaign checkout payment branch anchor.
  *
  * Ensures:
- * - BPA organization exists (APPROVED)
+ * - Furtail organization exists (APPROVED)
  * - ACTIVE branch exists for campaign orders (orders.branchId)
  * - campaigns.organizerId linked when null
  *
@@ -13,18 +13,18 @@
  *   npm run bootstrap:campaign-branch
  *
  * Optional env:
- *   CAMPAIGN_ORGANIZER_ORG_NAME    (default: Bangladesh Pet Association)
- *   CAMPAIGN_CHECKOUT_BRANCH_CODE  (default: BPA-CAMPAIGN-CHECKOUT)
- *   CAMPAIGN_CHECKOUT_BRANCH_NAME  (default: BPA Campaign Operations (Central))
+ *   CAMPAIGN_ORGANIZER_ORG_NAME    (default: Furtail)
+ *   CAMPAIGN_CHECKOUT_BRANCH_CODE  (default: Furtail-CAMPAIGN-CHECKOUT)
+ *   CAMPAIGN_CHECKOUT_BRANCH_NAME  (default: Furtail Campaign Operations (Central))
  *   CAMPAIGN_PAYMENT_BRANCH_ID     (optional override — verified if set)
  */
 import "dotenv/config";
 import prisma from "../src/infrastructure/db/prismaClient";
 import { resolveCampaignPaymentBranch } from "../src/api/v1/modules/campaign/payment.service";
 
-export const DEFAULT_ORG_NAME = "Bangladesh Pet Association";
-export const DEFAULT_BRANCH_CODE = "BPA-CAMPAIGN-CHECKOUT";
-export const DEFAULT_BRANCH_NAME = "BPA Campaign Operations (Central)";
+export const DEFAULT_ORG_NAME = "Furtail";
+export const DEFAULT_BRANCH_CODE = "Furtail-CAMPAIGN-CHECKOUT";
+export const DEFAULT_BRANCH_NAME = "Furtail Campaign Operations (Central)";
 
 export type BootstrapCampaignBranchResult = {
   organization: {
@@ -143,7 +143,7 @@ async function ensureActiveCheckoutBranch(orgId: number, branchCode: string, bra
       capabilitiesJson: { campaignCheckout: true },
       featuresJson: {},
       addressJson: {
-        label: "BPA central campaign checkout",
+        label: "Furtail central campaign checkout",
         city: "Dhaka",
         country: "Bangladesh",
       },

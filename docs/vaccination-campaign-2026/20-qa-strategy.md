@@ -10,7 +10,7 @@
 
 - Ensure system functionality meets requirements
 - Validate user experience across devices
-- Verify integration with existing BPA systems
+- Verify integration with existing Furtail systems
 - Confirm security requirements are met
 - Validate performance under expected load
 
@@ -18,7 +18,7 @@
 
 | In Scope | Out of Scope |
 |----------|--------------|
-| Campaign booking flow | Existing BPA app features |
+| Campaign booking flow | Existing Furtail app features |
 | Staff portal | Existing admin panel |
 | Payment integration | Payment gateway internals |
 | SMS notifications | SMS provider infrastructure |
@@ -200,7 +200,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Campaign Booking Flow', () => {
   test('should complete booking from start to finish', async ({ page }) => {
     // Step 1: Land on campaign page
-    await page.goto('https://vacc.bpa.com.bd');
+    await page.goto('https://vacc.furtail.com.bd');
     await expect(page.locator('h1')).toContainText('Cat Vaccination');
     
     // Step 2: Click book now
@@ -240,7 +240,7 @@ test.describe('Campaign Booking Flow', () => {
   test('should work on mobile viewport', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 667 });
     
-    await page.goto('https://vacc.bpa.com.bd');
+    await page.goto('https://vacc.furtail.com.bd');
     
     // Mobile-specific checks
     await expect(page.locator('.mobile-menu-button')).toBeVisible();
@@ -343,7 +343,7 @@ export const options = {
 
 export default function () {
   // Simulate booking lookup
-  const res = http.get('https://api.bpa.com.bd/api/v1/campaigns/1');
+  const res = http.get('https://api.furtail.com.bd/api/v1/campaigns/1');
   
   check(res, {
     'status is 200': (r) => r.status === 200,
@@ -377,7 +377,7 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 test('booking page should be accessible', async ({ page }) => {
-  await page.goto('https://vacc.bpa.com.bd/book');
+  await page.goto('https://vacc.furtail.com.bd/book');
   
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa'])
@@ -439,8 +439,8 @@ test_data:
     - No-show booking
     
   users:
-    - New user (no BPA account)
-    - Existing BPA user
+    - New user (no Furtail account)
+    - Existing Furtail user
     - User with existing pets
     - Staff with various roles
 ```

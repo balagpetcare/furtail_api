@@ -33,8 +33,8 @@ The Campaign Configuration Engine has been implemented across Backend, Web Admin
 
 | Action | File | Description |
 |--------|------|-------------|
-| **MODIFY** | `src/bpa/campaign/admin/CampaignForm.tsx` | Added 8 toggle switches (Booking Open, Online Payment, Pay At Venue, Walk-In, Approval Required, Slot Required, Auto Close, Show Remaining Slots) + Max Capacity field; updated form values, defaults, payload serialization, and deserialization |
-| **MODIFY** | `src/bpa/campaign/admin/CampaignNav.tsx` | Added "Analytics" tab |
+| **MODIFY** | `src/furtail/campaign/admin/CampaignForm.tsx` | Added 8 toggle switches (Booking Open, Online Payment, Pay At Venue, Walk-In, Approval Required, Slot Required, Auto Close, Show Remaining Slots) + Max Capacity field; updated form values, defaults, payload serialization, and deserialization |
+| **MODIFY** | `src/furtail/campaign/admin/CampaignNav.tsx` | Added "Analytics" tab |
 | **MODIFY** | `lib/campaignApi.ts` | Added `CampaignConfigData` type, `campaignAdminGetConfig`, `campaignAdminUpdateConfig`, `campaignAdminSaveConfig`, `campaignAdminGetConfigHistory`, `CampaignAnalyticsData` type, `campaignAdminAnalytics` functions |
 | **MODIFY** | `app/admin/(larkon)/campaigns/[id]/edit/page.tsx` | Saves config alongside campaign update |
 | **MODIFY** | `app/admin/(larkon)/campaigns/new/page.tsx` | Saves config when creating new campaign |

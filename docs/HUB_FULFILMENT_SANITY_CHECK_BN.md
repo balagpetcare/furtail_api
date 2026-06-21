@@ -117,7 +117,7 @@
 
 ## ৬) আপডেটেড FINAL CHECKLIST
 
-**Backend (bpa_app_api):**
+**Backend (furtail_api):**
 - [x] `prisma/schema.prisma` — Order fulfilment + OrderSource
 - [x] `prisma/migrations/...` — migration
 - [x] `src/api/v1/modules/orders/orders.service.ts` — getOrders/getOrderById/createOrder/cancelOrder + getDefaultFulfilmentLocationForBranch; **cancelOrder idempotent (already CANCELLED → { order, performedCancel: false })**

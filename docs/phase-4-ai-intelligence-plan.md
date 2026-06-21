@@ -1,6 +1,6 @@
 # Phase 4: AI Demand Forecasting + Replenishment + Procurement + Control Tower
 
-Architecture reference for Phase-4: demand forecasting, replenishment suggestions, procurement intelligence, and network control tower. Implementation is anchored in BPA patterns (Prisma inventory/ledger/stock requests, service layer, job scripts, multi-panel Next.js). **No auto-purchase or auto-approval**; AI outputs are explainable; users can dismiss or accept suggestions into draft stock requests only.
+Architecture reference for Phase-4: demand forecasting, replenishment suggestions, procurement intelligence, and network control tower. Implementation is anchored in Furtail patterns (Prisma inventory/ledger/stock requests, service layer, job scripts, multi-panel Next.js). **No auto-purchase or auto-approval**; AI outputs are explainable; users can dismiss or accept suggestions into draft stock requests only.
 
 ## 1. Demand Forecasting Engine
 

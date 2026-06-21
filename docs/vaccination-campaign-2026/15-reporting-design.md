@@ -372,7 +372,7 @@ import ExcelJS from 'exceljs';
 
 async function exportToExcel(report: DailySummaryReport): Promise<Buffer> {
   const workbook = new ExcelJS.Workbook();
-  workbook.creator = 'BPA Campaign System';
+  workbook.creator = 'Furtail Campaign System';
   workbook.created = new Date();
   
   // Summary Sheet
@@ -686,7 +686,7 @@ const reportWorker = new Worker('campaign-reports', async (job) => {
       const recipients = await getCampaignAdminEmails(campaignId);
       
       await sendReportEmail(recipients, {
-        subject: `[BPA Campaign] Daily Summary - ${report.date}`,
+        subject: `[Furtail Campaign] Daily Summary - ${report.date}`,
         template: 'daily-summary',
         data: report,
       });
@@ -730,7 +730,7 @@ const reportWorker = new Worker('campaign-reports', async (job) => {
   </p>
   
   <p style="color: #6b7280; font-size: 12px;">
-    This is an automated report from BPA Vaccination Campaign System.
+    This is an automated report from Furtail Vaccination Campaign System.
   </p>
 </body>
 </html>
@@ -747,7 +747,7 @@ import { Server } from 'socket.io';
 
 const io = new Server(httpServer, {
   cors: {
-    origin: ['https://admin.bpa.com.bd'],
+    origin: ['https://admin.furtail.com.bd'],
     credentials: true,
   },
 });

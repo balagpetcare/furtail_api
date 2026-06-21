@@ -1,7 +1,7 @@
 # PRODUCER GOVERNANCE MASTER PLAN (Admin Panel থেকে Producer Panel Control)
 
 **Version:** v1.0  
-**System:** BPA/WPA (Backend API: `/api/v1`, Multi-panel Next.js: Admin panel on port `3103`)  
+**System:** Furtail/Furtail (Backend API: `/api/v1`, Multi-panel Next.js: Admin panel on port `3103`)  
 **Goal:** Admin Panel থেকে Producer Panel-এর সব গুরুত্বপূর্ণ কার্যক্রম **Observe + Control + Audit + Enforce** করা
 
 ---
@@ -371,7 +371,7 @@ Doc:
 
 ---
 
-## 10) Notes / Guardrails (BPA/WPA standards)
+## 10) Notes / Guardrails (Furtail/Furtail standards)
 
 - Backend enforcement mandatory; UI guard is not enough
 - Modular services recommended:

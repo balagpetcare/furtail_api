@@ -2,7 +2,7 @@
 
 **Date:** 2026-06-07  
 **Scope:** Phase B — URL-driven campaign slug routing for public booking  
-**Projects:** `vaccination_2026` (primary), `bpa-landing` (bridge CTAs)
+**Projects:** `vaccination_2026` (primary), `furtail-landing` (bridge CTAs)
 
 **Related:** [campaign-booking-id-zero-audit.md](./campaign-booking-id-zero-audit.md)
 
@@ -76,7 +76,7 @@ Implemented URL-first campaign slug routing so `/book` loads the campaign named 
 
 **Global chrome:** SiteHeader, SiteFooter, contact page, booking detail "Book another", book/success "Try again"
 
-**bpa-landing:** `getCampaignBookingUrl(campaignSlug)` appends `?campaign=`; promo + bridge pages pass `campaign.slug`
+**furtail-landing:** `getCampaignBookingUrl(campaignSlug)` appends `?campaign=`; promo + bridge pages pass `campaign.slug`
 
 ### 7. Config
 
@@ -142,7 +142,7 @@ Invalid `?campaign=` value → `INVALID_CAMPAIGN_SLUG_MESSAGE` (env not used).
 | Booking | `app/book/page.tsx`, `components/booking/BookingWizard.tsx` |
 | Landing load | `app/page.tsx`, `components/landing/CampaignBookingContext.tsx` |
 | CTAs | 20+ landing/global components (see §6) |
-| Bridge | `bpa-landing/src/config/campaign.ts`, promo + bridge pages |
+| Bridge | `furtail-landing/src/config/campaign.ts`, promo + bridge pages |
 | Tooling | `scripts/e2e-landing-validation.mjs`, `.env.example` |
 
 ---

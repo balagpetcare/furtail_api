@@ -5,7 +5,7 @@ Replace temporary name-based vaccine stock matching with explicit, durable mappi
 
 The desired end state is:
 - vaccination administration resolves stock candidates from a stored mapping first
-- mapping is safe for multi-tenant BPA/WPA orgs
+- mapping is safe for multi-tenant Furtail/Furtail orgs
 - admins/owners can review and manage mappings intentionally
 - the system can gradually migrate away from heuristic name/slug matching without breaking active clinics
 
@@ -87,7 +87,7 @@ This means each `VaccineType` directly points to one inventory item and optional
 - would force one global mapping for what is actually a tenant-specific inventory choice
 
 #### Verdict
-Not recommended for BPA/WPA multi-tenant inventory.
+Not recommended for Furtail/Furtail multi-tenant inventory.
 
 ### B. Create `VaccineInventoryMapping` table
 This means mapping rows are separate from `VaccineType`, typically linking:
@@ -121,7 +121,7 @@ This means a dedicated mapping table, but scoped by tenant context, such as:
 #### Pros
 - matches actual data ownership: `ClinicalItem` belongs to an org
 - allows one org to map Rabies Vaccine to a different inventory item than another org
-- safe for multi-tenant BPA/WPA deployment
+- safe for multi-tenant Furtail/Furtail deployment
 - allows phased evolution to branch overrides later if needed
 
 #### Cons

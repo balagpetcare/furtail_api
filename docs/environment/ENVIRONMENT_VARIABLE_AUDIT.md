@@ -1,4 +1,4 @@
-# BPA Backend — Environment Variable Audit
+# Furtail Backend — Environment Variable Audit
 
 **Generated:** 2026-06-05  
 **Scope:** `backend-api` (243 runtime + 1 Prisma-config variables discovered via static scan)  
@@ -77,7 +77,7 @@
 |----------|----------|---------|---------|---------|
 | `STORAGE_PROVIDER` | No | `minio` or `b2` | `src/infrastructure/storage/storage.config.ts` | `minio` |
 | `AWS_ENDPOINT` / `S3_ENDPOINT` | Yes* | S3 API endpoint | Storage config, bootstrap | MinIO: `http://localhost:9000` |
-| `AWS_BUCKET_NAME` / `S3_BUCKET` | Yes* | Bucket name | Storage config | `bpa-pets` / `bpa-production-media` |
+| `AWS_BUCKET_NAME` / `S3_BUCKET` | Yes* | Bucket name | Storage config | `furtail-pets` / `furtail-production-media` |
 | `AWS_ACCESS_KEY_ID` / `S3_ACCESS_KEY` | Yes* | Access key | Storage config | MinIO dev defaults in code |
 | `AWS_SECRET_ACCESS_KEY` / `S3_SECRET_KEY` | Yes* | Secret key | Storage config | MinIO dev defaults in code |
 | `AWS_REGION` / `S3_REGION` | No | AWS region string | Storage config | `us-east-1` / `us-east-005` |
@@ -148,7 +148,7 @@ When `REDIS_ENABLED=false`: in-memory cache, queues off, campaign OTP in-memory.
 | `SMTP_USER` | Email worker | SMTP username | `smtpMailer.ts` | — |
 | `SMTP_PASS` | Email worker | SMTP password | `smtpMailer.ts` | — |
 | `SMTP_SECURE` | No | TLS (`true`/`false`) | `smtpMailer.ts` | `false` |
-| `SMTP_FROM` | No | From header | `smtpMailer.ts` | `BPA <no-reply@localhost>` |
+| `SMTP_FROM` | No | From header | `smtpMailer.ts` | `Furtail <no-reply@localhost>` |
 
 Worker: `npm run worker:email` (requires Redis).
 
@@ -226,7 +226,7 @@ Worker: `npm run worker:email` (requires Redis).
 |----------|---------|---------|
 | `CAMPAIGN_JWT_SECRET` | OTP session JWT | Falls back to `JWT_SECRET` |
 | `CAMPAIGN_QR_SECRET` | QR ticket signing | Falls back to `JWT_SECRET` |
-| `CAMPAIGN_BASE_URL` | Ticket/QR links | `https://vaccine.bpa.org.bd` |
+| `CAMPAIGN_BASE_URL` | Ticket/QR links | `https://vaccine.furtail.org.bd` |
 | `CAMPAIGN_LANDING_URL` | Payment redirect | — |
 | `CAMPAIGN_TEST_OTP` | Dev-only fixed OTP | `123456` (non-prod) |
 | `CAMPAIGN_BOOKING_COUPONS` | JSON coupon array | — |

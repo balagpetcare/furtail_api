@@ -8,7 +8,7 @@
 |------------|---------|
 | Larkon / shared cropper | **Yes.** `src/media/cropper/ImageCropperModal.tsx` uses `react-easy-crop` (zoom, rotate, square aspect via config). `useImageCropper` exposes `openCropper(file, config) → Promise<CropResult \| null>`. |
 | Presets | **`getCropperConfig("avatar")`** in `src/media/cropper/config-presets.ts` — fixed 1:1, WebP output up to 512×512 client-side. |
-| Other croppers | `ImageUploadWithCrop.jsx`, `app/owner/_components/branch/ImageUploadField.tsx`, `src/bpa/components/media/ImageUploadCard.jsx` — redundant; **not** used for account hub. |
+| Other croppers | `ImageUploadWithCrop.jsx`, `app/owner/_components/branch/ImageUploadField.tsx`, `src/furtail/components/media/ImageUploadCard.jsx` — redundant; **not** used for account hub. |
 | Compression | **Client:** crop modal encodes to WebP/JPEG/PNG per preset (`ImageCropperModal` `cropToBlob`). **No** separate `browser-image-compression` library. |
 | Upload helpers | `src/lib/meProfileApi.ts` (`mePostForm`), `src/lib/profilePhotoUpload.ts` (limits + MIME allowlist). |
 | Docs | `bpa_web/docs/IMAGE_CROPPER_SYSTEM.md` describes the unified cropper + `ImageUploader`. |
@@ -66,7 +66,7 @@
 2. Validate type/size (same limits as backend pre-crop).
 3. **`openCropper(file, getCropperConfig("avatar"))`** — modal: square crop, zoom, rotate; Cancel → `null`, no state break.
 4. On confirm → upload **`cropped.file`** via `FormData` to `/profile/photo`.
-5. On success → `loadAll()` + `window.dispatchEvent('bpa:me-refresh')` for header / `useMe` consumers.
+5. On success → `loadAll()` + `window.dispatchEvent('furtail:me-refresh')` for header / `useMe` consumers.
 
 ---
 
@@ -98,7 +98,7 @@
 |-----|------------|
 | Topbar profile dropdown “jumps” / scroll on open | **Root cause:** `DropdownToggle as="a"` behaves like a link; Bootstrap/React-Bootstrap often implies `href="#"` semantics → **scroll to top** (felt as upward movement). **Fix:** `DropdownToggle as="button" type="button"` with `aria-label` / `aria-haspopup="menu"`. |
 | Avatar layout shift (load / refresh) | Fixed **32×32** (Larkon `ProfileDropdown`) and **34×34** (owner `TopProfileMenu`) slots with explicit `width`/`height`, `flexShrink: 0`, `decoding="async"`, and **removing** `stopPropagation` on the avatar `<img>` in `TopProfileMenu` so the whole control toggles reliably. |
-| Stale `/auth/me` after upload | `useMe` `fetch` now uses **`cache: 'no-store'`** so browsers do not serve cached identity after `bpa:me-refresh`. |
+| Stale `/auth/me` after upload | `useMe` `fetch` now uses **`cache: 'no-store'`** so browsers do not serve cached identity after `furtail:me-refresh`. |
 | Account Hub edge cases | Empty file rejection; **try/catch** around `openCropper`; **`messageFromMeDeleteError`** for structured delete errors; **image `key`** on hub preview when URL/source changes. |
 
 ### Panel coverage

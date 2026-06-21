@@ -2,7 +2,7 @@
 
 **Reference:** [LOCATION_SPEC.md](./LOCATION_SPEC.md), [LOCATION_AUDIT.md](./LOCATION_AUDIT.md)
 
-This plan describes how to move from the current location usage to the WPA approach (Place, AdminUnit, ServiceArea, CountryPolicy) **without deleting existing data**. Existing data will be preserved and upgraded in place where needed.
+This plan describes how to move from the current location usage to the Furtail approach (Place, AdminUnit, ServiceArea, CountryPolicy) **without deleting existing data**. Existing data will be preserved and upgraded in place where needed.
 
 ---
 

@@ -1,6 +1,6 @@
 /**
  * Campaign SMS Service
- * Integrates with existing BPA notification infrastructure
+ * Integrates with existing Furtail notification infrastructure
  * Uses BullMQ for queue-based SMS delivery
  */
 
@@ -14,9 +14,9 @@ import { interpolateTemplate, normalizePhone, formatDate } from "./campaign.util
 import { generateVerificationCode } from "./qr.service";
 import { formatTicketUrlsForSms } from "./ticket.service";
 
-// Default SMS templates (BulkSMSBD / BPA standard)
+// Default SMS templates (BulkSMSBD / Furtail standard)
 const DEFAULT_TEMPLATES: Record<SmsTemplateCode, string> = {
-  OTP: "Your BPA OTP is {{otp}}",
+  OTP: "Your Furtail OTP is {{otp}}",
   BOOKING_REQUEST: `Dear {{ownerName}},
 
 Your booking request has been received.
@@ -26,14 +26,14 @@ Booking ID: {{bookingRef}}
 You will receive further updates shortly.`,
   PAYMENT_SUCCESS: `Dear {{ownerName}},
 
-Your BPA Cat Flu & Rabies Vaccination booking has been confirmed.
+Your Furtail Cat Flu & Rabies Vaccination booking has been confirmed.
 
 Booking ID: {{bookingRef}}
 Date: {{date}}
 Location: {{location}}
 
 Thank you.
-Bangladesh Pet Association`,
+Furtail`,
   PAYMENT_FAILED: `Dear {{ownerName}},
 
 Your payment could not be completed.
@@ -41,21 +41,21 @@ Please try again.
 
 Booking ID: {{bookingRef}}
 
-Bangladesh Pet Association`,
+Furtail`,
   BOOKING_CONFIRMED: `Dear {{ownerName}},
 
-Your BPA Cat Flu & Rabies Vaccination booking has been confirmed.
+Your Furtail Cat Flu & Rabies Vaccination booking has been confirmed.
 
 Booking ID: {{bookingRef}}
 Date: {{date}}
 Location: {{location}}
 
 Thank you.
-Bangladesh Pet Association`,
+Furtail`,
   BOOKING_ZONE_INTEREST:
-    "BPA Vaccination: Interest registered! Ref {{bookingRef}}. Zone: {{zoneName}}, Area: {{bookingArea}}. {{catCount}} cat(s). We will SMS your venue, date & time before the campaign.",
+    "Furtail Vaccination: Interest registered! Ref {{bookingRef}}. Zone: {{zoneName}}, Area: {{bookingArea}}. {{catCount}} cat(s). We will SMS your venue, date & time before the campaign.",
   VENUE_ASSIGNED:
-    "BPA Vaccination: Your appointment is set! Ref {{bookingRef}}. {{catCount}} cat(s) — {{bookingArea}} on {{date}} at {{location}}, {{time}}.",
+    "Furtail Vaccination: Your appointment is set! Ref {{bookingRef}}. {{catCount}} cat(s) — {{bookingArea}} on {{date}} at {{location}}, {{time}}.",
   SLOT_CONFIRMED: `Your vaccination slot has been confirmed.
 
 Date: {{date}}
@@ -65,20 +65,20 @@ Location: {{location}}
 Booking ID: {{bookingRef}}`,
   REMINDER_24H: `Reminder:
 
-Your BPA vaccination appointment is tomorrow.
+Your Furtail vaccination appointment is tomorrow.
 
 Date: {{date}}
 Time: {{time}}
 Location: {{location}}`,
-  REMINDER_2H: "BPA Vaccination: {{petName}} in 2 hours at {{location}}. Please arrive 10 min early. Ref: {{bookingRef}}",
-  VACCINATION_COMPLETE: "BPA Vaccination Complete! {{petName}} vaccinated. Certificate: {{certUrl}} Valid for 1 year.",
-  CERTIFICATE_READY: `Your BPA vaccination certificate is ready.
+  REMINDER_2H: "Furtail Vaccination: {{petName}} in 2 hours at {{location}}. Please arrive 10 min early. Ref: {{bookingRef}}",
+  VACCINATION_COMPLETE: "Furtail Vaccination Complete! {{petName}} vaccinated. Certificate: {{certUrl}} Valid for 1 year.",
+  CERTIFICATE_READY: `Your Furtail vaccination certificate is ready.
 
 Certificate ID: {{certificateId}}
 
-Download from your BPA account.`,
-  BOOKING_CANCELLED: "BPA Vaccination: Your booking ({{bookingRef}}) has been cancelled. Rebook at {{siteUrl}}",
-  NO_SHOW: "BPA Vaccination: You missed your appointment ({{bookingRef}}). Please rebook at {{siteUrl}}",
+Download from your Furtail account.`,
+  BOOKING_CANCELLED: "Furtail Vaccination: Your booking ({{bookingRef}}) has been cancelled. Rebook at {{siteUrl}}",
+  NO_SHOW: "Furtail Vaccination: You missed your appointment ({{bookingRef}}). Please rebook at {{siteUrl}}",
   ANNOUNCEMENT: "{{message}}",
 };
 
@@ -88,7 +88,7 @@ Download from your BPA account.`,
 
 /**
  * Send SMS using campaign templates
- * Integrates with existing BPA notification queue
+ * Integrates with existing Furtail notification queue
  */
 export async function sendCampaignSms(input: SendSmsInput): Promise<{
   success: boolean;
@@ -273,7 +273,7 @@ export async function sendBookingConfirmation(bookingId: number): Promise<void> 
     return sendZoneInterestConfirmation(bookingId);
   }
 
-  const ticketBase = process.env.CAMPAIGN_BASE_URL || "https://vaccine.bpa.org.bd";
+  const ticketBase = process.env.CAMPAIGN_BASE_URL || "https://vaccine.furtail.org.bd";
   const ticketUrls = formatTicketUrlsForSms(
     booking.pets
       .filter((p) => p.ticketToken)
@@ -367,7 +367,7 @@ export async function sendZoneInterestConfirmation(bookingId: number): Promise<v
   });
   if (!booking) return;
 
-  const siteUrl = process.env.CAMPAIGN_LANDING_URL || process.env.CAMPAIGN_BASE_URL || "https://vaccine.bpa.org.bd";
+  const siteUrl = process.env.CAMPAIGN_LANDING_URL || process.env.CAMPAIGN_BASE_URL || "https://vaccine.furtail.org.bd";
   const verificationCode = generateVerificationCode(booking.qrToken);
   const zoneName = booking.coverageZoneName ?? "Your zone";
   const bookingArea = booking.bookingArea ?? zoneName;
@@ -466,7 +466,7 @@ export async function sendBookingCancelled(bookingId: number): Promise<void> {
 
   if (!booking) return;
 
-  const siteUrl = process.env.CAMPAIGN_BASE_URL || "https://vaccine.bpa.org.bd";
+  const siteUrl = process.env.CAMPAIGN_BASE_URL || "https://vaccine.furtail.org.bd";
 
   await sendCampaignSms({
     phone: booking.ownerPhone,
@@ -492,7 +492,7 @@ export async function sendNoShowNotification(bookingId: number): Promise<void> {
 
   if (!booking) return;
 
-  const siteUrl = process.env.CAMPAIGN_BASE_URL || "https://vaccine.bpa.org.bd";
+  const siteUrl = process.env.CAMPAIGN_BASE_URL || "https://vaccine.furtail.org.bd";
 
   await sendCampaignSms({
     phone: booking.ownerPhone,

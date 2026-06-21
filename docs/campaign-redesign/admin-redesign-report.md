@@ -1,6 +1,6 @@
 # Campaign Admin Module — Redesign Report
 
-**Project:** BPA 2026 Vaccination Campaign — Admin (`bpa_web`)  
+**Project:** Furtail 2026 Vaccination Campaign — Admin (`bpa_web`)  
 **Date:** 2026-06-04  
 **Status:** Planning only — no code modified.  
 **Companion docs:** `docs/campaign-redesign/master-plan.md`, `docs/campaign-redesign/location-migration-report.md`
@@ -35,7 +35,7 @@ This document is the implementation blueprint. Execution must follow `docs/BPA_S
 
 | Issue | Evidence |
 |-------|----------|
-| **18 horizontal tabs** wrap on small screens; Bookings is last | `src/bpa/campaign/admin/CampaignNav.tsx` |
+| **18 horizontal tabs** wrap on small screens; Bookings is last | `src/furtail/campaign/admin/CampaignNav.tsx` |
 | **No shared layout** — every page imports `CampaignNav` manually | 19 pages grep `CampaignNav` |
 | **Settings split across 3 routes** | `edit`, `pricing`, and config fields buried in one form |
 | **Slug editing awkward** | Slug in `CampaignForm` but **stripped on save** in `edit/page.tsx` (`delete payload.slug`) |
@@ -166,15 +166,15 @@ This document is the implementation blueprint. Execution must follow `docs/BPA_S
 | File | Purpose |
 |------|---------|
 | `app/admin/(larkon)/campaigns/[id]/layout.tsx` | Campaign shell: sidebar + optional header strip |
-| `src/bpa/campaign/admin/campaignAdminNavConfig.ts` | Sidebar groups + hrefs + icons (single source of truth) |
-| `src/bpa/campaign/admin/CampaignSidebar.tsx` | Renders nav from config; active state via `usePathname` |
-| `src/bpa/campaign/admin/CampaignShellHeader.tsx` | Campaign name, `CampaignStatusBadge`, Activate/Pause shortcuts |
+| `src/furtail/campaign/admin/campaignAdminNavConfig.ts` | Sidebar groups + hrefs + icons (single source of truth) |
+| `src/furtail/campaign/admin/CampaignSidebar.tsx` | Renders nav from config; active state via `usePathname` |
+| `src/furtail/campaign/admin/CampaignShellHeader.tsx` | Campaign name, `CampaignStatusBadge`, Activate/Pause shortcuts |
 
 ### 5.2 Deprecate (not delete)
 
 | File | Action |
 |------|--------|
-| `src/bpa/campaign/admin/CampaignNav.tsx` | Stop importing in pages; keep file until redirects verified; then add `@deprecated` comment |
+| `src/furtail/campaign/admin/CampaignNav.tsx` | Stop importing in pages; keep file until redirects verified; then add `@deprecated` comment |
 
 ### 5.3 Layout behavior
 
@@ -200,7 +200,7 @@ export default function CampaignDetailLayout({ children }) {
 ### 5.4 Sidebar config (single source)
 
 ```ts
-// src/bpa/campaign/admin/campaignAdminNavConfig.ts (conceptual)
+// src/furtail/campaign/admin/campaignAdminNavConfig.ts (conceptual)
 export type CampaignNavItem = {
   key: string
   label: string
@@ -404,7 +404,7 @@ Recommendation: **Sidebar children only** (Slug Editor, Booking Controls as sepa
 
 **Phase A (layout):** Templates tab only (current behavior). Other tabs show “Coming soon” or hidden until backend ready.
 
-**Does not duplicate:** OTP settings (platform-level) or generic BPA notification admin.
+**Does not duplicate:** OTP settings (platform-level) or generic Furtail notification admin.
 
 ---
 
@@ -469,7 +469,7 @@ Recommendation: **Sidebar children only** (Slug Editor, Booking Controls as sepa
 | Pre-registrations | pre-reg export | Pre-registrations page |
 | Demand | demand-intelligence | Demand map |
 
-**Single implementation:** `src/bpa/campaign/admin/campaignExportActions.ts` — functions called from **both** Reports and Exports.
+**Single implementation:** `src/furtail/campaign/admin/campaignExportActions.ts` — functions called from **both** Reports and Exports.
 
 **Does not duplicate:** Reports preview charts (Reports = view + generate; Exports = download only).
 
@@ -504,13 +504,13 @@ Recommendation: **Sidebar children only** (Slug Editor, Booking Controls as sepa
 
 | Component | Path |
 |-----------|------|
-| `AdminPageShell` | `@/src/bpa/admin/components/AdminPageShell` |
-| `DataTable` | `@/src/bpa/admin/components/DataTable` |
-| `AdminFiltersBar` | `@/src/bpa/admin/components/AdminFiltersBar` |
-| `ErrorState` | `@/src/bpa/admin/components/ErrorState` |
-| `CampaignStatusBadge` | `@/src/bpa/campaign/admin/CampaignStatusBadge` |
-| `CampaignDashboardWidgets` | `@/src/bpa/campaign/admin/CampaignDashboardWidgets` |
-| `CampaignTrendChart` | `@/src/bpa/campaign/admin/CampaignTrendChart` |
+| `AdminPageShell` | `@/src/furtail/admin/components/AdminPageShell` |
+| `DataTable` | `@/src/furtail/admin/components/DataTable` |
+| `AdminFiltersBar` | `@/src/furtail/admin/components/AdminFiltersBar` |
+| `ErrorState` | `@/src/furtail/admin/components/ErrorState` |
+| `CampaignStatusBadge` | `@/src/furtail/campaign/admin/CampaignStatusBadge` |
+| `CampaignDashboardWidgets` | `@/src/furtail/campaign/admin/CampaignDashboardWidgets` |
+| `CampaignTrendChart` | `@/src/furtail/campaign/admin/CampaignTrendChart` |
 
 ### 7.2 Refactor (split, not duplicate)
 
@@ -660,14 +660,14 @@ D:\BPA_Data\bpa_web\app\admin\(larkon)\campaigns\[id]\settings\page.tsx
 D:\BPA_Data\bpa_web\app\admin\(larkon)\campaigns\[id]\settings\slug\page.tsx
 D:\BPA_Data\bpa_web\app\admin\(larkon)\campaigns\[id]\settings\booking\page.tsx
 D:\BPA_Data\bpa_web\app\admin\(larkon)\campaigns\[id]\exports\page.tsx
-D:\BPA_Data\bpa_web\src\bpa\campaign\admin\campaignAdminNavConfig.ts
-D:\BPA_Data\bpa_web\src\bpa\campaign\admin\CampaignSidebar.tsx
-D:\BPA_Data\bpa_web\src\bpa\campaign\admin\CampaignShellHeader.tsx
-D:\BPA_Data\bpa_web\src\bpa\campaign\admin\CampaignSettingsFields.tsx      # extracted
-D:\BPA_Data\bpa_web\src\bpa\campaign\admin\CampaignSlugFields.tsx           # extracted
-D:\BPA_Data\bpa_web\src\bpa\campaign\admin\CampaignBookingControlsFields.tsx # extracted
-D:\BPA_Data\bpa_web\src\bpa\campaign\admin\campaignExportActions.ts         # shared exports
-D:\BPA_Data\bpa_web\src\bpa\campaign\admin\SmsCenterTabs.tsx                 # optional
+D:\BPA_Data\bpa_web\src\furtail\campaign\admin\campaignAdminNavConfig.ts
+D:\BPA_Data\bpa_web\src\furtail\campaign\admin\CampaignSidebar.tsx
+D:\BPA_Data\bpa_web\src\furtail\campaign\admin\CampaignShellHeader.tsx
+D:\BPA_Data\bpa_web\src\furtail\campaign\admin\CampaignSettingsFields.tsx      # extracted
+D:\BPA_Data\bpa_web\src\furtail\campaign\admin\CampaignSlugFields.tsx           # extracted
+D:\BPA_Data\bpa_web\src\furtail\campaign\admin\CampaignBookingControlsFields.tsx # extracted
+D:\BPA_Data\bpa_web\src\furtail\campaign\admin\campaignExportActions.ts         # shared exports
+D:\BPA_Data\bpa_web\src\furtail\campaign\admin\SmsCenterTabs.tsx                 # optional
 ```
 
 ### 11.2 Modify (remove CampaignNav import)
@@ -692,7 +692,7 @@ D:\BPA_Data\bpa_web\app\admin\(larkon)\campaigns\[id]\audit\page.tsx
 ### 11.3 Modify (logic)
 
 ```
-D:\BPA_Data\bpa_web\src\bpa\campaign\admin\CampaignForm.tsx        # split / slim
+D:\BPA_Data\bpa_web\src\furtail\campaign\admin\CampaignForm.tsx        # split / slim
 D:\BPA_Data\bpa_web\app\admin\(larkon)\campaigns\[id]\edit\page.tsx  # → redirect only
 D:\BPA_Data\bpa_web\app\admin\(larkon)\campaigns\new\page.tsx       # use composed form
 D:\BPA_Data\bpa_web\lib\campaignApi.ts                           # export helpers only when needed
@@ -771,7 +771,7 @@ Implement **AD-1 through AD-3** before or in parallel with master-plan R4; do no
 - `docs/campaign-redesign/master-plan.md` — §1.4 page inventory, §9.1 IA, Phase R4
 - `docs/campaign-redesign/location-migration-report.md` — public booking location picker (separate from admin)
 - `docs/vaccination-campaign-2026/12-web-admin-design.md` — original design intent
-- `D:\BPA_Data\bpa_web\src\bpa\campaign\admin\CampaignNav.tsx` — current tabs (to be replaced)
+- `D:\BPA_Data\bpa_web\src\furtail\campaign\admin\CampaignNav.tsx` — current tabs (to be replaced)
 - `D:\BPA_Data\bpa_web\src\components\branch\StaffBranchSidebar.jsx` — sidebar pattern reference
 - `D:\BPA_Data\bpa_web\app\admin\(larkon)\medicine\_lib\navConfig.ts` — workspace nav config pattern
 

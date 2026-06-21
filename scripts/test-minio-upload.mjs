@@ -21,7 +21,7 @@ async function main() {
 
   const rand = crypto.randomBytes(6).toString("hex");
   const key = `BD/media/0/test_${Date.now()}_${rand}.txt`;
-  const body = Buffer.from(`bpa-storage-upload-test-${cfg.provider}`);
+  const body = Buffer.from(`furtail-storage-upload-test-${cfg.provider}`);
   await client.send(
     new PutObjectCommand({
       Bucket: cfg.bucket,

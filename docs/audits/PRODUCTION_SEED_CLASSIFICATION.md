@@ -1,4 +1,4 @@
-# Production Seed Classification (BPA / WPA)
+# Production Seed Classification (Furtail / Furtail)
 
 **Date:** 2026-06-06  
 **Repository:** `backend-api`  
@@ -165,7 +165,7 @@
 | `seedClinicalVaccineItems.ts` | Org-level vaccine clinical items | `clinicalItem`, `ORG_ID` | Partial | Opt-in | Medium — creates items |
 | `seedInboundReceiveQaFixtures.ts` | QA diagnostics log | none (read) | Yes | Yes | None |
 | `seedWarehousePhase1Minimal.ts` | Demo warehouse structure | `warehouse*`, first org | Yes | **No** | Medium — demo infra |
-| `coverage/*` | BPA coverage zones | `coverageZone*`, `bdArea` | Yes | Yes | Low |
+| `coverage/*` | Furtail coverage zones | `coverageZone*`, `bdArea` | Yes | Yes | Low |
 
 ### 5.2 Seeds module (`prisma/seeds/`)
 
@@ -184,7 +184,7 @@
 | `seed-coverage-zones.ts` | Full coverage + auto-dhaka | coverage seeders | Yes | Yes | Low |
 | `seed-dhaka-metro.ts` | Metro zones subset | coverage partial | Yes | Yes | Low |
 | `seed-clinic-vaccine-items.ts` | Org vaccine items | `ORG_ID` env | Partial | Opt-in | Medium |
-| `seed-campaign-checkout-anchor.ts` | BPA campaign org/branch | `organization`, `branch` | Yes | Caution | Medium |
+| `seed-campaign-checkout-anchor.ts` | Furtail campaign org/branch | `organization`, `branch` | Yes | Caution | Medium |
 | `seed-demo-catalog.ts` | Demo products only | demo seeder | Yes | **No** | Medium |
 | `seed-campaign-included-vaccines.js` | Campaign vaccine package rows | campaign slug | Partial | Caution | Medium |
 | `seed-test-stock.js` | Stock at location #2 | raw SQL/pg, hardcoded IDs | Yes | **No** | High — inventory |

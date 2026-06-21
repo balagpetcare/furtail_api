@@ -37,7 +37,7 @@
 1. Crop + upload typical JPG / PNG / WebP sources → success.
 2. Retry after failure → no stuck loading; user can pick again.
 3. Remove photo → unchanged.
-4. Account hub + header refresh after success → `bpa:me-refresh` / `useMe` unchanged.
+4. Account hub + header refresh after success → `furtail:me-refresh` / `useMe` unchanged.
 
 ## Files changed
 

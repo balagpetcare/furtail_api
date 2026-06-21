@@ -1,6 +1,6 @@
 # Warehouse Phase 1 — Foundation
 
-Enterprise documentation for multi-tenant warehouse stock in BPA/WPA. Source of truth for inventory movement is **ledger-based** (`StockLedger`); balances are derived (`StockBalance`, `StockLotBalance`).
+Enterprise documentation for multi-tenant warehouse stock in Furtail/Furtail. Source of truth for inventory movement is **ledger-based** (`StockLedger`); balances are derived (`StockBalance`, `StockLotBalance`).
 
 ## Assumptions
 

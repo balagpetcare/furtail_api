@@ -1,4 +1,4 @@
-# WowDash UI Standard (BPA)
+# WowDash UI Standard (Furtail)
 
 Must use WowDash styling across dashboards:
 - Tables, badges, forms

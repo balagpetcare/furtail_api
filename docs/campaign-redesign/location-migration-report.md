@@ -1,6 +1,6 @@
 # Booking — Location Selection Migration Report
 
-**Project:** BPA 2026 Cat Flu + Rabies Vaccination Campaign  
+**Project:** Furtail 2026 Cat Flu + Rabies Vaccination Campaign  
 **Date:** 2026-06-04  
 **Status:** Planning only — no code modified.  
 **Companion:** `docs/campaign-redesign/master-plan.md`
@@ -192,7 +192,7 @@ Returns:
   "data": [
     {
       "id": 42,
-      "name": "BPA Mirpur Vaccination Centre",
+      "name": "Furtail Mirpur Vaccination Centre",
       "address": "House 21, Mirpur-10, Dhaka",
       "addressJson": { "division": "Dhaka", "district": "Dhaka", "upazila": "Mirpur", "area": "Mirpur-10" },
       "latitude": 23.806,

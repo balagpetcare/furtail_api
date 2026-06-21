@@ -1,4 +1,4 @@
-# BPA Nginx — Production Config
+# Furtail Nginx — Production Config
 
 ```
 infra/nginx/
@@ -16,8 +16,8 @@ infra/nginx/
 │   └── proxy-api.conf
 ├── sites-available/
 │   ├── 00-acme-and-redirect.conf
-│   ├── bangladeshpetassociation.com.conf
-│   └── vaccination.bangladeshpetassociation.com.conf
+│   ├── furtail.world.conf
+│   └── vaccination.furtail.world.conf
 └── nginx.conf.patch             # merge notes for main nginx.conf
 ```
 
@@ -31,7 +31,7 @@ sudo cp conf.d/*.conf /etc/nginx/conf.d/
 sudo cp snippets/*.conf /etc/nginx/snippets/
 sudo cp sites-available/*.conf /etc/nginx/sites-available/
 sudo ln -sf /etc/nginx/sites-available/00-acme-and-redirect.conf /etc/nginx/sites-enabled/
-sudo ln -sf /etc/nginx/sites-available/bangladeshpetassociation.com.conf /etc/nginx/sites-enabled/
-sudo ln -sf /etc/nginx/sites-available/vaccination.bangladeshpetassociation.com.conf /etc/nginx/sites-enabled/
+sudo ln -sf /etc/nginx/sites-available/furtail.world.conf /etc/nginx/sites-enabled/
+sudo ln -sf /etc/nginx/sites-available/vaccination.furtail.world.conf /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
 ```

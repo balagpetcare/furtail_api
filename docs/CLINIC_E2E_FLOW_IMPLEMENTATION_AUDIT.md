@@ -1,4 +1,4 @@
-# BPA Clinic End-to-End Flow — Implementation Audit Report
+# Furtail Clinic End-to-End Flow — Implementation Audit Report
 
 **Date:** 2026-03-14  
 **Scope:** Backend (backend-api), Frontend (bpa_web), DB (Prisma), permissions, handoffs, controls, edge cases  

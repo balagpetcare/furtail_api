@@ -135,7 +135,7 @@
 Per `final-integration-report.md`:
 
 - **bpa_web:** `LocationField`, `LocationPickerUnified`, organization wizard — integrated.
-- **bpa_app:** `LocationSelectorWidget` in fundraising screens — integrated.
+- **furtail_app:** `LocationSelectorWidget` in fundraising screens — integrated.
 
 Backend must expose non-empty `/unions` for full UX.
 

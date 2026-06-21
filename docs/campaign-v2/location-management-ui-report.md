@@ -104,7 +104,7 @@ Unchanged analytics services; they depend on booking `coverageZoneId` / `booking
 
 | File | Change |
 |------|--------|
-| `src/bpa/campaign/admin/CampaignLocationEditor.tsx` | **New** — modal form |
+| `src/furtail/campaign/admin/CampaignLocationEditor.tsx` | **New** — modal form |
 | `app/admin/(larkon)/campaigns/[id]/locations/page.tsx` | Table + editor; zone/area columns |
 | `lib/campaignApi.ts` | Types + `campaignAdminCoverageZones`, `campaignAdminBdAreasByZone` |
 

@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Stop'
 
-Write-Host "== BPA DB DEPLOY (migrate deploy + seed) ==" -ForegroundColor Cyan
+Write-Host "== Furtail DB DEPLOY (migrate deploy + seed) ==" -ForegroundColor Cyan
 
 Write-Host "npx prisma generate" -ForegroundColor Yellow
 npx prisma generate

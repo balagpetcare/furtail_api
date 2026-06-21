@@ -1,6 +1,6 @@
 # Global-Ready Product System Documentation
 
-**BPA Product Ecosystem – World-Scale Design**
+**Furtail Product Ecosystem – World-Scale Design**
 
 *(This document is aligned with [BPA_STANDARD.md](../BPA_STANDARD.md) and [PROJECT_CONTEXT.md](../PROJECT_CONTEXT.md). Ports, merge policy, and touch-point rules must not be violated.)*
 
@@ -149,7 +149,7 @@ Company (Global)
 - QR duplicate
 - ফেক প্রোডাক্ট
 
-### BPA Solution
+### Furtail Solution
 
 প্রতিটি ইউনিটে:
 
@@ -306,7 +306,7 @@ Admin দেখতে পারবে:
 | Serial generation = server-side only | ক্লায়েন্ট কখনো serial বা signature জেনারেট করবে না |
 | No client-side trust | Verification সব সার্ভার সাইড; ক্লায়েন্ট শুধু display |
 
-### BPA Standard মেনে চলুন
+### Furtail Standard মেনে চলুন
 
 - [BPA_STANDARD.md](../BPA_STANDARD.md): পোর্ট পরিবর্তন নয়; কোড merge করতে হবে, overwrite নয়; ছোট প্যাচ; টাচ পয়েন্ট আগে নিশ্চিত করুন।
 - [PROJECT_CONTEXT.md](../PROJECT_CONTEXT.md): Backward compatible change; update-only patch পছন্দনীয়।

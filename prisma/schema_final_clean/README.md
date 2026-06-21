@@ -1,6 +1,6 @@
-# BPA Prisma Schema Package (Clean)
+# Furtail Prisma Schema Package (Clean)
 
-This bundle contains the modular Prisma schema files, seed-data JSON, and seeder scripts used in the BPA backend.
+This bundle contains the modular Prisma schema files, seed-data JSON, and seeder scripts used in the Furtail backend.
 
 ## Folder layout
 - `schema/` – split Prisma schema files (base/core/wallet/fundraising/location, etc.)

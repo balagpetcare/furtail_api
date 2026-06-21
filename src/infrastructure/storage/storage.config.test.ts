@@ -36,21 +36,21 @@ describe("storage.config", () => {
 
   it("resolves minio from AWS_* vars", () => {
     process.env.STORAGE_PROVIDER = "minio";
-    process.env.AWS_BUCKET_NAME = "bpa-pets";
+    process.env.AWS_BUCKET_NAME = "furtail-pets";
     process.env.AWS_ENDPOINT = "http://localhost:9000";
     process.env.AWS_ACCESS_KEY_ID = "minioadmin";
     process.env.AWS_SECRET_ACCESS_KEY = "minioadmin";
     const { resolveStorageConfig } = loadConfigModule();
     const cfg = resolveStorageConfig();
     expect(cfg.provider).toBe("minio");
-    expect(cfg.bucketName).toBe("bpa-pets");
+    expect(cfg.bucketName).toBe("furtail-pets");
     expect(cfg.endpoint).toBe("http://localhost:9000");
   });
 
   it("resolves b2 from S3_* vars", () => {
     process.env.STORAGE_PROVIDER = "b2";
     process.env.S3_REGION = "us-east-005";
-    process.env.S3_BUCKET = "bpa-production-media";
+    process.env.S3_BUCKET = "furtail-production-media";
     process.env.S3_ENDPOINT = "https://s3.us-east-005.backblazeb2.com";
     process.env.S3_ACCESS_KEY = "key-id";
     process.env.S3_SECRET_KEY = "secret";
@@ -58,14 +58,14 @@ describe("storage.config", () => {
     const { resolveStorageConfig } = loadConfigModule();
     const cfg = resolveStorageConfig();
     expect(cfg.provider).toBe("b2");
-    expect(cfg.bucketName).toBe("bpa-production-media");
+    expect(cfg.bucketName).toBe("furtail-production-media");
     expect(cfg.publicUrl).toBe("https://cdn.example.com");
   });
 
   it("requires public URL for b2 validation", () => {
     process.env.STORAGE_PROVIDER = "b2";
     process.env.S3_ENDPOINT = "https://s3.us-east-005.backblazeb2.com";
-    process.env.S3_BUCKET = "bpa-production-media";
+    process.env.S3_BUCKET = "furtail-production-media";
     process.env.S3_ACCESS_KEY = "k";
     process.env.S3_SECRET_KEY = "s";
     process.env.STORAGE_PUBLIC_URL = "";

@@ -1,7 +1,7 @@
-# BPA Ecosystem Deployment Readiness Audit
+# Furtail Ecosystem Deployment Readiness Audit
 
 **Audit date:** 2026-06-05  
-**Scope:** All Bangladesh Pet Association production repositories  
+**Scope:** All Furtail production repositories  
 **Type:** Read-only audit — no code changes  
 **Auditor:** Automated ecosystem scan + repository inspection
 
@@ -11,15 +11,15 @@
 
 | Repository | Risk Level | Deployment Status | Primary Blocker |
 |---|---|---|---|
-| **bpa_app_api** | **Medium** | Conditionally ready | No PM2/CI; Docker dev-only; shallow health checks |
+| **furtail_api** | **Medium** | Conditionally ready | No PM2/CI; Docker dev-only; shallow health checks |
 | **next_v1** | **Medium** | Conditionally ready | No container/PM2 config; incomplete prod env |
 | **vaccination_2026** | **Medium** | Conditionally ready | Campaign slug env; LCP/a11y follow-ups |
-| **bpa_app** | **High** | Not store-ready | Placeholder bundle IDs, debug signing, Firebase |
+| **furtail_app** | **High** | Not store-ready | Placeholder bundle IDs, debug signing, Firebase |
 | **bpa_land** | **Critical** | Not deployable | Application code not pushed to GitHub |
 
 **Ecosystem verdict:** The **web/API/campaign stack** can proceed to production server deployment after resolving `bpa_land` git push and completing server-side PM2/systemd + env configuration. The **Flutter mobile app** requires a separate pre-store remediation track and is not part of the initial server `git clone` deployment.
 
-**Production domain:** `bangladeshpetassociation.com` (Cloudflare → nginx → loopback apps)
+**Production domain:** `furtail.world` (Cloudflare → nginx → loopback apps)
 
 ---
 
@@ -42,12 +42,12 @@
 
 ## Per-Repository Audit
 
-### 1. bpa_app_api (backend-api)
+### 1. furtail_api (backend-api)
 
 | Field | Value |
 |---|---|
 | **Local path** | `D:\BPA_Data\backend-api` |
-| **GitHub URL** | https://github.com/balagpetcare/bpa_app_api.git |
+| **GitHub URL** | https://github.com/balagpetcare/furtail_api.git |
 | **Branch** | `main` |
 | **Last commit** | `5cad431` — chore: sync push summary final hash (2026-06-05) |
 | **Package version** | `10.0.0.6` |
@@ -74,7 +74,7 @@
 | Database migrations | ~271 migrations; `prisma migrate deploy` + integrity check |
 | nginx upstream | `bpa_api` → `127.0.0.1:3000` (config in `infra/nginx/`) |
 | Docker production | **Not ready** — compose runs `npm run dev`; `dockerfile` vs `Dockerfile` case mismatch |
-| PM2 | **Not configured** — docs reference `pm2 restart bpa-api bpa-worker` |
+| PM2 | **Not configured** — docs reference `pm2 restart furtail-api furtail-worker` |
 
 #### Environment Configuration
 
@@ -90,8 +90,8 @@
 
 **Status: Missing.** No `ecosystem.config.js` in repository. Documented process names:
 
-- `bpa-api` — main API on `:3000`
-- `bpa-worker` — notification worker
+- `furtail-api` — main API on `:3000`
+- `furtail-worker` — notification worker
 
 #### Docker Readiness
 
@@ -125,7 +125,7 @@
 
 | Host | Purpose | nginx config |
 |---|---|---|
-| `api.bangladeshpetassociation.com` | Central API | Proposed in deployment guide §3.5 (add to VCS) |
+| `api.furtail.world` | Central API | Proposed in deployment guide §3.5 (add to VCS) |
 | Cert strategy | Let's Encrypt SAN or Cloudflare Origin CA | `infra/nginx/snippets/ssl-letsencrypt.conf` |
 | Cloudflare | Full (strict), WAF, rate limits | Documented in `PRODUCTION_DEPLOYMENT_GUIDE.md` |
 
@@ -151,7 +151,7 @@
 4. `/health/ready` endpoint with DB probe
 5. Complete `.env.production.example`
 6. Fix `.env.example` PORT to 3000
-7. `api.bangladeshpetassociation.com.conf` nginx site in VCS
+7. `api.furtail.world.conf` nginx site in VCS
 8. Automated backup scripts or managed DB confirmation
 
 ---
@@ -163,7 +163,7 @@
 | **Local path** | `D:\BPA_Data\bpa_web` |
 | **GitHub URL** | https://github.com/balagpetcare/next_v1.git |
 | **Branch** | `main` |
-| **Last commit** | `740835a` — updated Vaccination updare BPA (2026-06-05) |
+| **Last commit** | `740835a` — updated Vaccination updare Furtail (2026-06-05) |
 | **Package version** | `0.1.0` |
 | **Sync with origin** | In sync (0 ahead / 0 behind) |
 | **Working tree** | Clean |
@@ -197,11 +197,11 @@
 |---|---|
 | `.env.example` | 5 vars only |
 | Missing from example | `NEXT_PUBLIC_APP_URL`, `SITE_MODE`, feature flags, `COOKIE_DOMAIN` coordination |
-| Production API | `NEXT_PUBLIC_API_BASE_URL=https://api.bangladeshpetassociation.com` |
+| Production API | `NEXT_PUBLIC_API_BASE_URL=https://api.furtail.world` |
 
 #### PM2 / Docker
 
-**Status: Missing** in repository. Expected: `pm2 start npm --name bpa-web -- start` or systemd equivalent.
+**Status: Missing** in repository. Expected: `pm2 start npm --name furtail-web -- start` or systemd equivalent.
 
 #### Deployment Scripts
 
@@ -221,7 +221,7 @@ Stateless frontend — redeploy from git tag. No data backup required.
 
 | Planned host | Port | Status |
 |---|---|---|
-| `admin.bangladeshpetassociation.com` | 3103 | Documented in `PORT_AND_DOMAIN_MAP.md` |
+| `admin.furtail.world` | 3103 | Documented in `PORT_AND_DOMAIN_MAP.md` |
 | Other panels | 3100–3107 | Subdomains planned, nginx not in VCS |
 
 **Issue:** `images.remotePatterns` in `next.config.js` allows only `localhost:3000` — production image hosts not configured.
@@ -278,7 +278,7 @@ Stateless frontend — redeploy from git tag. No data backup required.
 | Production port | **3110** (fixed) |
 | Start command | `npm run start` → `next start -p 3110` |
 | nginx upstream | `bpa_vaccination` → `127.0.0.1:3110` |
-| nginx vhost | `infra/nginx/sites-available/vaccination.bangladeshpetassociation.com.conf` |
+| nginx vhost | `infra/nginx/sites-available/vaccination.furtail.world.conf` |
 | API proxy | `/api/*` → `backend-api:3000` via nginx + Next.js rewrite |
 | PM2/Docker | **None in repo** |
 
@@ -286,14 +286,14 @@ Stateless frontend — redeploy from git tag. No data backup required.
 
 | Variable | Required | Notes |
 |---|---|---|
-| `NEXT_PUBLIC_API_BASE_URL` | Yes | `https://api.bangladeshpetassociation.com` |
+| `NEXT_PUBLIC_API_BASE_URL` | Yes | `https://api.furtail.world` |
 | `NEXT_PUBLIC_CAMPAIGN_SLUG` | **Critical** | Must set explicitly (`cat-flu-rabies-2026`); code fallback is `uat-free-2026` |
-| `NEXT_PUBLIC_SITE_URL` | Yes | `https://vaccination.bangladeshpetassociation.com` |
+| `NEXT_PUBLIC_SITE_URL` | Yes | `https://vaccination.furtail.world` |
 | `NEXT_PUBLIC_ANALYTICS_*` | Optional | GA4, Meta Pixel, Clarity |
 
 #### PM2 / Docker
 
-**Status: Missing.** Documented process name: `bpa-vaccination`.
+**Status: Missing.** Documented process name: `furtail-vaccination`.
 
 #### Deployment Scripts
 
@@ -307,7 +307,7 @@ Stateless — redeploy from git. Campaign data lives in `backend-api` PostgreSQL
 
 | Host | Config |
 |---|---|
-| `vaccination.bangladeshpetassociation.com` | nginx vhost in VCS; SSL via Let's Encrypt |
+| `vaccination.furtail.world` | nginx vhost in VCS; SSL via Let's Encrypt |
 | Security headers | nginx `security-headers.conf` (HSTS, CSP) |
 | `/book/payment/*` | `Cache-Control: no-store` in nginx |
 
@@ -332,12 +332,12 @@ Stateless — redeploy from git. Campaign data lives in `backend-api` PostgreSQL
 
 ---
 
-### 4. bpa_app (Flutter Mobile)
+### 4. furtail_app (Flutter Mobile)
 
 | Field | Value |
 |---|---|
-| **Local path** | `D:\BPA_Data\bpa_app` |
-| **GitHub URL** | https://github.com/balagpetcare/bpa_app.git |
+| **Local path** | `D:\BPA_Data\furtail_app` |
+| **GitHub URL** | https://github.com/balagpetcare/furtail_app.git |
 | **Branch** | `main` |
 | **Last commit** | `9255aa8` — feat: vaccination campaign booking, UI standardization, and deployment prep (2026-06-05) |
 | **App version** | `10.0.0+7` |
@@ -375,8 +375,8 @@ Stateless — redeploy from git. Campaign data lives in `backend-api` PostgreSQL
 
 | Platform | Status | Blocker |
 |---|---|---|
-| Android | **Not ready** | `com.example.bpa_app`, debug signing, placeholder Firebase |
-| iOS | **Not ready** | `com.example.bpaApp`, no `DEVELOPMENT_TEAM`, no `GoogleService-Info.plist` |
+| Android | **Not ready** | `com.example.furtail_app`, debug signing, placeholder Firebase |
+| iOS | **Not ready** | `com.example.furtailApp`, no `DEVELOPMENT_TEAM`, no `GoogleService-Info.plist` |
 | App Links | **Not deployed** | `assetlinks.json` / AASA examples only |
 | Privacy policy | **Missing** from repo |
 
@@ -407,11 +407,11 @@ Stateless — redeploy from git. Campaign data lives in `backend-api` PostgreSQL
 
 ---
 
-### 5. bpa_land (bpa-landing)
+### 5. bpa_land (furtail-landing)
 
 | Field | Value |
 |---|---|
-| **Local path** | `D:\BPA_Data\bpa-landing` |
+| **Local path** | `D:\BPA_Data\furtail-landing` |
 | **GitHub URL** | https://github.com/balagpetcare/bpa_land.git |
 | **Branch** | `main` |
 | **Last commit (remote)** | `4ffed88` — first commit (README only) |
@@ -433,9 +433,9 @@ Stateless — redeploy from git. Campaign data lives in `backend-api` PostgreSQL
 | Component | Status |
 |---|---|
 | Production port | **3101** (fixed) |
-| Production host | `bangladeshpetassociation.com` |
+| Production host | `furtail.world` |
 | nginx upstream | `bpa_landing` → `127.0.0.1:3101` |
-| nginx vhost | `infra/nginx/sites-available/bangladeshpetassociation.com.conf` |
+| nginx vhost | `infra/nginx/sites-available/furtail.world.conf` |
 | Remote deploy | **BLOCKED** — `git clone` yields README only |
 
 #### Untracked Local Files (Not on GitHub)
@@ -450,20 +450,20 @@ postcss.config.mjs, lighthouse-report.json, AGENTS.md, CLAUDE.md
 
 | Variable | Production value |
 |---|---|
-| `NEXT_PUBLIC_SITE_URL` | `https://bangladeshpetassociation.com` |
-| `NEXT_PUBLIC_API_URL` | `https://api.bangladeshpetassociation.com/api/v1` |
-| `NEXT_PUBLIC_CAMPAIGN_SITE_URL` | `https://vaccination.bangladeshpetassociation.com` |
+| `NEXT_PUBLIC_SITE_URL` | `https://furtail.world` |
+| `NEXT_PUBLIC_API_URL` | `https://api.furtail.world/api/v1` |
+| `NEXT_PUBLIC_CAMPAIGN_SITE_URL` | `https://vaccination.furtail.world` |
 | `NEXT_PUBLIC_ANALYTICS_*` | Required per production audit |
 
 #### PM2 / Docker
 
-**Status: Missing.** Documented process name: `bpa-landing`.
+**Status: Missing.** Documented process name: `furtail-landing`.
 
 #### Security Audit
 
 | Check | Status |
 |---|---|
-| Direct API calls | Cross-origin to `api.bangladeshpetassociation.com` — CORS required on API |
+| Direct API calls | Cross-origin to `api.furtail.world` — CORS required on API |
 | Analytics consent | **Missing** per `BPA_LANDING_PRODUCTION_AUDIT.md` |
 | Security headers | nginx only (not in Next config) |
 
@@ -491,9 +491,9 @@ flowchart TB
     subgraph apps [Application Layer]
         LAND[bpa_land :3101]
         VAC[vaccination_2026 :3110]
-        API[bpa_app_api :3000]
+        API[furtail_api :3000]
         WEB[next_v1 :3100-3107]
-        APP[bpa_app Flutter]
+        APP[furtail_app Flutter]
     end
 
     subgraph data [Data Layer]
@@ -527,13 +527,13 @@ flowchart TB
 | `bpa_land` code not on GitHub | bpa_land | **Critical** | Commit + push before server clone |
 | No PM2/systemd configs | All server apps | **High** | Create on server during deploy |
 | No CI/CD | All repos | **High** | Manual `verify` + smoke tests pre-deploy |
-| JWT/CORS defaults | bpa_app_api | **High** | Enforce prod env vars before start |
+| JWT/CORS defaults | furtail_api | **High** | Enforce prod env vars before start |
 | Campaign slug mismatch | vaccination_2026 | **High** | Set `NEXT_PUBLIC_CAMPAIGN_SLUG` explicitly |
-| Mobile not store-ready | bpa_app | **High** | Separate track; not blocking web deploy |
-| Docker not production-ready | bpa_app_api | **Medium** | Use bare-metal PM2 path |
-| Shallow health checks | bpa_app_api | **Medium** | Add `/health/ready` post-deploy |
+| Mobile not store-ready | furtail_app | **High** | Separate track; not blocking web deploy |
+| Docker not production-ready | furtail_api | **Medium** | Use bare-metal PM2 path |
+| Shallow health checks | furtail_api | **Medium** | Add `/health/ready` post-deploy |
 | Port 3101 dev conflict | bpa_land + next_v1 shop | **Low** (prod) | Separate containers in production |
-| Pre-existing tracked zips | bpa_app | **Low** | Do not add new artifacts |
+| Pre-existing tracked zips | furtail_app | **Low** | Do not add new artifacts |
 
 ---
 
@@ -541,10 +541,10 @@ flowchart TB
 
 | Repository | Repo Health | Branch | Release | Env Config | PM2 | Docker | Scripts | Backup | SSL | Security | **Overall** |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| bpa_app_api | ✅ | ✅ | ⚠️ | ⚠️ | ❌ | ⚠️ | ⚠️ | ⚠️ | ✅ | ⚠️ | **65%** |
+| furtail_api | ✅ | ✅ | ⚠️ | ⚠️ | ❌ | ⚠️ | ⚠️ | ⚠️ | ✅ | ⚠️ | **65%** |
 | next_v1 | ✅ | ✅ | ⚠️ | ⚠️ | ❌ | ❌ | ⚠️ | ✅ | ⚠️ | ⚠️ | **55%** |
 | vaccination_2026 | ✅ | ✅ | ⚠️ | ⚠️ | ❌ | ❌ | ❌ | ✅ | ✅ | ⚠️ | **60%** |
-| bpa_app | ✅ | ✅ | ❌ | ❌ | N/A | N/A | ❌ | N/A | ⚠️ | ❌ | **30%** |
+| furtail_app | ✅ | ✅ | ❌ | ❌ | N/A | N/A | ❌ | N/A | ⚠️ | ❌ | **30%** |
 | bpa_land | ❌ | ✅ | ❌ | ⚠️ | ❌ | ❌ | ⚠️ | ✅ | ✅ | ⚠️ | **25%** |
 
 **Legend:** ✅ Ready · ⚠️ Partial / documented · ❌ Missing / blocker
@@ -553,7 +553,7 @@ flowchart TB
 
 ## Recommended Pre-Deploy Actions (Priority Order)
 
-1. **P0:** Commit and push `bpa-landing` application code to `bpa_land` GitHub remote
+1. **P0:** Commit and push `furtail-landing` application code to `bpa_land` GitHub remote
 2. **P0:** Provision production server with Node 20+, PostgreSQL, Redis, nginx
 3. **P0:** Configure production `.env` files from vault (never commit)
 4. **P1:** Create PM2 ecosystem file on server for all processes
@@ -575,6 +575,6 @@ flowchart TB
 | nginx configs | `infra/nginx/` |
 | Disaster recovery | `DISASTER-RECOVERY-PLAYBOOK.md` |
 | Git audit (prior) | `docs/git/GIT_REPOSITORY_AUDIT.md` |
-| Mobile production readiness | `bpa_app/docs/mobile/production_readiness.md` |
-| Landing production audit | `bpa-landing/docs/audits/BPA_LANDING_PRODUCTION_AUDIT.md` |
+| Mobile production readiness | `furtail_app/docs/mobile/production_readiness.md` |
+| Landing production audit | `furtail-landing/docs/audits/BPA_LANDING_PRODUCTION_AUDIT.md` |
 | Vaccination UI review | `vaccination_2026/docs/reports/FINAL_PRODUCTION_UI_REVIEW.md` |

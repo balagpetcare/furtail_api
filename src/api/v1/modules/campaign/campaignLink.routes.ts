@@ -1,5 +1,5 @@
 /**
- * Campaign Link Routes — BPA app authenticated endpoints
+ * Campaign Link Routes — Furtail app authenticated endpoints
  * POST/GET /api/v1/campaign-link/*
  */
 

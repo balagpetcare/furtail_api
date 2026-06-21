@@ -154,7 +154,7 @@ Implication:
 3. Coverage logic split between tree-level and village-level semantics increases complexity.
 4. Legacy and new API families in parallel require strict compatibility governance.
 
-## 8) Must-Preserve Behaviors For BPA/WPA Design
+## 8) Must-Preserve Behaviors For Furtail/Furtail Design
 
 - Strong parent-child hierarchy enforcement
 - Deterministic import + verify tooling

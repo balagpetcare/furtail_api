@@ -2,7 +2,7 @@
 
 ## Overview
 
-End-to-end implementation for BPA/WPA:
+End-to-end implementation for Furtail/Furtail:
 
 1. **Teams & Delegation** – Owner creates teams (name, description, scopes); members join via **email invitation**; token-based accept; revoke-all, set-team, enable/disable member.
 2. **Multi-Context** – Single user can have multiple contexts (branch, team, roles, scopes); context selector in owner panel; menu and permissions from current context.

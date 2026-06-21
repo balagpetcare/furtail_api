@@ -88,7 +88,7 @@ These facts bound every design decision (baseline truth from code review):
 
 ### Why Staff POS stays
 
-- It already implements **branch context** via [`useBranchContext`](../../bpa_web/lib/useBranchContext.ts), **permission gates** (`pos.view`, `pos.sell`, …), **shifts**, **barcode**, **line returns**, and **drawer** tab — aligned with BPA branch staff model.
+- It already implements **branch context** via [`useBranchContext`](../../bpa_web/lib/useBranchContext.ts), **permission gates** (`pos.view`, `pos.sell`, …), **shifts**, **barcode**, **line returns**, and **drawer** tab — aligned with Furtail branch staff model.
 - Backend [`pos.middleware.ts`](../src/api/v1/modules/pos/pos.middleware.ts) enforces **BranchMember + role permissions** per `branchId`, matching staff routing.
 
 ### What happens to Shop POS (`/shop/pos`)
@@ -413,4 +413,4 @@ Implement via **new migration** (follow [`docs/PRISMA_MIGRATION_NON_DESTRUCTIVE_
 
 ---
 
-*Document version: 1.0 — planning only; implementation follows BPA migration and non-destructive Prisma policies.*
+*Document version: 1.0 — planning only; implementation follows Furtail migration and non-destructive Prisma policies.*

@@ -539,7 +539,7 @@ exports.geocode = async (req, res) => {
           ...(countrycodes ? { countrycodes } : {}),
         },
         headers: {
-          'User-Agent': 'BPA-Location-System/1.0', // Required by Nominatim
+          'User-Agent': 'Furtail-Location-System/1.0', // Required by Nominatim
         },
         timeout: 10000,
       });
@@ -584,7 +584,7 @@ exports.geocode = async (req, res) => {
           addressdetails: 1,
         },
         headers: {
-          'User-Agent': 'BPA-Location-System/1.0',
+          'User-Agent': 'Furtail-Location-System/1.0',
         },
         timeout: 10000,
       });
@@ -637,7 +637,7 @@ exports.reverseGeocode = async (req, res) => {
         addressdetails: 1,
       },
       headers: {
-        'User-Agent': 'BPA-Location-System/1.0',
+        'User-Agent': 'Furtail-Location-System/1.0',
       },
       timeout: 10000,
     });

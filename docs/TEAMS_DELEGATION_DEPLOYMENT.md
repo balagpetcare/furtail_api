@@ -11,13 +11,13 @@ Owner accounts can create teams, assign delegation scopes (Products, Clinics, In
 
 **Location:** `bpa_web/app/owner/teams/page.jsx`
 
-- **Create Team form:** BPA Design System (card radius-12, card-body p-24, form-control, form-label, row/col). Responsive layout.
+- **Create Team form:** Furtail Design System (card radius-12, card-body p-24, form-control, form-label, row/col). Responsive layout.
 - **Fields:** Team Name (required), Description (optional), Delegation Scopes (checkboxes: Products, Clinics, Inventory, Staff, Branches, Finance (Read Only)).
 - **Validation:** Inline error under Team Name when empty.
 - **Toasts:** Success and error alerts with dismiss; success auto-clears after 5s.
 - **Loading:** Spinner on Create Team button while submitting; loading state for initial teams list.
 - **API:** POST `/api/v1/owner/teams` with JSON `{ name, description?, scopes? }`. Owner is set server-side (do **not** send `owner_id` from client).
-- **State:** React state (useState/useCallback) for inputs, loading, success, error; Teams list is refetched on success. *(BPA Next.js owner panel uses React state; Riverpod is used in the Flutter app.)*
+- **State:** React state (useState/useCallback) for inputs, loading, success, error; Teams list is refetched on success. *(Furtail Next.js owner panel uses React state; Riverpod is used in the Flutter app.)*
 - **List update:** After successful create, form resets and teams list is reloaded.
 
 ---
@@ -155,8 +155,8 @@ End-to-end production verification (owner → team → staff → scope):
 
 **Location:** `bpa_web/app/owner/teams/[id]/page.jsx`
 
-- **Team info:** Name, description, and scope badges (BPA card styling).
+- **Team info:** Name, description, and scope badges (Furtail card styling).
 - **Members:** List with Remove per member (DELETE `/api/v1/owner/teams/:teamId/members/:userId`); Add member by User ID (POST `.../members` with `{ userId }`).
 - **Assign delegation:** User ID + Scope dropdown; POST `/api/v1/owner/delegations` with `{ delegatedUserId, scopeKey, teamId }`.
-- **UX:** Success/error alerts, loading states, BPA Design System (card radius-12, form-control, btn-primary).
+- **UX:** Success/error alerts, loading states, Furtail Design System (card radius-12, form-control, btn-primary).
 - **API:** Uses `ownerDelete` for remove member; `ownerDelete` now surfaces `error` from response (same as `ownerPost`).

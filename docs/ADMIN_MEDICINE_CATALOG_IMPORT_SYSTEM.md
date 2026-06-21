@@ -142,7 +142,7 @@ Headers are matched **case-insensitive**; spaces and `_`/`-` are stripped before
 
 Each staging row keeps immutable `rawPayloadJson`, computed `rowFingerprint`, `classification`, `issuesJson`, `normalizedPayloadJson` (when valid), and post-apply `applyStatus` / `applyDetailJson` / optional `countryMedicineBrandId`.
 
-## Consumption in BPA/WPA (clinic & prescriptions)
+## Consumption in Furtail/Furtail (clinic & prescriptions)
 
 Applied import rows become **`CountryMedicineBrand`** records (per country + presentation + brand + package fingerprint). This layer stays **separate** from:
 

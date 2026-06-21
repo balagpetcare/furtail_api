@@ -1,4 +1,4 @@
-# Super Admin Bootstrap Audit (BPA / WPA)
+# Super Admin Bootstrap Audit (Furtail / Furtail)
 
 **Date:** 2026-06-06  
 **Repository:** `backend-api`  
@@ -65,7 +65,7 @@ Creates or updates:
 | `SUPER_ADMIN_PASSWORD` | **Yes** (bootstrap) | `bootstrap-super-admin.ts` | bcrypt hash written on every matching run |
 | `SUPER_ADMIN_EMAIL` | One of email/phone | bootstrap, verify, whitelist seed | Normalized lowercase |
 | `SUPER_ADMIN_PHONE` | One of email/phone | bootstrap, verify | Comma-separated supported; one user per phone |
-| `SUPER_ADMIN_NAME` | No | bootstrap | Default: `"BPA Super Admin"` |
+| `SUPER_ADMIN_NAME` | No | bootstrap | Default: `"Furtail Super Admin"` |
 | `SUPER_ADMIN_WHITELIST_EMAILS` | No | bootstrap, whitelist seed, `seedGlobalCountryRoles` | Comma-separated |
 | `SUPER_ADMIN_WHITELIST_PHONES` | No | bootstrap, whitelist seed, `seedGlobalCountryRoles` | Comma-separated |
 | `ADMIN_EMAILS` | No | `seedGlobalCountryRoles` | Fallback for PLATFORM_ADMIN assign |
@@ -139,7 +139,7 @@ userGlobalRole.upsert({ ... SUPER_ADMIN ... });
 
 ```powershell
 cd D:\BPA_Data\backend-api
-cross-env SUPER_ADMIN_EMAIL=admin@yourdomain.com SUPER_ADMIN_PASSWORD="<strong-password>" SUPER_ADMIN_NAME="BPA Super Admin" npm run admin:bootstrap
+cross-env SUPER_ADMIN_EMAIL=admin@yourdomain.com SUPER_ADMIN_PASSWORD="<strong-password>" SUPER_ADMIN_NAME="Furtail Super Admin" npm run admin:bootstrap
 ```
 
 ### 8.2 Initial bootstrap (phone)

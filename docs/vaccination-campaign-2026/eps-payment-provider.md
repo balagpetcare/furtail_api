@@ -1,4 +1,4 @@
-# EPS Sandbox Payment Provider (BPA unified payments)
+# EPS Sandbox Payment Provider (Furtail unified payments)
 
 **Provider code:** `eps`  
 **Activation:** `PAYMENT_PROVIDER=eps`  
@@ -55,7 +55,7 @@ Run `node scripts/verify-eps-endpoint.js` after changing EPS env.
 
 ## API flow (implemented)
 
-| Step | EPS endpoint | BPA module |
+| Step | EPS endpoint | Furtail module |
 |------|----------------|------------|
 | GetToken | `POST {EPS_BASE_URL}/v1/Auth/GetToken` | `eps.provider.ts` (`getEpsAuthToken`) |
 | Initialize | `POST .../v1/EPSEngine/InitializeEPS` | `eps.provider.ts` (`createIntent`) |

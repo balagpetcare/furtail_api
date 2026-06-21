@@ -141,17 +141,17 @@ interface CertificateData {
 │    ┌───────────────────┐                                               │
 │    │                   │   VERIFICATION                                │
 │    │    [QR CODE]      │   Scan this QR code or visit:                │
-│    │                   │   vacc.bpa.com.bd/verify/CERT-XYZ789012345   │
+│    │                   │   vacc.furtail.com.bd/verify/CERT-XYZ789012345   │
 │    │                   │                                               │
 │    └───────────────────┘                                               │
 │                                                                         │
 │    ─────────────────────────────────────────────────────────────────   │
 │                                                                         │
 │    This certificate is issued under the 2026 Cat Flu + Rabies          │
-│    Vaccination Campaign by Bangladesh Pet Alliance (BPA).              │
+│    Vaccination Campaign by Bangladesh Pet Alliance (Furtail).              │
 │                                                                         │
 │    For verification, scan the QR code above or contact:                │
-│    support@bpa.com.bd | 09612-345678                                   │
+│    support@furtail.com.bd | 09612-345678                                   │
 │                                                                         │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
@@ -387,7 +387,7 @@ function addFooter(doc: PDFKit.PDFDocument, data: CertificateData) {
     );
   
   doc.text(
-    'For verification, scan the QR code above or contact: support@bpa.com.bd | 09612-345678',
+    'For verification, scan the QR code above or contact: support@furtail.com.bd | 09612-345678',
     { align: 'center' }
   );
 }
@@ -505,7 +505,7 @@ export function CertificateView({ data }: CertificateViewProps) {
       {/* Footer */}
       <div className="px-6 py-4 text-center text-xs text-gray-500">
         <p>Issued by {data.campaign.organizer}</p>
-        <p>Questions? Contact support@bpa.com.bd</p>
+        <p>Questions? Contact support@furtail.com.bd</p>
       </div>
     </div>
   );
@@ -565,7 +565,7 @@ export default function VerifyPage({ certificate }: { certificate: CertificateDa
             This certificate could not be verified. It may be invalid or revoked.
           </p>
           <a
-            href="https://bpa.com.bd/contact"
+            href="https://furtail.com.bd/contact"
             className="text-blue-600 hover:underline"
           >
             Contact Support
@@ -774,8 +774,8 @@ async function regenerateCertificate(
   
   return {
     newToken,
-    verifyUrl: `https://vacc.bpa.com.bd/verify/${newToken}`,
-    pdfUrl: `https://api.bpa.com.bd/api/v1/campaign-certificate/${newToken}/pdf`,
+    verifyUrl: `https://vacc.furtail.com.bd/verify/${newToken}`,
+    pdfUrl: `https://api.furtail.com.bd/api/v1/campaign-certificate/${newToken}/pdf`,
   };
 }
 ```

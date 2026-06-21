@@ -1,6 +1,6 @@
 # 01 — QA Checklist
 
-**Campaign:** BPA 2026 Cat Flu + Rabies Vaccination  
+**Campaign:** Furtail 2026 Cat Flu + Rabies Vaccination  
 **Audit date:** 2026-06-02  
 **Scope:** Backend · Web (Admin + Staff) · Landing · Flutter  
 **Type:** Functional & non-functional QA (no new features)
@@ -135,7 +135,7 @@ Record tester, environment, date, and evidence (screenshot, API response, log ID
 
 ---
 
-## H. App linking (BPA Flutter)
+## H. App linking (Furtail Flutter)
 
 | # | Test | Layer | Pass |
 |---|------|-------|------|
@@ -212,7 +212,7 @@ cd bpa_web
 npm run build
 
 # Flutter
-cd bpa_app
+cd furtail_app
 flutter analyze lib/features/campaign
 ```
 

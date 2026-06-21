@@ -73,7 +73,7 @@
 | `lib/phone.ts` | **New** |
 | `lib/smsApi.ts` | `adminSmsGatewayTest()` |
 | `app/admin/.../bookings/page.tsx` | Normalize phone filter |
-| `src/bpa/campaign/admin/CampaignOperationsCenter.tsx` | SMS gateway test panel |
+| `src/furtail/campaign/admin/CampaignOperationsCenter.tsx` | SMS gateway test panel |
 
 ### docs
 

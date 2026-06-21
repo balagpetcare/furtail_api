@@ -54,9 +54,9 @@ function getPanelFromReturnTo(returnTo: string): string {
       3106: "Country",
     };
     
-    return portToPanel[port] || "BPA";
+    return portToPanel[port] || "Furtail";
   } catch {
-    return "BPA";
+    return "Furtail";
   }
 }
 
@@ -72,7 +72,7 @@ function getLoginPageHtml(app: string, returnTo: string, error?: string): string
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign In - ${panelName} | BPA</title>
+  <title>Sign In - ${panelName} | Furtail</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <style>
@@ -174,7 +174,7 @@ function getLoginPageHtml(app: string, returnTo: string, error?: string): string
     <div class="auth-right">
       <div class="max-w-464-px mx-auto w-100">
         <div class="text-center mb-4">
-          <h2 class="fw-bold mb-2" style="color: var(--primary-600);">BPA</h2>
+          <h2 class="fw-bold mb-2" style="color: var(--primary-600);">Furtail</h2>
           <h4 class="mb-2">${panelName} Sign In</h4>
           <p class="text-secondary">Sign in with your email or phone number</p>
         </div>
@@ -342,7 +342,7 @@ function getRegisterPageHtml(app: string, returnTo: string, error?: string): str
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register - ${panelName} | BPA</title>
+  <title>Register - ${panelName} | Furtail</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <style>
@@ -444,7 +444,7 @@ function getRegisterPageHtml(app: string, returnTo: string, error?: string): str
     <div class="auth-right">
       <div class="max-w-464-px mx-auto w-100">
         <div class="text-center mb-4">
-          <h2 class="fw-bold mb-2" style="color: var(--primary-600);">BPA</h2>
+          <h2 class="fw-bold mb-2" style="color: var(--primary-600);">Furtail</h2>
           <h4 class="mb-2">${panelName} Registration</h4>
           <p class="text-secondary">Create a new account to get started</p>
         </div>

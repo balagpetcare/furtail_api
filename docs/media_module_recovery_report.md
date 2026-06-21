@@ -84,7 +84,7 @@ None — the utility file was already present; only paths were fixed.
 
 **Config** (`appConfig.storage`):
 
-- `bucketName` → `AWS_BUCKET_NAME` (default `bpa-pets`)
+- `bucketName` → `AWS_BUCKET_NAME` (default `furtail-pets`)
 - `publicUrl` → `MINIO_PUBLIC_URL`
 - `endpoint` → `AWS_ENDPOINT` (API → MinIO)
 
@@ -120,7 +120,7 @@ None — the utility file was already present; only paths were fixed.
 2. **Profile / other APIs** — Not every endpoint uses `resolveClientMediaUrl`; extend helper where raw `media.url` is returned to mobile.
 3. **Production `npm start`** — Uses `dist/`; run `npm run build` after path fixes so `dist/**` matches `src/**`.
 4. **LAN IP drift** — Update `MINIO_PUBLIC_URL` and Flutter `MEDIA_BASE_URL` together; run `node scripts/repair-media-urls.mjs`.
-5. **Fresh MinIO data dir** — Run `npm run minio:init` for public read policy on `bpa-pets`.
+5. **Fresh MinIO data dir** — Run `npm run minio:init` for public read policy on `furtail-pets`.
 
 ---
 

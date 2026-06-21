@@ -1,16 +1,16 @@
-# BPA Vaccination Campaign Platform — Redesign Plan
+# Furtail Vaccination Campaign Platform — Redesign Plan
 
 **Status:** Implemented (Phase A–E)  
 **Date:** 2026-06-05  
 **Completed:** 2026-06-05  
-**Scope:** `backend-api`, `bpa_app`, `bpa_web` (admin), `vaccination_2026` (reference)  
+**Scope:** `backend-api`, `furtail_app`, `bpa_web` (admin), `vaccination_2026` (reference)  
 **Policy:** Follow `BPA_STANDARD.md`, non-destructive Prisma migrations, preserve payment gateway integration
 
 ---
 
 ## 1. Executive summary
 
-The BPA vaccination campaign stack already supports express checkout, Dhaka city-corporation booking, multi-cat pricing, payment webhooks, SMS, QR check-in, and per-pet certificates on the **backend** and **web landing**. The **mobile app** still uses a legacy flow: direct clinic/location picker, no dynamic price breakdown, single booking-level QR, and limited analytics.
+The Furtail vaccination campaign stack already supports express checkout, Dhaka city-corporation booking, multi-cat pricing, payment webhooks, SMS, QR check-in, and per-pet certificates on the **backend** and **web landing**. The **mobile app** still uses a legacy flow: direct clinic/location picker, no dynamic price breakdown, single booking-level QR, and limited analytics.
 
 This redesign aligns the **mobile booking UX with production web parity** and closes gaps for **per-cat tickets**, **area-wise public analytics**, and a **modular domain architecture** reusable for future campaign types.
 
@@ -18,7 +18,7 @@ This redesign aligns the **mobile booking UX with production web parity** and cl
 
 ## 2. Current state analysis
 
-### 2.1 Mobile (`bpa_app`)
+### 2.1 Mobile (`furtail_app`)
 
 | Area | Current | Gap |
 |------|---------|-----|
@@ -201,7 +201,7 @@ model CampaignPet {
 ### 4.11 Payment gateway
 
 - Preserve `createCheckoutPaymentIntent` → WebView → webhook → `fulfillCheckoutFromOrder`.
-- Mobile `CampaignPaymentPage` unchanged (WebView return URLs `bpa://campaign/checkout/success`).
+- Mobile `CampaignPaymentPage` unchanged (WebView return URLs `furtail://campaign/checkout/success`).
 
 ---
 

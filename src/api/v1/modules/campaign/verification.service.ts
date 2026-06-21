@@ -68,7 +68,7 @@ export async function verifyCertificate(
         isExpired,
         daysRemaining: Math.max(0, daysRemaining),
         location: "",
-        campaignName: "BPA Vaccination Campaign",
+        campaignName: "Furtail Vaccination Campaign",
       },
       message: isExpired
         ? "This certificate has expired. Please revaccinate."

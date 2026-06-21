@@ -21,7 +21,7 @@ function resolveStorageEndpoint(rawEndpoint: string): string {
   if (!endpoint) return endpoint;
   try {
     const u = new URL(endpoint);
-    if (!isDockerRuntime() && u.hostname === "bpa-storage") {
+    if (!isDockerRuntime() && u.hostname === "furtail-storage") {
       u.hostname = "localhost";
       return u.toString().replace(/\/$/, "");
     }

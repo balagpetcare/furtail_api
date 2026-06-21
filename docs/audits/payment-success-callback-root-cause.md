@@ -269,7 +269,7 @@ Express checkout expects **`/book/success?checkoutId={sessionUuid}`** (appended 
 
 Express checkout canonical UX is `app/book/success/page.tsx`, which polls `getCheckoutStatus(checkoutId)` when `?checkoutId=` is present.
 
-`/book/payment/success` links to confirm with `ref` as **booking ref**, but EPS would supply `CKO-*` (order number) if `CustomerOrderId` were present — not the human booking ref (e.g. `BPA-XXXX`).
+`/book/payment/success` links to confirm with `ref` as **booking ref**, but EPS would supply `CKO-*` (order number) if `CustomerOrderId` were present — not the human booking ref (e.g. `Furtail-XXXX`).
 
 **Conclusion:** `/book/confirm/[ref]` is unreachable in this incident because (a) callback fails, (b) redirect never fires, (c) even a working redirect would not land on confirm with the correct `ref`, and (d) express flow is designed for `/book/success?checkoutId=`, not confirm.
 

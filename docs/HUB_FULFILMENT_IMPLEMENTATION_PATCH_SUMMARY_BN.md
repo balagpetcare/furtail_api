@@ -169,7 +169,7 @@ Backend স্বয়ংক্রিয়ভাবে ব্রাঞ্চ�
 
 ## FINAL DIFF CHECKLIST
 
-**Backend (bpa_app_api):**
+**Backend (furtail_api):**
 - [x] `prisma/schema.prisma` — OrderSource enum, Order এ fulfilmentInventoryLocationId, orderSource, relation, indexes; InventoryLocation.ordersFulfilled; StockLedgerType এ SALE_CLINIC
 - [x] `prisma/migrations/20260210120000_add_order_fulfilment_location_and_source/migration.sql` — নতুন মাইগ্রেশন
 - [x] `src/api/v1/modules/orders/orders.service.ts` — getOrders filter + include fulfilmentInventoryLocation; getOrderById include; createOrder নতুন ফিল্ড + getDefaultFulfilmentLocationForBranch

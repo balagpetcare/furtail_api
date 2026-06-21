@@ -1,11 +1,11 @@
 /**
- * BPA public contact details for booking confirmation PDFs.
+ * Furtail public contact details for booking confirmation PDFs.
  * Override via env when needed for staging.
  */
 
 export const BPA_PDF_ORG = {
-  name: "Bangladesh Pet Association (BPA)",
-  website: process.env.BPA_WEBSITE_URL || "https://bangladeshpetassociation.com",
+  name: "Furtail (Furtail)",
+  website: process.env.BPA_WEBSITE_URL || "https://furtail.world",
   email: process.env.BPA_CONTACT_EMAIL || "vetandpetcare@gmail.com",
   phone: process.env.BPA_CONTACT_PHONE || "01575-008300",
   address:

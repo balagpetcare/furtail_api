@@ -1,6 +1,6 @@
 # Warehouse Staff Dashboard - Enterprise Plan
 
-This document outlines the plan for designing and implementing a comprehensive Warehouse Staff Dashboard for the BPA/WPA multi-panel system.
+This document outlines the plan for designing and implementing a comprehensive Warehouse Staff Dashboard for the Furtail/Furtail multi-panel system.
 
 ## 1. Current-State Audit
 

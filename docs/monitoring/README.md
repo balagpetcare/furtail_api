@@ -1,4 +1,4 @@
-# BPA Monitoring & Operations
+# Furtail Monitoring & Operations
 
 **Status:** Planning only — see approval gate in strategy doc.
 

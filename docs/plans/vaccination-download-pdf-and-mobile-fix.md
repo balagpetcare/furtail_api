@@ -52,7 +52,7 @@
 | vaccination_2026 | `lib/bookingPdf.ts` | *(new)* Generate/download helpers | **Create** |
 | vaccination_2026 | `app/book/success/page.tsx` | Polls checkout status | Pass PDF props |
 | vaccination_2026 | `package.json` | Dependencies | Add PDF lib (see §Architecture) |
-| vaccination_2026 | `app/icon.svg` | BPA mark | Embed in PDF header |
+| vaccination_2026 | `app/icon.svg` | Furtail mark | Embed in PDF header |
 | vaccination_2026 | `config/organization.ts` | Branding copy | Footer text source |
 
 ### Task 3 — Booking lookup PDF
@@ -77,7 +77,7 @@
 | backend-api | `src/api/v1/modules/notifications/sms.routes.ts` | `POST /notifications/sms/test` | **Exists** |
 | backend-api | `src/api/v1/modules/notifications/sms.controller.ts` | `smsTestHandler` | Enhance response detail (optional) |
 | backend-api | `src/api/v1/modules/admin_sms/admin_sms.routes.ts` | `POST /admin/sms/send` | **Exists** |
-| bpa_web | `src/bpa/campaign/admin/CampaignOperationsCenter.tsx` | Bulk SMS only | Add “Test SMS” panel (optional) |
+| bpa_web | `src/furtail/campaign/admin/CampaignOperationsCenter.tsx` | Bulk SMS only | Add “Test SMS” panel (optional) |
 
 ---
 
@@ -176,7 +176,7 @@ formatBangladeshPhone(input: string): string     // display-friendly
 
 | Field | Success page source | Lookup source |
 |-------|---------------------|---------------|
-| BPA Logo | `app/icon.svg` | Same |
+| Furtail Logo | `app/icon.svg` | Same |
 | Campaign name | `checkoutResult.campaign.name` | **Gap** — extend claim API |
 | Booking ID | `booking.bookingRef` | ✓ |
 | Verification code | `verificationCode` | ✓ |
@@ -190,7 +190,7 @@ formatBangladeshPhone(input: string): string     // display-friendly
 | Payment method | `checkoutResult.paymentMethod` | **Gap** |
 | Payment amount | `checkoutResult.amount` | **Gap** |
 | Booking date | `booking.bookingDate` | ✓ |
-| Footer | `Official BPA Vaccination Campaign 2026` | static |
+| Footer | `Official Furtail Vaccination Campaign 2026` | static |
 
 ### Architecture decision — **requires confirmation**
 
@@ -202,7 +202,7 @@ formatBangladeshPhone(input: string): string     // display-friendly
 | **D. Print-only HTML** (`window.print`) | Zero deps | No true `.pdf` download with filename | Use **alongside** A for Print button |
 
 **Recommended:** Option **A + D**
-- `Download PDF` → `@react-pdf/renderer` → `BPA-Vaccination-Booking-{BOOKING_REF}.pdf`
+- `Download PDF` → `@react-pdf/renderer` → `Furtail-Vaccination-Booking-{BOOKING_REF}.pdf`
 - `Print PDF` → `window.print()` on same layout (print CSS)
 
 ### New components
@@ -337,7 +337,7 @@ Admin booking search works with partial match (`slice(-11)`). Normalize on input
 | `01701022277` accepted | Booking form + lookup |
 | DB stores `01…` | API request payload / DB spot-check |
 | Success page PDF card | Visual + download |
-| Filename `BPA-Vaccination-Booking-{REF}.pdf` | Download test |
+| Filename `Furtail-Vaccination-Booking-{REF}.pdf` | Download test |
 | Lookup PDF | After claim flow |
 | SMS status | `docs/audits/sms-delivery-audit.md` |
 | TypeScript / build | `typecheck` + `build` both repos |
@@ -359,7 +359,7 @@ Admin booking search works with partial match (`slice(-11)`). Normalize on input
 
 1. Collect owner name on express booking (optional field).
 2. Email booking PDF via backend notification worker.
-3. Share `lib/phone.ts` logic to a small `@bpa/phone` package if more repos need it.
+3. Share `lib/phone.ts` logic to a small `@furtail/phone` package if more repos need it.
 4. Server-side PDF archive in object storage for audit trail.
 
 ---

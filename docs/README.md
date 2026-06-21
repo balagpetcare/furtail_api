@@ -1,4 +1,4 @@
-# BPA Project Documentation
+# Furtail Project Documentation
 
 এই ফোল্ডারে প্রজেক্টের সব প্ল্যানিং ও ডিজাইন ডকুমেন্ট রাখা হয়েছে। মূল সোর্স ফোল্ডার (src, prisma, package.json ইত্যাদি) থেকে আলাদা রাখা হয়েছে যাতে ফাইলগুলো মিশে না যায়।
 

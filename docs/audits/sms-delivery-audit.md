@@ -1,7 +1,7 @@
-# SMS Delivery Verification Audit — BPA Vaccination 2026
+# SMS Delivery Verification Audit — Furtail Vaccination 2026
 
 **Date:** 2026-06-07  
-**Scope:** Campaign booking SMS (payment success, OTP, reminders) and central BPA SMS gateway  
+**Scope:** Campaign booking SMS (payment success, OTP, reminders) and central Furtail SMS gateway  
 **Repos:** `backend-api` (primary), workers, `bpa_web` (admin SMS UI)
 
 ---

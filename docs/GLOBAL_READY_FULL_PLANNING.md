@@ -1,6 +1,6 @@
 # Global-Ready Full Planning - সারা বিশ্বে উন্মুক্ত করার আপডেট প্ল্যান
 
-**BPA / WorldPetsAssociation - সম্পূর্ণ স্ক্যান ও পরবর্তী স্টেপ প্ল্যান**
+**Furtail / WorldPetsAssociation - সম্পূর্ণ স্ক্যান ও পরবর্তী স্টেপ প্ল্যান**
 
 *(Aligned with [BPA_STANDARD.md](../BPA_STANDARD.md), [PROJECT_CONTEXT.md](../PROJECT_CONTEXT.md). Reference: [GLOBAL_COUNTRY_WISE_DESIGN_BLUEPRINT.md](./GLOBAL_COUNTRY_WISE_DESIGN_BLUEPRINT.md), [GLOBAL_READY_PRODUCT_SYSTEM.md](./GLOBAL_READY_PRODUCT_SYSTEM.md), Plan doc section 8.)*
 
@@ -20,7 +20,7 @@
 | Locations | BD-only | BdDivision, BdDistrict, BdUpazila, BdArea (Bangladesh hierarchy) |
 | Donation | Simple | Donation: campaignId, donorId, amount, status; no country, no policy_version, no AML/KYC flow |
 | Audit | Partial | AuditLog: ORGANIZATION, BRANCH, OWNER_KYC only; no DONATION/TRANSACTION |
-| Storage | Single bucket | bpa-pets; no country-wise bucket or prefix |
+| Storage | Single bucket | furtail-pets; no country-wise bucket or prefix |
 | Rate limit | Partial | Auth, withdraw, webhook; no donation-specific limiter |
 | Idempotency | Partial | Withdraw has Idempotency-Key; donate does not |
 | Middleware order | - | No countryContext or policyFeature middleware in app.ts |
@@ -29,11 +29,11 @@
 
 | Area | Status | Detail |
 |------|--------|--------|
-| Ports | OK | 3000 API; bpa_web 3100–3107; bpa-landing 3101; vaccination_2026 3110 — see [infrastructure/PORT_AND_DOMAIN_MAP.md](./infrastructure/PORT_AND_DOMAIN_MAP.md) |
+| Ports | OK | 3000 API; bpa_web 3100–3107; furtail-landing 3101; vaccination_2026 3110 — see [infrastructure/PORT_AND_DOMAIN_MAP.md](./infrastructure/PORT_AND_DOMAIN_MAP.md) |
 | Country / subdomain | Missing | No X-Country-Code or subdomain-based routing |
 | Locale / i18n | Partial | LanguageLayer, CurrenciesLayer, CompanyLayer (limited) |
 
-### 1.3 Flutter App (bpa_app)
+### 1.3 Flutter App (furtail_app)
 
 | Area | Status | Detail |
 |------|--------|--------|
@@ -91,7 +91,7 @@
 |---|--------|--------|--------------|
 | D1 | Geocode API | API | GET /locations/geocode, GET /locations/reverse (Nominatim/Photon); rate limit, cache |
 | D2 | Map + picker (web) | bpa_web | Leaflet or MapLibre; center pin or draggable marker; Confirm -> lat/lng |
-| D3 | Map + picker (Flutter) | bpa_app | Same stack; location picker screen |
+| D3 | Map + picker (Flutter) | furtail_app | Same stack; location picker screen |
 | D4 | Branch lat/lng + GeoFence | DB | Branch address_json, coverage_polygon (GeoJSON); validation |
 
 ### Group E: Frontend + App
@@ -99,8 +99,8 @@
 | # | Update | Scope | Touch points |
 |---|--------|--------|--------------|
 | E1 | Country header / subdomain | bpa_web | Send X-Country-Code or use subdomain (bd., in.); API calls include country |
-| E2 | Country select (Flutter) | bpa_app | First launch: country picker (auto-detect + manual); persist; apply configs/terms |
-| E3 | Policy-based UI | bpa_web + bpa_app | Hide/disable Donation or Ads if policy says off; show reason_code |
+| E2 | Country select (Flutter) | furtail_app | First launch: country picker (auto-detect + manual); persist; apply configs/terms |
+| E3 | Policy-based UI | bpa_web + furtail_app | Hide/disable Donation or Ads if policy says off; show reason_code |
 
 ### Group F: RBAC + Roles
 
@@ -171,7 +171,7 @@
 | 3.5 | Flutter: map + location picker | 3.3 |
 | 3.6 | Branch lat/lng + coverage_polygon | schema |
 
-**Touch points:** appConfig, media.service, payout providers, new locations/geocode routes, bpa_web components, bpa_app screens.
+**Touch points:** appConfig, media.service, payout providers, new locations/geocode routes, bpa_web components, furtail_app screens.
 
 ### Phase 4: Ads + Govt Reporting + RBAC (2-4 weeks)
 
@@ -191,7 +191,7 @@
 | Step | Task | Depends on |
 |------|------|------------|
 | 5.1 | bpa_web: X-Country-Code or subdomain; pass to API | Phase 1 |
-| 5.2 | bpa_app: country select (first launch); persist; apply configs | Phase 1 |
+| 5.2 | furtail_app: country select (first launch); persist; apply configs | Phase 1 |
 | 5.3 | Hide/disable Donation or Ads per policy | Phase 2 |
 
 ### Phase 6: Docs + Launch Prep (ongoing)
@@ -253,7 +253,7 @@ Phase 6 (Docs) -- ongoing
 ## Part 6: রিস্ক ও সতর্কতা
 
 - **Backward compatibility:** সব পরিবর্তন additive; existing API without country = assume BD.
-- **BPA Standard:** Ports unchanged; merge only, no overwrite; touch points confirm before code.
+- **Furtail Standard:** Ports unchanged; merge only, no overwrite; touch points confirm before code.
 - **Data:** New country = new policy seed; default donation OFF for new countries.
 - **Rollback:** Policy OFF per country without code deploy; DB migration rollback only if needed.
 

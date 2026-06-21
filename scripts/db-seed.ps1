@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Stop'
 
-Write-Host "== BPA DB SEED ==" -ForegroundColor Cyan
+Write-Host "== Furtail DB SEED ==" -ForegroundColor Cyan
 
 Write-Host "npx prisma generate" -ForegroundColor Yellow
 npx prisma generate

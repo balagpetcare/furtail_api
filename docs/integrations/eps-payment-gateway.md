@@ -1,4 +1,4 @@
-# EPS Bangladesh Payment Gateway — BPA Integration
+# EPS Bangladesh Payment Gateway — Furtail Integration
 
 Production-ready EPS integration for campaign booking checkout. Credentials are read **only** from environment variables — never hardcoded.
 
@@ -22,8 +22,8 @@ Production-ready EPS integration for campaign booking checkout. Credentials are 
 
 ```env
 PAYMENT_PROVIDER=eps
-API_PUBLIC_BASE_URL=https://api-staging.bpa.com.bd
-CAMPAIGN_LANDING_URL=https://vaccination-staging.bpa.com.bd
+API_PUBLIC_BASE_URL=https://api-staging.furtail.com.bd
+CAMPAIGN_LANDING_URL=https://vaccination-staging.furtail.com.bd
 
 EPS_BASE_URL=https://sandboxpgapi.eps.com.bd
 EPS_USERNAME=your_sandbox_username

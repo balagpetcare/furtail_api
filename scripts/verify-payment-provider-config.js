@@ -22,7 +22,7 @@ const keys = [
   "EPS_SANDBOX",
 ];
 
-console.log("=== BPA Payment Provider Verification ===\n");
+console.log("=== Furtail Payment Provider Verification ===\n");
 console.log("Active provider detected:", provider);
 console.log("Provider ready:", cfg.isProviderConfigured(provider));
 console.log("Startup validation ok:", validation.ok);
