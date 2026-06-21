@@ -143,44 +143,14 @@ export async function getEnterpriseProfile(userId: number) {
   if (!user) return null;
 
   const orgMembers: any[] = [];
-  const [doctorVerification, branchMembers] = await Promise.all([
-    prisma.doctorVerification.findUnique({
-      where: { userId },
-      select: {
-        verificationStatus: true,
-        licenseNumber: true,
-        specializationTags: true,
-        qualifications: true,
-        primaryCountryCode: true,
-      },
-    }),
-    prisma.branchMember.findMany({
-      where: { userId, status: "ACTIVE" },
-      include: {
-        branch: { select: { id: true, name: true, code: true, status: true, orgId: true } },
-        org: { select: { id: true, name: true } },
-        clinicStaffProfile: {
-          select: {
-            staffType: true,
-            licenseNumber: true,
-            specializationTags: true,
-            roleInClinic: true,
-            visitTypes: true,
-            defaultConsultationFee: true,
-            followUpFee: true,
-            emergencyFee: true,
-            commissionPolicy: true,
-            contractStatus: true,
-            allowEmergencyOverbook: true,
-            visiting: true,
-            status: true,
-            onboardingStatus: true,
-          },
-        },
-      },
-      orderBy: { id: "desc" },
-    }),
-  ]);
+  const branchMembers = await prisma.branchMember.findMany({
+    where: { userId, status: "ACTIVE" },
+    include: {
+      branch: { select: { id: true, name: true, code: true, status: true, orgId: true } },
+      org: { select: { id: true, name: true } },
+    },
+    orderBy: { id: "desc" },
+  });
 
   const activeBranchId = user.appSettings?.lastActiveBranchId ?? null;
 
@@ -230,7 +200,6 @@ export async function getEnterpriseProfile(userId: number) {
     organization: {
       owner: user.ownerProfile,
       orgMembers,
-      doctorVerification,
     },
     professional: {
       branchAssignments: branchMembers.map((bm) => ({
@@ -241,20 +210,7 @@ export async function getEnterpriseProfile(userId: number) {
         branch: bm.branch,
         org: bm.org,
         rbacRoles: [],
-        clinic: bm.clinicStaffProfile
-          ? {
-              ...bm.clinicStaffProfile,
-              defaultConsultationFee:
-                bm.clinicStaffProfile.defaultConsultationFee != null
-                  ? Number(bm.clinicStaffProfile.defaultConsultationFee)
-                  : null,
-              followUpFee:
-                bm.clinicStaffProfile.followUpFee != null ? Number(bm.clinicStaffProfile.followUpFee) : null,
-              emergencyFee:
-                bm.clinicStaffProfile.emergencyFee != null ? Number(bm.clinicStaffProfile.emergencyFee) : null,
-              employeeCode: bm.clinicStaffProfile.licenseNumber ?? `BM-${bm.id}`,
-            }
-          : null,
+        clinic: null,
       })),
     },
     preferences: {

@@ -126,7 +126,7 @@ model UserAuth {
   lockedUntil       DateTime?
   createdAt         DateTime     @default(now())
   updatedAt         DateTime     @updatedAt
-  /// OIDC subject (e.g. Google "sub") â€” set for OAuth-linked accounts
+  /// OIDC subject (e.g. Google "sub") — set for OAuth-linked accounts
   oauthSubject      String?
   user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -320,7 +320,12 @@ model User {
   branchMembersInvited                    BranchMember[]                       @relation("BranchMemberInvitedBy")
   branchMemberships                       BranchMember[]
   branchProfilesReviewed                  BranchProfileDetails[]               @relation("BranchKycReviewedBy")
+  clinicalCasesAsPatient                  ClinicalCase[]                       @relation("ClinicalCasePatient")
+  doctorVerificationReviewed              DoctorVerification[]                 @relation("DoctorVerificationReviewedBy")
+  doctorVerification                      DoctorVerification?
   donations                               Donation[]
+  emergencyApprovalsApproved              EmergencyDoctorApproval[]            @relation("EmergencyApprovalApprover")
+  emergencyApprovalsRequested             EmergencyDoctorApproval[]            @relation("EmergencyApprovalRequester")
   fundraisingAccountStatusLogsAsAdmin     FundraisingAccountStatusLog[]        @relation("FundraisingAccountStatusLogAdminUser")
   fundraisingAccount                      FundraisingAccount?
   fundraisingWithdrawRequestsAsAdmin      FundraisingWithdrawRequest[]         @relation("FundraisingWithdrawAdminUser")
@@ -337,6 +342,8 @@ model User {
   ownerOnboardingState                    OwnerOnboardingState?
   ownerProfile                            OwnerProfile?
   pets                                    Pet[]
+  posShiftsClosed                         PosShift[]                           @relation("PosShiftClosedBy")
+  posShiftsOpened                         PosShift[]                           @relation("PosShiftOpenedBy")
   postCommentLikes                        PostCommentLike[]
   postComments                            PostComment[]
   postLikes                               PostLike[]
@@ -344,6 +351,10 @@ model User {
   reports                                 Report[]                             @relation("UserReports")
   rewardHistories                         RewardHistory[]
   servicesCreated                         Service[]                            @relation("ServiceCreatedBy")
+  surgeryCasesCreatedBy                   SurgeryCase[]                        @relation("SurgeryCaseCreatedBy")
+  surgeryCasesAsPatient                   SurgeryCase[]                        @relation("SurgeryCasePatient")
+  surgeryCasesUpdatedBy                   SurgeryCase[]                        @relation("SurgeryCaseUpdatedBy")
+  surgeryPackagesUpdatedBy                SurgeryPackage[]                     @relation("SurgeryPackageUpdatedBy")
   achievements                            UserAchievement[]
   appSettings                             UserAppSettings?
   auth                                    UserAuth?
@@ -991,6 +1002,7 @@ model Pet {
   /// Staff clinic: pet was registered at this branch (visibility before first appointment/visit).
   clinicRegisteredBranchId Int?
   appointments             Appointment[]
+  clinicalCases            ClinicalCase[]
   dewormingRecords         DewormingRecord[]
   medicalHistories         MedicalHistory[]
   familyMembers            PetFamilyMember[]
@@ -1004,6 +1016,7 @@ model Pet {
   size                     AnimalSize?           @relation(fields: [sizeId], references: [id])
   subBreed                 SubBreed?             @relation(fields: [subBreedId], references: [id])
   user                     User                  @relation(fields: [userId], references: [id])
+  surgeryCases             SurgeryCase[]
   vaccinations             Vaccination[]
   vaccinationReminders     VaccinationReminder[]
   visits                   Visit[]
@@ -1785,12 +1798,19 @@ model Organization {
   branchPolicies                 BranchPolicy[]
   branchRooms                    BranchRoom[]
   branches                       Branch[]
+  clinicIntakes                  ClinicIntake[]
+  clinicStaffProfiles            ClinicStaffProfile[]
+  clinicalCases                  ClinicalCase[]
   vaccinationReminders           VaccinationReminder[]
   controllerForCountry           Country?                        @relation("CountryController")
   legalProfile                   OrganizationLegalProfile?
+  orgPricingPolicy               OrgPricingPolicy?
   country                        Country?                        @relation(fields: [countryId], references: [id], onDelete: Restrict)
   owner                          User                            @relation(fields: [ownerUserId], references: [id])
   services                       Service[]
+  surgeryCases                   SurgeryCase[]
+  surgeryPackages                SurgeryPackage[]
+  vendors                        Vendor[]
   visits                         Visit[]
   warehouses                     Warehouse[]
   // Campaign 2026 relations
@@ -1834,10 +1854,18 @@ model Branch {
   profileDetails                     BranchProfileDetails?
   rooms                              BranchRoom[]
   org                                Organization                      @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  clinicFinanceConfig                ClinicFinanceConfig?
+  clinicIntakes                      ClinicIntake[]
+  clinicStaffProfiles                ClinicStaffProfile[]
+  clinicalCases                      ClinicalCase[]
   inventoryLocations                 InventoryLocation[]
   orders                             Order[]
   petsRegisteredAtClinic             Pet[]                             @relation("PetClinicRegistrationBranch")
+  posInvoices                        PosInvoice[]
+  posShifts                          PosShift[]
   services                           Service[]
+  surgeryCases                       SurgeryCase[]
+  surgeryPackages                    SurgeryPackage[]
   userAppSettingsLastActive          UserAppSettings[]
   vaccinationReminders               VaccinationReminder[]
   visits                             Visit[]
@@ -1879,6 +1907,7 @@ model BranchRoom {
   appointments             Appointment[]
   branch                   Branch                 @relation(fields: [branchId], references: [id], onDelete: Cascade)
   org                      Organization           @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  surgeryCases             SurgeryCase[]
 
   @@unique([branchId, name])
   @@unique([branchId, code])
@@ -1926,6 +1955,9 @@ model BranchMember {
   invitedBy                    User?                     @relation("BranchMemberInvitedBy", fields: [invitedByUserId], references: [id])
   org                          Organization              @relation(fields: [orgId], references: [id], onDelete: Cascade)
   user                         User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clinicStaffProfile           ClinicStaffProfile?
+  clinicalCasesAsPrimaryDoctor ClinicalCase[]            @relation("ClinicalCasePrimaryDoctor")
+  surgeryCasesAsPrimaryDoctor  SurgeryCase[]             @relation("SurgeryCasePrimaryDoctor")
   visitsAsDoctor               Visit[]                   @relation("VisitDoctor")
 
   @@unique([branchId, userId])
@@ -1934,7 +1966,79 @@ model BranchMember {
   @@map("branch_members")
 }
 
+model DoctorVerification {
+  id                  Int                          @id @default(autoincrement())
+  userId              Int                          @unique
+  licenseNumber       String?                      @db.VarChar(128)
+  registrationBody    String?                      @db.VarChar(128)
+  specializationTags  Json?
+  nidNumber           String?                      @db.VarChar(32)
+  metadataJson        Json?
+  verificationStatus  VerificationStatus           @default(UNSUBMITTED)
+  submittedAt         DateTime?
+  reviewedAt          DateTime?
+  reviewedByAdminId   Int?
+  reviewNote          String?
+  createdAt           DateTime                     @default(now())
+  updatedAt           DateTime                     @updatedAt
+  primaryCountryCode  String?                      @db.VarChar(3)
+  divisionId          Int?
+  districtId          Int?
+  upazilaId           Int?
+  unionId             Int?
+  areaId              Int?
+  qualifications      Json?
+  onboardingCompleted Boolean                      @default(false)
+  reviewedByAdmin     User?                        @relation("DoctorVerificationReviewedBy", fields: [reviewedByAdminId], references: [id])
+  user                User                         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([verificationStatus])
+  @@index([reviewedByAdminId])
+  @@index([primaryCountryCode])
+  @@index([divisionId])
+  @@index([districtId])
+  @@index([upazilaId])
+  @@index([unionId])
+  @@index([areaId])
+  @@map("doctor_verifications")
+}
+
+model ClinicStaffProfile {
+  id                      Int                      @id @default(autoincrement())
+  orgId                   Int
+  branchId                Int
+  branchMemberId          Int                      @unique
+  staffType               String                   @db.VarChar(32)
+  licenseNumber           String?                  @db.VarChar(64)
+  specializationTags      Json?
+  defaultConsultationFee  Decimal?                 @db.Decimal(12, 2)
+  visiting                Boolean                  @default(false)
+  status                  String                   @default("ACTIVE") @db.VarChar(16)
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  roleInClinic            String?                  @db.VarChar(32)
+  visitTypes              Json?
+  followUpFee             Decimal?                 @db.Decimal(12, 2)
+  emergencyFee            Decimal?                 @db.Decimal(12, 2)
+  commissionPolicy        Json?
+  scheduleEditPolicy      String                   @default("BOTH") @db.VarChar(32)
+  contractStatus          String                   @default("ACTIVE") @db.VarChar(16)
+  contractStartDate       DateTime?
+  contractEndDate         DateTime?
+  contractNotes           String?
+  maxPatientsPerDay       Int?
+  allowEmergencyOverbook  Boolean                  @default(false)
+  permissionOverrides     Json?
+  travelBufferMinutes     Int                      @default(0)
+  onboardingStatus        String                   @default("PENDING") @db.VarChar(16)
+  branch                  Branch                   @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  branchMember            BranchMember             @relation(fields: [branchMemberId], references: [id], onDelete: Cascade)
+  org                     Organization             @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, branchId])
+  @@index([branchId, staffType])
+  @@map("clinic_staff_profiles")
+}
 
 model Appointment {
   id                          Int                      @id @default(autoincrement())
@@ -1997,6 +2101,11 @@ model Appointment {
   rescheduledTo               Appointment?             @relation("AppointmentReschedule")
   room                        BranchRoom?              @relation(fields: [roomId], references: [id])
   service                     Service                  @relation(fields: [serviceId], references: [id])
+  surgeryPackage              SurgeryPackage?          @relation(fields: [surgeryPackageId], references: [id])
+  intake                      ClinicIntake?
+  clinicalCase                ClinicalCase?
+  emergencyApproval           EmergencyDoctorApproval?
+  surgeryCase                 SurgeryCase?
   visit                       Visit?
 
   @@index([orgId, branchId])
@@ -2010,6 +2119,37 @@ model Appointment {
   @@map("appointments")
 }
 
+model ClinicIntake {
+  id                 Int          @id @default(autoincrement())
+  orgId              Int
+  branchId           Int
+  appointmentId      Int          @unique
+  chiefComplaint     String?
+  complaintDuration  String?      @db.VarChar(128)
+  complaintOnset     String?      @db.VarChar(32)
+  symptomsJson       Json?
+  additionalSymptoms String?
+  weightKg           Float?
+  tempC              Float?
+  heartRate          Int?
+  respRate           Int?
+  hydrationStatus    String?      @db.VarChar(32)
+  feedingJson        Json?
+  historyJson        Json?
+  riskFlagsJson      Json?
+  documentsJson      Json?
+  status             String       @default("NOT_STARTED") @db.VarChar(16)
+  createdByUserId    Int?
+  updatedByUserId    Int?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  appointment        Appointment  @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  branch             Branch       @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  org                Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([branchId, status])
+  @@map("clinic_intakes")
+}
 
 model Visit {
   id                         Int                         @id @default(autoincrement())
@@ -2027,7 +2167,9 @@ model Visit {
   createdAt                  DateTime                    @default(now())
   updatedAt                  DateTime                    @updatedAt
   treatmentCode              String?                     @db.VarChar(32)
+  clinicalCase               ClinicalCase?
   orders                     Order[]
+  surgeryCase                SurgeryCase?
   appointment                Appointment?                @relation(fields: [appointmentId], references: [id])
   branch                     Branch                      @relation(fields: [branchId], references: [id], onDelete: Cascade)
   doctor                     BranchMember?               @relation("VisitDoctor", fields: [doctorId], references: [id], onDelete: Restrict)
@@ -2080,11 +2222,14 @@ model Order {
   invoiceNumber                     String?                         @unique(where: raw("(\"invoiceNumber\" IS NOT NULL)"))
   posShiftId                        Int?
   visitId                           Int?
+  clinicInvoice                     ClinicInvoice?
   branch                            Branch                          @relation(fields: [branchId], references: [id], onDelete: Cascade)
   createdBy                         User?                           @relation("OrderCreatedBy", fields: [createdByUserId], references: [id])
   customer                          User?                           @relation("OrderCustomer", fields: [customerId], references: [id])
   fulfilmentInventoryLocation       InventoryLocation?              @relation("OrderFulfilmentLocation", fields: [fulfilmentInventoryLocationId], references: [id])
+  posShift                          PosShift?                       @relation(fields: [posShiftId], references: [id])
   visit                             Visit?                          @relation(fields: [visitId], references: [id])
+  posInvoice                        PosInvoice?
   // Campaign 2026 relations
   campaignBookings                  CampaignBooking[]               @relation("CampaignBookingPaymentOrder")
   campaignCheckoutSessions          CampaignCheckoutSession[]       @relation("CampaignCheckoutOrder")
@@ -2119,6 +2264,26 @@ model OrderPayment {
   @@map("order_payments")
 }
 
+model PosInvoice {
+  id            Int       @id @default(autoincrement())
+  orderId       Int       @unique
+  invoiceNumber String    @unique
+  branchId      Int
+  subtotal      Decimal   @db.Decimal(12, 2)
+  discountPct   Decimal?  @db.Decimal(5, 2)
+  discountAmt   Decimal   @default(0) @db.Decimal(12, 2)
+  taxPct        Decimal?  @db.Decimal(5, 2)
+  taxAmt        Decimal   @default(0) @db.Decimal(12, 2)
+  grandTotal    Decimal   @db.Decimal(12, 2)
+  paymentMethod String
+  paidAt        DateTime?
+  createdAt     DateTime  @default(now())
+  branch        Branch    @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  order         Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([branchId])
+  @@map("pos_invoices")
+}
 
 model PaymentTransactionLog {
   id             Int      @id @default(autoincrement())
@@ -2209,6 +2374,8 @@ model Service {
   branch                   Branch                    @relation(fields: [branchId], references: [id], onDelete: Cascade)
   createdBy                User                      @relation("ServiceCreatedBy", fields: [createdByUserId], references: [id])
   org                      Organization              @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  surgeryCases             SurgeryCase[]
+  surgeryPackages          SurgeryPackage[]
 
   @@index([orgId, branchId])
   @@index([branchId, status])
@@ -2465,8 +2632,10 @@ model InventoryLocation {
   zoneId                     Int?
   /// Optional pick-face bin (rack/bin hierarchy under WarehouseZone).
   binId                      Int?
+  bin                        WarehouseBin?                   @relation(fields: [binId], references: [id])
   branch                     Branch                          @relation(fields: [branchId], references: [id], onDelete: Cascade)
   warehouse                  Warehouse?                      @relation(fields: [warehouseId], references: [id])
+  zone                       WarehouseZone?                  @relation(fields: [zoneId], references: [id])
   ordersFulfilled            Order[]                         @relation("OrderFulfilmentLocation")
 
   @@index([type])
@@ -2480,15 +2649,324 @@ model InventoryLocation {
   @@map("inventory_locations")
 }
 
+model OrgPricingPolicy {
+  orgId                                  Int          @id
+  enforceBranchOverrideWithinCentralBand Boolean      @default(true)
+  retailDiscountApprovalEnabled          Boolean      @default(true)
+  createdAt                              DateTime     @default(now())
+  updatedAt                              DateTime     @default(now()) @updatedAt
+  /// When true, POS commits enforce floor, retail rules, and approval linkage (server-side).
+  posPricingGovernanceEnabled            Boolean      @default(false)
+  /// When true (and governance is off), barcode / product browse still uses enterprise list resolution for displayed price. When governance is on, enterprise list is always used for scan/browse regardless of this flag.
+  posUseEnterpriseListResolution         Boolean      @default(false)
+  /// Block checkout unit price below latest GRN reference cost (when cost known).
+  blockSaleBelowCost                     Boolean      @default(false)
+  /// When true, enforce ProductPricing.minPrice as floor on discounted POS lines.
+  blockSaleBelowFloor                    Boolean      @default(true)
+  allowCampaignStacking                  Boolean      @default(false)
+  allowMembershipStacking                Boolean      @default(false)
+  scheduledPricingEnabled                Boolean      @default(false)
+  batchPricingEnabled                    Boolean      @default(false)
+  defaultMaxDiscountPercent              Decimal?     @db.Decimal(5, 2)
+  org                                    Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
 
+  @@map("org_pricing_policies")
+}
 
+model PosShift {
+  id                    Int            @id @default(autoincrement())
+  branchId              Int
+  openedByUserId        Int
+  openedAt              DateTime       @default(now())
+  closedAt              DateTime?
+  status                PosShiftStatus @default(OPEN)
+  startingCash          Decimal        @default(0) @db.Decimal(12, 2)
+  closingCash           Decimal?       @db.Decimal(12, 2)
+  variance              Decimal?       @db.Decimal(12, 2)
+  closedByUserId        Int?
+  managerOverrideReason String?
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  orders                Order[]
+  branch                Branch         @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  closedBy              User?          @relation("PosShiftClosedBy", fields: [closedByUserId], references: [id])
+  openedBy              User           @relation("PosShiftOpenedBy", fields: [openedByUserId], references: [id])
 
+  @@index([branchId, status])
+  @@index([branchId, openedAt])
+  @@map("pos_shifts")
+}
 
+model Vendor {
+  id                      Int                    @id @default(autoincrement())
+  orgId                   Int
+  name                    String
+  contactJson             Json?
+  status                  VendorStatus           @default(ACTIVE)
+  createdAt               DateTime               @default(now())
+  updatedAt               DateTime               @updatedAt
+  code                    String?
+  phone                   String?
+  email                   String?
+  addressLine1            String?
+  addressLine2            String?
+  district                String?
+  city                    String?
+  country                 String?
+  vendorType              VendorType?            @default(OTHER)
+  defaultPaymentTermsDays Int?
+  creditLimit             Decimal?               @db.Decimal(12, 2)
+  openingBalance          Decimal                @default(0) @db.Decimal(12, 2)
+  notes                   String?
+  /// Wave-2: default lead time for procurement planning (days)
+  defaultLeadTimeDays     Int?
+  minOrderValue           Decimal?               @db.Decimal(14, 2)
+  currencyPreference      String?                @db.VarChar(10)
+  asnSupported            Boolean                @default(false)
+  deliveryWindowsJson     Json?
+  preferredWarehouseId    Int?
+  payoutAccounts          PayoutAccount[]
+  org                     Organization           @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  preferredWarehouse      Warehouse?             @relation("VendorPreferredWarehouse", fields: [preferredWarehouseId], references: [id])
 
+  @@unique([orgId, code])
+  @@index([orgId])
+  @@index([orgId, name])
+  @@map("vendors")
+}
 
+model PayoutAccount {
+  id          Int               @id @default(autoincrement())
+  vendorId    Int
+  type        PayoutAccountType
+  detailsJson Json
+  isDefault   Boolean           @default(false)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  vendor      Vendor            @relation(fields: [vendorId], references: [id], onDelete: Cascade)
 
+  @@index([vendorId])
+  @@index([isDefault])
+  @@map("payout_accounts")
+}
 
+model SurgeryPackage {
+  id                     Int                      @id @default(autoincrement())
+  orgId                  Int
+  branchId               Int
+  serviceId              Int
+  packageCode            String                   @db.VarChar(32)
+  packageName            String                   @db.VarChar(128)
+  packageType            PackageType              @default(STANDARD)
+  baseSellingPrice       Decimal                  @db.Decimal(12, 2)
+  validFrom              DateTime?                @db.Date
+  validTo                DateTime?                @db.Date
+  doctorFeeAmount        Decimal?                 @db.Decimal(12, 2)
+  clinicFeeAmount        Decimal?                 @db.Decimal(12, 2)
+  consumableBlockAmount  Decimal?                 @db.Decimal(12, 2)
+  medicationBlockAmount  Decimal?                 @db.Decimal(12, 2)
+  supportFeeAmount       Decimal?                 @db.Decimal(12, 2)
+  estimatedCost          Decimal?                 @db.Decimal(12, 2)
+  emergencySurchargeRule Json?
+  addOnAllowed           Boolean                  @default(true)
+  discountable           Boolean                  @default(true)
+  speciesCondition       Json?
+  status                 String                   @default("ACTIVE") @db.VarChar(16)
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+  eligibilityRuleJson    Json?
+  availabilityRuleJson   Json?
+  minSellingPrice        Decimal?                 @db.Decimal(12, 2)
+  maxDiscountPct         Decimal?                 @db.Decimal(5, 2)
+  maxDiscountAmount      Decimal?                 @db.Decimal(12, 2)
+  taxApplicable          Boolean                  @default(false)
+  branchOverrideAllowed  Boolean                  @default(false)
+  description            String?
+  publicDescription      String?
+  internalNotes          String?
+  department             String?                  @db.VarChar(64)
+  breedNote              String?                  @db.VarChar(256)
+  updatedByUserId        Int?
+  effectiveFrom          DateTime?                @db.Date
+  effectiveTo            DateTime?                @db.Date
+  allowedRoomTypes       Json?                    @default("[]")
+  appointments           Appointment[]
+  clinicInvoices         ClinicInvoice[]
+  clinicalCases          ClinicalCase[]
+  surgeryCases           SurgeryCase[]
+  branch                 Branch                   @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  org                    Organization             @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  service                Service                  @relation(fields: [serviceId], references: [id])
+  updatedBy              User?                    @relation("SurgeryPackageUpdatedBy", fields: [updatedByUserId], references: [id])
 
+  @@unique([branchId, packageCode])
+  @@index([orgId, branchId])
+  @@index([branchId, serviceId])
+  @@index([packageCode])
+  @@index([status])
+  @@map("surgery_packages")
+}
+
+model ClinicalCase {
+  id                     Int                      @id @default(autoincrement())
+  orgId                  Int
+  branchId               Int
+  appointmentId          Int?                     @unique
+  visitId                Int?                     @unique
+  patientId              Int
+  petId                  Int
+  surgeryPackageId       Int?
+  status                 ClinicalCaseStatus       @default(OPEN)
+  totalCharges           Decimal?                 @db.Decimal(12, 2)
+  totalCollected         Decimal?                 @db.Decimal(12, 2)
+  primaryDoctorId        Int?
+  openedAt               DateTime                 @default(now())
+  completedAt            DateTime?
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+  clinicInvoices         ClinicInvoice[]
+  appointment            Appointment?             @relation(fields: [appointmentId], references: [id])
+  branch                 Branch                   @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  org                    Organization             @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  patient                User                     @relation("ClinicalCasePatient", fields: [patientId], references: [id])
+  pet                    Pet                      @relation(fields: [petId], references: [id])
+  primaryDoctor          BranchMember?            @relation("ClinicalCasePrimaryDoctor", fields: [primaryDoctorId], references: [id])
+  surgeryPackage         SurgeryPackage?          @relation(fields: [surgeryPackageId], references: [id])
+  visit                  Visit?                   @relation(fields: [visitId], references: [id])
+  surgeryCase            SurgeryCase?
+
+  @@index([branchId, status])
+  @@index([patientId])
+  @@index([visitId])
+  @@index([appointmentId])
+  @@map("clinical_cases")
+}
+
+model SurgeryCase {
+  id                        Int                        @id @default(autoincrement())
+  orgId                     Int
+  branchId                  Int
+  clinicalCaseId            Int?                       @unique
+  appointmentId             Int?                       @unique
+  visitId                   Int?                       @unique
+  patientId                 Int
+  petId                     Int
+  serviceId                 Int
+  surgeryPackageId          Int?
+  roomId                    Int?
+  primaryDoctorId           Int
+  caseNumber                String                     @unique @db.VarChar(32)
+  surgeryType               String?                    @db.VarChar(64)
+  priority                  SurgeryCasePriority        @default(NORMAL)
+  status                    SurgeryCaseStatus          @default(DRAFT)
+  scheduledStartAt          DateTime?
+  scheduledEndAt            DateTime?
+  actualStartAt             DateTime?
+  actualEndAt               DateTime?
+  preopNotes                String?
+  operativeNotes            String?
+  postopNotes               String?
+  complicationNotes         String?
+  dischargeNotes            String?
+  followUpDate              DateTime?                  @db.Date
+  pricingSnapshotJson       Json?
+  feeRuleSnapshotJson       Json?
+  estimatedAmount           Decimal?                   @db.Decimal(12, 2)
+  advancePaid               Decimal?                   @db.Decimal(12, 2)
+  createdByUserId           Int
+  updatedByUserId           Int?
+  createdAt                 DateTime                   @default(now())
+  updatedAt                 DateTime                   @updatedAt
+  clinicInvoices            ClinicInvoice?
+  appointment               Appointment?               @relation(fields: [appointmentId], references: [id])
+  branch                    Branch                     @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  clinicalCase              ClinicalCase?              @relation(fields: [clinicalCaseId], references: [id])
+  createdBy                 User                       @relation("SurgeryCaseCreatedBy", fields: [createdByUserId], references: [id])
+  org                       Organization               @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  patient                   User                       @relation("SurgeryCasePatient", fields: [patientId], references: [id])
+  pet                       Pet                        @relation(fields: [petId], references: [id])
+  primaryDoctor             BranchMember               @relation("SurgeryCasePrimaryDoctor", fields: [primaryDoctorId], references: [id])
+  room                      BranchRoom?                @relation(fields: [roomId], references: [id])
+  service                   Service                    @relation(fields: [serviceId], references: [id])
+  surgeryPackage            SurgeryPackage?            @relation(fields: [surgeryPackageId], references: [id])
+  updatedBy                 User?                      @relation("SurgeryCaseUpdatedBy", fields: [updatedByUserId], references: [id])
+  visit                     Visit?                     @relation(fields: [visitId], references: [id])
+
+  @@index([branchId, status])
+  @@index([branchId, scheduledStartAt])
+  @@index([primaryDoctorId])
+  @@index([patientId])
+  @@index([petId])
+  @@map("surgery_cases")
+}
+
+model ClinicInvoice {
+  id                Int                @id @default(autoincrement())
+  orderId           Int                @unique
+  clinicalCaseId    Int?
+  surgeryPackageId  Int?
+  doctorFeeAmount   Decimal?           @db.Decimal(12, 2)
+  clinicShareAmount Decimal?           @db.Decimal(12, 2)
+  supportFeeAmount  Decimal?           @db.Decimal(12, 2)
+  consumableCost    Decimal?           @db.Decimal(12, 2)
+  discountApplied   Decimal?           @db.Decimal(12, 2)
+  settlementRef     String?            @db.VarChar(64)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  surgeryCaseId     Int?               @unique
+  anesthesiaCharge  Decimal?           @db.Decimal(12, 2)
+  otCharge          Decimal?           @db.Decimal(12, 2)
+  equipmentCharge   Decimal?           @db.Decimal(12, 2)
+  labCharge         Decimal?           @db.Decimal(12, 2)
+  billingStatus     String?            @db.VarChar(16)
+  clinicalCase      ClinicalCase?      @relation(fields: [clinicalCaseId], references: [id])
+  order             Order              @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  surgeryCase       SurgeryCase?       @relation(fields: [surgeryCaseId], references: [id])
+  surgeryPackage    SurgeryPackage?    @relation(fields: [surgeryPackageId], references: [id])
+
+  @@index([clinicalCaseId])
+  @@index([surgeryCaseId])
+  @@map("clinic_invoices")
+}
+
+model ClinicFinanceConfig {
+  id                            Int             @id @default(autoincrement())
+  branchId                      Int             @unique
+  settlementCycle               SettlementCycle @default(MONTHLY)
+  discountLimitDefaultPct       Decimal?        @db.Decimal(5, 2)
+  overheadAllocationMethod      String?         @db.VarChar(32)
+  caseCompletionRule            String?         @db.VarChar(64)
+  vialReturnDays                Int?            @default(7)
+  stockIssueAuditLock           Boolean         @default(false)
+  billEditRestrictionAfterClose Boolean         @default(true)
+  doctorFeeEditRestricted       Boolean         @default(true)
+  configJson                    Json?
+  createdAt                     DateTime        @default(now())
+  updatedAt                     DateTime        @updatedAt
+  branch                        Branch          @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  @@map("clinic_finance_configs")
+}
+
+model EmergencyDoctorApproval {
+  id                Int         @id @default(autoincrement())
+  appointmentId     Int         @unique
+  requestedByUserId Int
+  approvalStatus    String      @default("PENDING") @db.VarChar(16)
+  approvedByUserId  Int?
+  approvedAt        DateTime?
+  customFeeAmount   Decimal?    @db.Decimal(12, 2)
+  billingNotes      String?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  appointment       Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  approvedBy        User?       @relation("EmergencyApprovalApprover", fields: [approvedByUserId], references: [id])
+  requestedBy       User        @relation("EmergencyApprovalRequester", fields: [requestedByUserId], references: [id])
+
+  @@index([appointmentId])
+  @@index([approvalStatus])
+  @@map("emergency_doctor_approvals")
+}
 
 model OwnerOnboardingState {
   id                Int              @id @default(autoincrement())
@@ -2533,6 +3011,8 @@ model Warehouse {
   /// Max over-receipt vs ordered line qty: null = unlimited (legacy); 0 = no over; 5 = 5% over allowed.
   poOverReceiptTolerancePercent  Decimal?                   @db.Decimal(5, 2)
   locations                      InventoryLocation[]
+  preferredByVendors             Vendor[]                   @relation("VendorPreferredWarehouse")
+  zones                          WarehouseZone[]
   branch                         Branch?                    @relation(fields: [branchId], references: [id])
   manager                        User?                      @relation("WarehouseManager", fields: [managerId], references: [id])
   org                            Organization               @relation(fields: [orgId], references: [id], onDelete: Cascade)
@@ -2545,8 +3025,65 @@ model Warehouse {
   @@map("warehouses")
 }
 
+model WarehouseZone {
+  id          Int                  @id @default(autoincrement())
+  warehouseId Int
+  code        String               @db.VarChar(64)
+  name        String               @db.VarChar(200)
+  purpose     WarehouseZonePurpose @default(GENERAL)
+  sortOrder   Int                  @default(0)
+  isActive    Boolean              @default(true)
+  note        String?
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+  locations   InventoryLocation[]
+  racks       WarehouseRack[]
+  warehouse   Warehouse            @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
 
+  @@unique([warehouseId, code])
+  @@index([warehouseId, isActive])
+  @@map("warehouse_zones")
+}
 
+model WarehouseRack {
+  id        Int            @id @default(autoincrement())
+  zoneId    Int
+  code      String         @db.VarChar(64)
+  name      String         @db.VarChar(200)
+  sortOrder Int            @default(0)
+  isActive  Boolean        @default(true)
+  note      String?
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  bins      WarehouseBin[]
+  zone      WarehouseZone  @relation(fields: [zoneId], references: [id], onDelete: Cascade)
+
+  @@unique([zoneId, code])
+  @@index([zoneId, isActive])
+  @@map("warehouse_racks")
+}
+
+model WarehouseBin {
+  id            Int                 @id @default(autoincrement())
+  rackId        Int
+  code          String              @db.VarChar(64)
+  name          String              @db.VarChar(200)
+  sortOrder     Int                 @default(0)
+  isActive      Boolean             @default(true)
+  note          String?
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  /// Wave-2 putaway: soft capacity limit (units); null = unlimited
+  maxUnits      Int?
+  allowMixedSku Boolean             @default(true)
+  storageClass  String?             @db.VarChar(32)
+  locations     InventoryLocation[]
+  rack          WarehouseRack       @relation(fields: [rackId], references: [id], onDelete: Cascade)
+
+  @@unique([rackId, code])
+  @@index([rackId, isActive])
+  @@map("warehouse_bins")
+}
 
 model Campaign {
   id          Int     @id @default(autoincrement())
@@ -2705,7 +3242,7 @@ model CampaignSlot {
   startTime String   @db.VarChar(5) // "09:00"
   endTime   String   @db.VarChar(5) // "12:00"
 
-  // Session (optional â€” legacy rows use API inference)
+  // Session (optional — legacy rows use API inference)
   sessionName        String? @db.VarChar(120)
   checkInStartTime   String? @db.VarChar(5)
   bookingCutoffTime  String? @db.VarChar(5)
