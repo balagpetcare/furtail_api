@@ -1,0 +1,4409 @@
+-- CreateEnum
+CREATE TYPE "Gender" AS ENUM ('MALE', 'FEMALE', 'UNKNOWN');
+
+-- CreateEnum
+CREATE TYPE "PetStatus" AS ENUM ('ACTIVE', 'DECEASED', 'LOST', 'ADOPTED');
+
+-- CreateEnum
+CREATE TYPE "FamilyRelation" AS ENUM ('OWNER', 'DAD', 'MOM', 'BROTHER', 'SISTER', 'OTHER');
+
+-- CreateEnum
+CREATE TYPE "UserStatus" AS ENUM ('ACTIVE', 'BLOCKED', 'DELETED');
+
+-- CreateEnum
+CREATE TYPE "ProfileVisibility" AS ENUM ('PUBLIC', 'PRIVATE', 'FOLLOWERS_ONLY');
+
+-- CreateEnum
+CREATE TYPE "AuthProvider" AS ENUM ('LOCAL', 'GOOGLE', 'FACEBOOK', 'APPLE', 'TWITTER');
+
+-- CreateEnum
+CREATE TYPE "FriendRequestStatus" AS ENUM ('PENDING', 'ACCEPTED', 'REJECTED', 'CANCELED');
+
+-- CreateEnum
+CREATE TYPE "PostType" AS ENUM ('TEXT', 'IMAGE', 'VIDEO', 'REEL');
+
+-- CreateEnum
+CREATE TYPE "PostCategory" AS ENUM ('GENERAL', 'FUNDRAISING', 'FUNDRAISING_UPDATE');
+
+-- CreateEnum
+CREATE TYPE "NotificationType" AS ENUM ('VERIFICATION_CASE_SUBMITTED', 'VERIFICATION_CASE_APPROVED', 'VERIFICATION_CASE_REJECTED', 'VERIFICATION_DOCUMENT_APPROVED', 'VERIFICATION_DOCUMENT_REJECTED', 'OWNER_KYC_SUBMITTED', 'SYSTEM', 'STAFF_INVITE', 'STAFF_BRANCH_ACCESS_REQUEST', 'STAFF_BRANCH_ACCESS_APPROVED', 'STAFF_BRANCH_ACCESS_REVOKED', 'STAFF_BRANCH_ACCESS_EXPIRED', 'INVENTORY_STOCK_REQUEST', 'INVENTORY_LOW_STOCK', 'INVENTORY_TRANSFER', 'FINANCE_PAYMENT', 'FINANCE_PAYOUT', 'CLINIC_APPOINTMENT', 'CLINIC_PRESCRIPTION', 'BATCH_SUSPICIOUS_ACTIVITY', 'PRODUCT_APPROVED', 'PRODUCT_REJECTED', 'ENFORCEMENT_CODE_BLOCKED', 'ENFORCEMENT_BATCH_QUARANTINED', 'ENFORCEMENT_PRODUCT_DEACTIVATED', 'ENFORCEMENT_ORG_SUSPENDED', 'ENFORCEMENT_ACTION_REVERTED', 'TICKET_CREATED', 'TICKET_REPLIED', 'TICKET_STATUS_CHANGED', 'TICKET_ASSIGNED', 'TICKET_SLA_BREACH');
+
+-- CreateEnum
+CREATE TYPE "NotificationPriority" AS ENUM ('P0', 'P1', 'P2');
+
+-- CreateEnum
+CREATE TYPE "NotificationStatus" AS ENUM ('ACTIVE', 'EXPIRED', 'CANCELLED');
+
+-- CreateEnum
+CREATE TYPE "NotificationRecipientScopeType" AS ENUM ('USER', 'ORG', 'BRANCH', 'ROLE');
+
+-- CreateEnum
+CREATE TYPE "NotificationDeliveryChannel" AS ENUM ('IN_APP', 'EMAIL', 'SMS');
+
+-- CreateEnum
+CREATE TYPE "NotificationDeliveryStatus" AS ENUM ('QUEUED', 'SENT', 'DELIVERED', 'FAILED');
+
+-- CreateEnum
+CREATE TYPE "TransactionType" AS ENUM ('CREDIT', 'DEBIT');
+
+-- CreateEnum
+CREATE TYPE "TransactionStatus" AS ENUM ('PENDING', 'SUCCESS', 'FAILED', 'KYC_REQUIRED', 'ON_HOLD_REVIEW');
+
+-- CreateEnum
+CREATE TYPE "PaymentMethod" AS ENUM ('CASH', 'BKASH', 'NAGAD', 'ROCKET', 'BANK', 'CARD', 'MOBILE', 'ONLINE', 'MIXED');
+
+-- CreateEnum
+CREATE TYPE "WalletSourceType" AS ENUM ('DONATION', 'WALLET_WITHDRAW_REQUEST', 'FUNDRAISING_WITHDRAW_REQUEST', 'ADMIN_ADJUSTMENT');
+
+-- CreateEnum
+CREATE TYPE "PayoutProvider" AS ENUM ('BKASH', 'NAGAD', 'ROCKET');
+
+-- CreateEnum
+CREATE TYPE "WalletWithdrawRequestStatus" AS ENUM ('SUBMITTED', 'UNDER_REVIEW', 'APPROVED', 'QUEUED', 'PROCESSING', 'TRANSFERRED', 'FAILED', 'REJECTED', 'CANCELED');
+
+-- CreateEnum
+CREATE TYPE "PayoutMethodType" AS ENUM ('MFS', 'BANK');
+
+-- CreateEnum
+CREATE TYPE "FundraisingWithdrawRequestStatus" AS ENUM ('SUBMITTED', 'UNDER_REVIEW', 'APPROVED', 'TRANSFERRED', 'REJECTED', 'CANCELED');
+
+-- CreateEnum
+CREATE TYPE "ReportTargetType" AS ENUM ('POST', 'FUNDRAISING', 'USER', 'PET');
+
+-- CreateEnum
+CREATE TYPE "ReportStatus" AS ENUM ('PENDING', 'REVIEWED', 'DISMISSED');
+
+-- CreateEnum
+CREATE TYPE "FundraisingAccountStatus" AS ENUM ('PENDING', 'VERIFIED', 'REJECTED');
+
+-- CreateEnum
+CREATE TYPE "FundraisingAccountType" AS ENUM ('INDIVIDUAL', 'ORGANIZATION');
+
+-- CreateEnum
+CREATE TYPE "FundraisingCampaignStatus" AS ENUM ('ACTIVE', 'PAUSED', 'ENDED');
+
+-- CreateEnum
+CREATE TYPE "AuditEntityType" AS ENUM ('ORGANIZATION', 'BRANCH', 'OWNER_KYC', 'DONATION', 'TRANSACTION', 'USER', 'WORKSPACE_TASK', 'WORKSPACE_ALERT', 'WORKSPACE_APPROVAL', 'STOCK_REQUEST', 'STOCK_DISPATCH', 'GRN', 'COUNTRY', 'POS_SALE', 'POS_REFUND', 'POS_INVOICE', 'POS_SHIFT', 'APPOINTMENT', 'QUEUE_SESSION', 'QUEUE_TICKET', 'STAFF_INVITE');
+
+-- CreateEnum
+CREATE TYPE "AuditActorRole" AS ENUM ('OWNER', 'ADMIN', 'SUPER_ADMIN', 'STAFF', 'USER');
+
+-- CreateEnum
+CREATE TYPE "PartnerStatus" AS ENUM ('NOT_APPLIED', 'PENDING_REVIEW', 'APPROVED', 'REJECTED', 'SUSPENDED');
+
+-- CreateEnum
+CREATE TYPE "OrganizationPayoutStatus" AS ENUM ('NOT_CONFIGURED', 'PENDING_APPROVAL', 'CONFIGURED', 'REJECTED');
+
+-- CreateEnum
+CREATE TYPE "BranchStatus" AS ENUM ('DRAFT', 'PENDING_REVIEW', 'ACTIVE', 'INACTIVE', 'BLOCKED');
+
+-- CreateEnum
+CREATE TYPE "VerificationStatus" AS ENUM ('UNSUBMITTED', 'SUBMITTED', 'VERIFIED', 'REJECTED', 'EXPIRED');
+
+-- CreateEnum
+CREATE TYPE "VerificationEntityType" AS ENUM ('OWNER', 'ORGANIZATION', 'BRANCH', 'PRODUCER_ORG', 'PRODUCER_PRODUCT');
+
+-- CreateEnum
+CREATE TYPE "VerificationAction" AS ENUM ('SUBMIT', 'APPROVE', 'REJECT', 'NOTE', 'LOCK', 'UNLOCK');
+
+-- CreateEnum
+CREATE TYPE "VerificationCaseStatus" AS ENUM ('DRAFT', 'SUBMITTED', 'REJECTED', 'APPROVED');
+
+-- CreateEnum
+CREATE TYPE "VerificationDocStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
+
+-- CreateEnum
+CREATE TYPE "DocumentType" AS ENUM ('NID_FRONT', 'NID_BACK', 'SELFIE_WITH_NID', 'TRADE_LICENSE', 'TIN_CERT', 'BIN_CERT', 'INCORPORATION_CERT', 'PARTNERSHIP_DEED', 'BOARD_RESOLUTION', 'BANK_CHEQUE_LEAF', 'STORE_FRONT_PHOTO', 'STORE_INSIDE_PHOTO', 'SIGNBOARD_PHOTO', 'VET_LICENSE', 'DRUG_LICENSE', 'OTHER', 'LABEL_FRONT', 'LABEL_BACK', 'LABEL_SIDE', 'PACKAGING_PHOTO_FRONT', 'PACKAGING_PHOTO_BACK', 'PACKAGING_PHOTO_SIDE', 'SEALED_PACKAGE_PHOTO', 'BRAND_LOGO', 'MANUFACTURING_LICENSE', 'REGULATORY_APPROVAL', 'VAT_TIN_CERT', 'DOCTOR_REGISTRATION', 'DOCTOR_DEGREE', 'DOCTOR_PHOTO');
+
+-- CreateEnum
+CREATE TYPE "DocumentStatus" AS ENUM ('SUBMITTED', 'VERIFIED', 'REJECTED');
+
+-- CreateEnum
+CREATE TYPE "RegistrationType" AS ENUM ('PROPRIETORSHIP', 'PARTNERSHIP', 'LIMITED_COMPANY', 'NGO');
+
+-- CreateEnum
+CREATE TYPE "OrgType" AS ENUM ('PARTNER', 'COUNTRY_CHAPTER');
+
+-- CreateEnum
+CREATE TYPE "MemberRole" AS ENUM ('OWNER', 'ORG_ADMIN', 'BRANCH_MANAGER', 'BRANCH_STAFF', 'SELLER', 'DELIVERY_MANAGER', 'DELIVERY_STAFF', 'WAREHOUSE_MANAGER', 'RECEIVING_STAFF', 'DISPATCH_STAFF', 'DOCTOR', 'CLINIC_STAFF', 'CLINIC_RECEPTION', 'CLINIC_INVENTORY_STAFF', 'PHARMACIST', 'GROOMING_STAFF', 'BOARDING_STAFF', 'TRAINING_STAFF');
+
+-- CreateEnum
+CREATE TYPE "MemberStatus" AS ENUM ('INVITED', 'ACTIVE', 'SUSPENDED');
+
+-- CreateEnum
+CREATE TYPE "AppointmentStatus" AS ENUM ('BOOKED', 'CONFIRMED', 'CHECKED_IN', 'IN_QUEUE', 'CALLED', 'IN_CONSULT', 'COMPLETED', 'CANCELLED', 'NO_SHOW', 'DRAFT', 'PRE_BOOKED');
+
+-- CreateEnum
+CREATE TYPE "AppointmentSource" AS ENUM ('MOBILE', 'OWNER_PORTAL', 'WALKIN', 'STAFF', 'PHONE', 'OWNER_PANEL', 'DOCTOR_PANEL', 'ONLINE_BOOKING');
+
+-- CreateEnum
+CREATE TYPE "AppointmentPriority" AS ENUM ('NORMAL', 'EMERGENCY', 'VIP');
+
+-- CreateEnum
+CREATE TYPE "VisitStatus" AS ENUM ('CHECKED_IN', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED');
+
+-- CreateEnum
+CREATE TYPE "InventoryLocationType" AS ENUM ('CLINIC', 'SHOP', 'ONLINE_HUB', 'CENTRAL_WAREHOUSE', 'BRANCH_STORE', 'CLINIC_STORE', 'DAMAGE_AREA', 'RETURN_AREA', 'PHARMACY', 'QUARANTINE', 'STAGING');
+
+-- CreateEnum
+CREATE TYPE "ProductImportSourceType" AS ENUM ('CSV', 'EXCEL', 'API');
+
+-- CreateEnum
+CREATE TYPE "ProductImportBatchStatus" AS ENUM ('PENDING', 'PROCESSING', 'COMPLETED', 'FAILED', 'CANCELLED');
+
+-- CreateEnum
+CREATE TYPE "ProductImportRowStatus" AS ENUM ('READY', 'NEEDS_FIX', 'ERROR');
+
+-- CreateEnum
+CREATE TYPE "IntegrationMappingType" AS ENUM ('CATEGORY', 'SUBCATEGORY', 'BRAND', 'UNIT');
+
+-- CreateEnum
+CREATE TYPE "RoleScope" AS ENUM ('ORG', 'BRANCH', 'GLOBAL', 'COUNTRY', 'STATE');
+
+-- CreateEnum
+CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED');
+
+-- CreateEnum
+CREATE TYPE "PaymentStatus" AS ENUM ('PENDING', 'COMPLETED', 'FAILED', 'REFUNDED');
+
+-- CreateEnum
+CREATE TYPE "VaccinationRecordStatus" AS ENUM ('ACTIVE', 'CORRECTED', 'VOIDED');
+
+-- CreateEnum
+CREATE TYPE "VaccinationReminderStage" AS ENUM ('SEVEN_DAYS_BEFORE', 'THREE_DAYS_BEFORE', 'DUE_DATE', 'OVERDUE');
+
+-- CreateEnum
+CREATE TYPE "VaccinationReminderChannel" AS ENUM ('IN_APP', 'SMS', 'EMAIL', 'WHATSAPP');
+
+-- CreateEnum
+CREATE TYPE "VaccinationReminderStatus" AS ENUM ('PENDING', 'SENT', 'SKIPPED', 'FAILED', 'CANCELLED');
+
+-- CreateEnum
+CREATE TYPE "OrderSource" AS ENUM ('ONLINE', 'POS', 'CLINIC', 'OTHER');
+
+-- CreateEnum
+CREATE TYPE "ServiceStatus" AS ENUM ('ACTIVE', 'INACTIVE');
+
+-- CreateEnum
+CREATE TYPE "ServiceDepartment" AS ENUM ('DOCTOR_DESK', 'LAB', 'PHARMACY', 'PROCEDURE_ROOM', 'GROOMING_UNIT');
+
+-- CreateEnum
+CREATE TYPE "PaymentGateRule" AS ENUM ('PAY_BEFORE_SERVICE', 'PAY_AFTER_SERVICE', 'PARTIAL_DEPOSIT', 'NO_GATE');
+
+-- CreateEnum
+CREATE TYPE "ServiceApprovalStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
+
+-- CreateEnum
+CREATE TYPE "ServiceCategory" AS ENUM ('CONSULTATION', 'VACCINATION', 'SURGERY', 'GROOMING', 'BOARDING', 'DIAGNOSTICS', 'EMERGENCY', 'OTHER', 'TEST', 'PROCEDURE', 'PHARMACY');
+
+-- CreateEnum
+CREATE TYPE "OrderPaymentStatus" AS ENUM ('PENDING', 'PAID', 'FAILED');
+
+-- CreateEnum
+CREATE TYPE "LocationPrecisionLevel" AS ENUM ('COARSE', 'MEDIUM', 'PRECISE');
+
+-- CreateEnum
+CREATE TYPE "LocationConsentLevel" AS ENUM ('NONE', 'COARSE', 'PRECISE_WHEN_USING', 'ALWAYS');
+
+-- CreateEnum
+CREATE TYPE "LocationSource" AS ENUM ('GPS', 'IP', 'MANUAL', 'WIFI', 'CELL');
+
+-- CreateEnum
+CREATE TYPE "LocationEventType" AS ENUM ('PING', 'SIGNIFICANT_MOVE', 'MANUAL_SET', 'HOME_SET');
+
+-- CreateEnum
+CREATE TYPE "LocationCoverageEntityType" AS ENUM ('USER', 'STAFF', 'DOCTOR', 'CLINIC', 'SHOP', 'BRANCH', 'ORGANIZATION', 'BREEDER', 'PRODUCER', 'VOLUNTEER', 'RESCUE_TEAM');
+
+-- CreateEnum
+CREATE TYPE "CoverageZoneType" AS ENUM ('METRO', 'CITY_CORPORATION', 'OPERATIONAL', 'BUSINESS_READINESS');
+
+-- CreateEnum
+CREATE TYPE "OnboardingStatus" AS ENUM ('NOT_STARTED', 'PATH_SELECTED', 'ORG_DRAFT', 'BRANCH_DRAFT', 'REVIEW_READY', 'COMPLETED', 'FAILED_RECOVERABLE');
+
+-- CreateEnum
+CREATE TYPE "OnboardingPath" AS ENUM ('CREATE_NEW', 'JOIN_EXISTING');
+
+-- CreateEnum
+CREATE TYPE "WarehouseType" AS ENUM ('CENTRAL', 'REGIONAL', 'TRANSIT');
+
+-- CreateEnum
+CREATE TYPE "CampaignStatus" AS ENUM ('DRAFT', 'ACTIVE', 'PAUSED', 'COMPLETED', 'CANCELLED');
+
+-- CreateEnum
+CREATE TYPE "CampaignVisibility" AS ENUM ('PUBLIC', 'PRIVATE', 'UNLISTED');
+
+-- CreateEnum
+CREATE TYPE "CampaignPricingType" AS ENUM ('FREE', 'PAID', 'DONATION');
+
+-- CreateEnum
+CREATE TYPE "CampaignSlotStatus" AS ENUM ('OPEN', 'FULL', 'CLOSED', 'CANCELLED');
+
+-- CreateEnum
+CREATE TYPE "CampaignBookingStatus" AS ENUM ('DRAFT', 'PENDING_ASSIGNMENT', 'CONFIRMED', 'CHECKED_IN', 'IN_PROGRESS', 'COMPLETED', 'NO_SHOW', 'CANCELLED');
+
+-- CreateEnum
+CREATE TYPE "CampaignBookingMode" AS ENUM ('VENUE', 'ZONE_INTEREST');
+
+-- CreateEnum
+CREATE TYPE "CampaignPaymentStatus" AS ENUM ('NOT_REQUIRED', 'PENDING', 'COMPLETED', 'FAILED', 'REFUNDED');
+
+-- CreateEnum
+CREATE TYPE "PaymentTransactionStatus" AS ENUM ('PENDING', 'SUCCESS', 'FAILED', 'CANCELLED');
+
+-- CreateEnum
+CREATE TYPE "CampaignRefundStatus" AS ENUM ('PENDING', 'PROCESSING', 'COMPLETED', 'FAILED');
+
+-- CreateEnum
+CREATE TYPE "CampaignPetVaccinationStatus" AS ENUM ('PENDING', 'IN_PROGRESS', 'COMPLETED', 'DEFERRED', 'SKIPPED');
+
+-- CreateEnum
+CREATE TYPE "CampaignStaffRole" AS ENUM ('ADMIN', 'COORDINATOR', 'CHECK_IN', 'VACCINATOR', 'SUPPORT');
+
+-- CreateEnum
+CREATE TYPE "CampaignSmsStatus" AS ENUM ('QUEUED', 'SENDING', 'SENT', 'DELIVERED', 'FAILED');
+
+-- CreateEnum
+CREATE TYPE "CampaignRolloutPhaseStatus" AS ENUM ('PLANNED', 'ACTIVE', 'COMPLETED');
+
+-- CreateEnum
+CREATE TYPE "CampaignRolloutPhaseCode" AS ENUM ('PHASE_1', 'PHASE_2', 'PHASE_3', 'PHASE_4');
+
+-- CreateEnum
+CREATE TYPE "CampaignPaymentChannelMode" AS ENUM ('SMS_ONLY', 'EPS_ONLY', 'SMS_AND_EPS', 'EPS_WITH_SMS_FALLBACK');
+
+-- CreateEnum
+CREATE TYPE "CampaignPreRegistrationStatus" AS ENUM ('WAITING', 'NOTIFIED', 'CONVERTED', 'CANCELLED');
+
+-- CreateEnum
+CREATE TYPE "SmsLogStatus" AS ENUM ('QUEUED', 'SENDING', 'SENT', 'DELIVERED', 'FAILED');
+
+-- CreateEnum
+CREATE TYPE "CampaignCheckoutStatus" AS ENUM ('PENDING', 'PAID', 'FULFILLED', 'EXPIRED', 'FAILED');
+
+-- CreateTable
+CREATE TABLE "animal_categories" (
+    "id" SERIAL NOT NULL,
+    "code" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "displayOrder" INTEGER NOT NULL DEFAULT 0,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+
+    CONSTRAINT "animal_categories_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "animal_types" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "categoryId" INTEGER,
+    "code" TEXT,
+    "scientificName" VARCHAR(128),
+    "icon" VARCHAR(64),
+    "displayOrder" INTEGER DEFAULT 0,
+    "isActive" BOOLEAN DEFAULT true,
+
+    CONSTRAINT "animal_types_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "animal_sizes" (
+    "id" SERIAL NOT NULL,
+    "code" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "minWeightKg" DOUBLE PRECISION,
+    "maxWeightKg" DOUBLE PRECISION,
+    "displayOrder" INTEGER NOT NULL DEFAULT 0,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+
+    CONSTRAINT "animal_sizes_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "animal_colors" (
+    "id" SERIAL NOT NULL,
+    "code" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "hexPreview" VARCHAR(16),
+    "displayOrder" INTEGER NOT NULL DEFAULT 0,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+
+    CONSTRAINT "animal_colors_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "coat_patterns" (
+    "id" SERIAL NOT NULL,
+    "code" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "displayOrder" INTEGER NOT NULL DEFAULT 0,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+
+    CONSTRAINT "coat_patterns_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "breeds" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "animalTypeId" INTEGER NOT NULL,
+    "code" VARCHAR(64),
+    "aliasNames" JSONB,
+    "originCountry" VARCHAR(64),
+    "defaultSizeId" INTEGER,
+    "isMixed" BOOLEAN NOT NULL DEFAULT false,
+    "isOther" BOOLEAN NOT NULL DEFAULT false,
+    "displayOrder" INTEGER DEFAULT 0,
+    "isActive" BOOLEAN DEFAULT true,
+
+    CONSTRAINT "breeds_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "sub_breeds" (
+    "id" SERIAL NOT NULL,
+    "breedId" INTEGER NOT NULL,
+    "code" VARCHAR(64) NOT NULL,
+    "name" TEXT NOT NULL,
+    "displayOrder" INTEGER NOT NULL DEFAULT 0,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+
+    CONSTRAINT "sub_breeds_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "user_auth" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "provider" "AuthProvider" NOT NULL DEFAULT 'LOCAL',
+    "email" TEXT,
+    "phone" TEXT,
+    "passwordHash" TEXT,
+    "passwordUpdatedAt" TIMESTAMP(3),
+    "emailVerifiedAt" TIMESTAMP(3),
+    "phoneVerifiedAt" TIMESTAMP(3),
+    "lastLoginAt" TIMESTAMP(3),
+    "failedAttempts" INTEGER NOT NULL DEFAULT 0,
+    "lockedUntil" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "oauthSubject" TEXT,
+
+    CONSTRAINT "user_auth_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "user_profiles" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "displayName" TEXT NOT NULL,
+    "username" TEXT NOT NULL,
+    "bio" TEXT,
+    "visibility" "ProfileVisibility" NOT NULL DEFAULT 'PUBLIC',
+    "showEmail" BOOLEAN NOT NULL DEFAULT false,
+    "showPhone" BOOLEAN NOT NULL DEFAULT false,
+    "avatarMediaId" INTEGER,
+    "coverMediaId" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "gender" "Gender",
+    "dateOfBirth" TIMESTAMP(3),
+    "divisionId" INTEGER,
+    "districtId" INTEGER,
+    "upazilaId" INTEGER,
+    "unionId" INTEGER,
+    "areaId" INTEGER,
+    "addressJson" JSONB,
+    "emergencyContactJson" JSONB,
+    "providerDisplayName" VARCHAR(256),
+    "providerAvatarUrl" TEXT,
+    "providerKey" VARCHAR(32),
+    "providerSyncedAt" TIMESTAMP(3),
+
+    CONSTRAINT "user_profiles_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "user_stats_cache" (
+    "userId" INTEGER NOT NULL,
+    "followersCount" INTEGER NOT NULL DEFAULT 0,
+    "followingCount" INTEGER NOT NULL DEFAULT 0,
+    "petsCount" INTEGER NOT NULL DEFAULT 0,
+    "pawPoints" INTEGER NOT NULL DEFAULT 0,
+    "rankGlobal" INTEGER,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "user_stats_cache_pkey" PRIMARY KEY ("userId")
+);
+
+-- CreateTable
+CREATE TABLE "user_sessions" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "refreshTokenHash" TEXT NOT NULL,
+    "deviceId" TEXT,
+    "userAgent" TEXT,
+    "ip" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+    "revokedAt" TIMESTAMP(3),
+
+    CONSTRAINT "user_sessions_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "user_follows" (
+    "id" SERIAL NOT NULL,
+    "followerId" INTEGER NOT NULL,
+    "followingId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "user_follows_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "user_profile_likes" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "likedById" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "user_profile_likes_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "user_friend_requests" (
+    "id" SERIAL NOT NULL,
+    "fromUserId" INTEGER NOT NULL,
+    "toUserId" INTEGER NOT NULL,
+    "status" "FriendRequestStatus" NOT NULL DEFAULT 'PENDING',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "user_friend_requests_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "user_friends" (
+    "id" SERIAL NOT NULL,
+    "userAId" INTEGER NOT NULL,
+    "userBId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "user_friends_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "achievements" (
+    "id" SERIAL NOT NULL,
+    "code" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "description" TEXT,
+    "requiredPoints" INTEGER NOT NULL DEFAULT 0,
+    "pointsReward" INTEGER NOT NULL DEFAULT 0,
+    "howTo" TEXT,
+    "iconMediaId" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "achievements_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "user_achievements" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "achievementId" INTEGER NOT NULL,
+    "unlockedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "user_achievements_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "user_gallery_items" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "mediaId" INTEGER NOT NULL,
+    "caption" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "deleted" BOOLEAN NOT NULL DEFAULT false,
+
+    CONSTRAINT "user_gallery_items_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "users" (
+    "id" SERIAL NOT NULL,
+    "status" "UserStatus" NOT NULL DEFAULT 'ACTIVE',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "currentPlaceId" INTEGER,
+    "tokenVersion" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "places" (
+    "id" SERIAL NOT NULL,
+    "latitude" DOUBLE PRECISION NOT NULL,
+    "longitude" DOUBLE PRECISION NOT NULL,
+    "countryCode" TEXT,
+    "stateName" TEXT,
+    "cityName" TEXT,
+    "formattedAddress" VARCHAR(1024),
+    "rawAddressJson" JSONB,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "places_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "location_places" (
+    "id" SERIAL NOT NULL,
+    "countryCode" TEXT NOT NULL,
+    "admin1" TEXT,
+    "admin2" TEXT,
+    "city" TEXT,
+    "postalCode" TEXT,
+    "formattedAddress" VARCHAR(1024),
+    "lat" DOUBLE PRECISION,
+    "lng" DOUBLE PRECISION,
+    "geoHash" TEXT,
+    "source" "LocationSource",
+    "sourcePlaceId" TEXT,
+    "bdDivision" TEXT,
+    "bdDistrict" TEXT,
+    "bdUpazila" TEXT,
+    "bdWard" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "location_places_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "user_location_profiles" (
+    "userId" INTEGER NOT NULL,
+    "homePlaceId" INTEGER,
+    "currentPlaceId" INTEGER,
+    "manualOverridePlaceId" INTEGER,
+    "lastLat" DOUBLE PRECISION,
+    "lastLng" DOUBLE PRECISION,
+    "precisionLevel" "LocationPrecisionLevel" NOT NULL,
+    "consentLevel" "LocationConsentLevel" NOT NULL,
+    "lastUpdatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "user_location_events" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "timestamp" TIMESTAMP(3) NOT NULL,
+    "lat" DOUBLE PRECISION NOT NULL,
+    "lng" DOUBLE PRECISION NOT NULL,
+    "placeId" INTEGER,
+    "accuracyMeters" DOUBLE PRECISION,
+    "source" "LocationSource" NOT NULL,
+    "eventType" "LocationEventType" NOT NULL,
+    "sessionId" TEXT,
+    "deviceId" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "user_location_events_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "owner_profiles" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "name" TEXT NOT NULL,
+    "supportPhone" TEXT,
+    "supportEmail" TEXT,
+    "divisionId" INTEGER,
+    "districtId" INTEGER,
+    "upazilaId" INTEGER,
+    "unionId" INTEGER,
+    "areaId" INTEGER,
+    "nid" TEXT,
+    "dateOfBirth" TIMESTAMP(3),
+    "genderText" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "addressJson" JSONB,
+
+    CONSTRAINT "owner_profiles_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "owner_kyc" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "fullName" TEXT NOT NULL,
+    "fatherName" TEXT,
+    "motherName" TEXT,
+    "dateOfBirth" TIMESTAMP(3),
+    "genderText" TEXT,
+    "nationality" TEXT DEFAULT 'Bangladeshi',
+    "nidNumber" TEXT,
+    "nidIssueDate" TIMESTAMP(3),
+    "nidAddressRaw" TEXT,
+    "mobile" TEXT,
+    "email" TEXT,
+    "presentAddressJson" JSONB,
+    "permanentAddressJson" JSONB,
+    "emergencyContactName" TEXT,
+    "emergencyContactPhone" TEXT,
+    "verificationStatus" "VerificationStatus" NOT NULL DEFAULT 'UNSUBMITTED',
+    "submittedAt" TIMESTAMP(3),
+    "reviewedAt" TIMESTAMP(3),
+    "reviewedByAdminId" INTEGER,
+    "reviewNote" TEXT,
+    "rejectionReason" TEXT,
+    "riskScore" INTEGER DEFAULT 0,
+    "isLocked" BOOLEAN NOT NULL DEFAULT false,
+    "lockReason" TEXT,
+    "deletedAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "businessIntentJson" JSONB,
+    "declarationsJson" JSONB,
+    "expiresAt" TIMESTAMP(3),
+    "kycLevel" INTEGER DEFAULT 0,
+
+    CONSTRAINT "owner_kyc_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "owner_kyc_documents" (
+    "id" SERIAL NOT NULL,
+    "ownerKycId" INTEGER NOT NULL,
+    "type" "DocumentType" NOT NULL,
+    "status" "DocumentStatus" NOT NULL DEFAULT 'SUBMITTED',
+    "mediaId" INTEGER NOT NULL,
+    "docNumber" TEXT,
+    "issueDate" TIMESTAMP(3),
+    "expiryDate" TIMESTAMP(3),
+    "note" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "owner_kyc_documents_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "org_legal_profiles" (
+    "id" SERIAL NOT NULL,
+    "orgId" INTEGER NOT NULL,
+    "organizationName" TEXT NOT NULL,
+    "registrationType" "RegistrationType" NOT NULL DEFAULT 'PROPRIETORSHIP',
+    "tradeLicenseNumber" TEXT,
+    "tradeLicenseIssueDate" TIMESTAMP(3),
+    "tradeLicenseExpiryDate" TIMESTAMP(3),
+    "issuingAuthority" TEXT,
+    "tinNumber" TEXT,
+    "binNumber" TEXT,
+    "officialPhone" TEXT,
+    "officialEmail" TEXT,
+    "website" TEXT,
+    "facebookPage" TEXT,
+    "bankAccountName" TEXT,
+    "bankAccountNumber" TEXT,
+    "bankName" TEXT,
+    "bankBranchName" TEXT,
+    "routingNumber" TEXT,
+    "payoutBkash" TEXT,
+    "payoutNagad" TEXT,
+    "payoutRocket" TEXT,
+    "verificationStatus" "VerificationStatus" NOT NULL DEFAULT 'UNSUBMITTED',
+    "submittedAt" TIMESTAMP(3),
+    "reviewedAt" TIMESTAMP(3),
+    "reviewedByAdminId" INTEGER,
+    "reviewNote" TEXT,
+    "rejectionReason" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "org_legal_profiles_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "branch_profile_details" (
+    "id" SERIAL NOT NULL,
+    "branchId" INTEGER NOT NULL,
+    "branchPhone" TEXT,
+    "branchEmail" TEXT,
+    "managerName" TEXT,
+    "managerPhone" TEXT,
+    "managerNidNumber" TEXT,
+    "addressJson" JSONB,
+    "latitude" DOUBLE PRECISION,
+    "longitude" DOUBLE PRECISION,
+    "googleMapLink" TEXT,
+    "openingHoursJson" JSONB,
+    "weeklyOffDaysJson" JSONB,
+    "vetLicenseNumber" TEXT,
+    "drugLicenseNumber" TEXT,
+    "verificationStatus" "VerificationStatus" NOT NULL DEFAULT 'UNSUBMITTED',
+    "submittedAt" TIMESTAMP(3),
+    "reviewedAt" TIMESTAMP(3),
+    "reviewedByAdminId" INTEGER,
+    "reviewNote" TEXT,
+    "rejectionReason" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "coveragePolygon" JSONB,
+    "coverageRadiusKm" DOUBLE PRECISION,
+
+    CONSTRAINT "branch_profile_details_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "verification_logs" (
+    "id" SERIAL NOT NULL,
+    "entityType" "VerificationEntityType" NOT NULL,
+    "entityId" INTEGER NOT NULL,
+    "action" "VerificationAction" NOT NULL,
+    "fromStatus" "VerificationStatus",
+    "toStatus" "VerificationStatus",
+    "adminUserId" INTEGER,
+    "note" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "verification_logs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "verification_cases" (
+    "id" SERIAL NOT NULL,
+    "entityType" "VerificationEntityType" NOT NULL,
+    "entityId" INTEGER NOT NULL,
+    "status" "VerificationCaseStatus" NOT NULL DEFAULT 'DRAFT',
+    "submittedAt" TIMESTAMP(3),
+    "reviewedAt" TIMESTAMP(3),
+    "reviewedByAdminId" INTEGER,
+    "reviewSummary" TEXT,
+    "lockReason" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "isLocked" BOOLEAN NOT NULL DEFAULT false,
+    "payloadJson" JSONB,
+
+    CONSTRAINT "verification_cases_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "verification_documents" (
+    "id" SERIAL NOT NULL,
+    "caseId" INTEGER NOT NULL,
+    "docType" "DocumentType" NOT NULL,
+    "status" "VerificationDocStatus" NOT NULL DEFAULT 'PENDING',
+    "isRequired" BOOLEAN NOT NULL DEFAULT true,
+    "mediaId" INTEGER NOT NULL,
+    "version" INTEGER NOT NULL DEFAULT 1,
+    "docNumber" TEXT,
+    "issueDate" TIMESTAMP(3),
+    "expiryDate" TIMESTAMP(3),
+    "rejectReason" TEXT,
+    "instruction" TEXT,
+    "checkedAt" TIMESTAMP(3),
+    "checkedByAdminId" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "verification_documents_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "verification_case_events" (
+    "id" SERIAL NOT NULL,
+    "caseId" INTEGER NOT NULL,
+    "action" "VerificationAction" NOT NULL,
+    "from" "VerificationCaseStatus",
+    "to" "VerificationCaseStatus",
+    "actorAdminId" INTEGER,
+    "note" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "verification_case_events_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "notifications" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "type" "NotificationType" NOT NULL,
+    "title" TEXT NOT NULL,
+    "message" TEXT NOT NULL,
+    "meta" JSONB,
+    "readAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "priority" "NotificationPriority" NOT NULL DEFAULT 'P2',
+    "status" "NotificationStatus" NOT NULL DEFAULT 'ACTIVE',
+    "actionUrl" VARCHAR(1024),
+    "dedupeKey" VARCHAR(255),
+    "expiresAt" TIMESTAMP(3),
+    "recipientScopeType" "NotificationRecipientScopeType",
+    "recipientScopeId" VARCHAR(255),
+    "orgId" INTEGER,
+    "branchId" INTEGER,
+    "severity" VARCHAR(32),
+    "source" VARCHAR(64),
+    "senderId" INTEGER,
+
+    CONSTRAINT "notifications_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "notification_reads" (
+    "id" SERIAL NOT NULL,
+    "notificationId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "readAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "notification_reads_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "notification_deliveries" (
+    "id" SERIAL NOT NULL,
+    "notificationId" INTEGER NOT NULL,
+    "channel" "NotificationDeliveryChannel" NOT NULL,
+    "toAddress" VARCHAR(512),
+    "providerMessageId" VARCHAR(255),
+    "status" "NotificationDeliveryStatus" NOT NULL DEFAULT 'QUEUED',
+    "error" TEXT,
+    "attemptCount" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "notification_deliveries_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "user_notification_prefs" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "allowEmail" BOOLEAN NOT NULL DEFAULT true,
+    "allowSms" BOOLEAN NOT NULL DEFAULT false,
+    "quietHoursStart" INTEGER,
+    "quietHoursEnd" INTEGER,
+    "enabledTypes" JSONB,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "soundEnabled" BOOLEAN NOT NULL DEFAULT true,
+    "allowInApp" BOOLEAN NOT NULL DEFAULT true,
+
+    CONSTRAINT "user_notification_prefs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "user_app_settings" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "language" VARCHAR(32),
+    "theme" VARCHAR(32),
+    "timezone" VARCHAR(64),
+    "dashboardLanding" VARCHAR(256),
+    "lastActiveBranchId" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "user_app_settings_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "verification_locked_update_attempts" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER,
+    "entityType" "VerificationEntityType" NOT NULL,
+    "entityId" INTEGER NOT NULL,
+    "reason" TEXT,
+    "endpoint" TEXT NOT NULL,
+    "method" TEXT NOT NULL,
+    "ip" TEXT,
+    "userAgent" TEXT,
+    "payloadJson" JSONB,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "verification_locked_update_attempts_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "posts" (
+    "id" SERIAL NOT NULL,
+    "authorId" INTEGER NOT NULL,
+    "type" "PostType" NOT NULL DEFAULT 'TEXT',
+    "category" "PostCategory" NOT NULL DEFAULT 'GENERAL',
+    "caption" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deletedAt" TIMESTAMP(3),
+
+    CONSTRAINT "posts_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "post_media" (
+    "id" SERIAL NOT NULL,
+    "postId" INTEGER NOT NULL,
+    "mediaId" INTEGER NOT NULL,
+    "order" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "post_media_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "post_likes" (
+    "id" SERIAL NOT NULL,
+    "postId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "post_likes_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "post_comments" (
+    "id" SERIAL NOT NULL,
+    "postId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "parentId" INTEGER,
+    "text" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deletedAt" TIMESTAMP(3),
+
+    CONSTRAINT "post_comments_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "post_comment_likes" (
+    "id" SERIAL NOT NULL,
+    "commentId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "post_comment_likes_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "media" (
+    "id" SERIAL NOT NULL,
+    "url" TEXT NOT NULL,
+    "key" TEXT,
+    "type" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "ownerUserId" INTEGER NOT NULL,
+    "deletedAt" TIMESTAMP(3),
+    "altText" TEXT,
+    "hash" TEXT,
+    "mimeType" TEXT,
+    "sizeBytes" INTEGER,
+
+    CONSTRAINT "media_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "pets" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "animalTypeId" INTEGER NOT NULL,
+    "breedId" INTEGER,
+    "profilePicId" INTEGER,
+    "name" TEXT NOT NULL,
+    "sex" "Gender" NOT NULL DEFAULT 'UNKNOWN',
+    "dateOfBirth" TIMESTAMP(3),
+    "microchipNumber" TEXT,
+    "isRescue" BOOLEAN NOT NULL DEFAULT false,
+    "isNeutered" BOOLEAN NOT NULL DEFAULT false,
+    "foodHabits" TEXT,
+    "healthDisorders" TEXT,
+    "notes" TEXT,
+    "status" "PetStatus" NOT NULL DEFAULT 'ACTIVE',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deleted" BOOLEAN NOT NULL DEFAULT false,
+    "uniquePetId" TEXT,
+    "qrCodeUrl" TEXT,
+    "allergies" JSONB DEFAULT '[]',
+    "bloodType" TEXT,
+    "healthCardJson" JSONB DEFAULT '{}',
+    "subBreedId" INTEGER,
+    "colorId" INTEGER,
+    "coatPatternId" INTEGER,
+    "sizeId" INTEGER,
+    "animalTypeNameSnapshot" VARCHAR(128),
+    "breedNameSnapshot" VARCHAR(128),
+    "subBreedNameSnapshot" VARCHAR(128),
+    "colorNameSnapshot" VARCHAR(64),
+    "coatPatternNameSnapshot" VARCHAR(64),
+    "sizeNameSnapshot" VARCHAR(32),
+    "customBreedText" VARCHAR(256),
+    "customColorText" VARCHAR(128),
+    "clinicRegisteredBranchId" INTEGER,
+
+    CONSTRAINT "pets_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "pet_family_members" (
+    "id" SERIAL NOT NULL,
+    "petId" INTEGER NOT NULL,
+    "relation" "FamilyRelation" NOT NULL DEFAULT 'OTHER',
+    "name" TEXT NOT NULL,
+    "avatarMediaId" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "pet_family_members_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "pet_weights" (
+    "id" SERIAL NOT NULL,
+    "petId" INTEGER NOT NULL,
+    "weightKg" DOUBLE PRECISION NOT NULL,
+    "notes" TEXT,
+    "recordedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "pet_weights_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "vaccine_types" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "targetAnimalTypeId" INTEGER,
+    "defaultIntervalDays" INTEGER NOT NULL DEFAULT 365,
+    "description" TEXT,
+
+    CONSTRAINT "vaccine_types_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "vaccinations" (
+    "id" SERIAL NOT NULL,
+    "petId" INTEGER NOT NULL,
+    "vaccineTypeId" INTEGER NOT NULL,
+    "orgId" INTEGER,
+    "branchId" INTEGER,
+    "inventoryBatchId" INTEGER,
+    "clinicalItemId" INTEGER,
+    "clinicalItemVariantId" INTEGER,
+    "stockLedgerId" INTEGER,
+    "orderId" INTEGER,
+    "invoiceId" INTEGER,
+    "administeredByUserId" INTEGER,
+    "administeredByDoctorId" INTEGER,
+    "administeredByStaffId" INTEGER,
+    "status" "VaccinationRecordStatus" NOT NULL DEFAULT 'ACTIVE',
+    "correctionReason" TEXT,
+    "correctedAt" TIMESTAMP(3),
+    "correctedByUserId" INTEGER,
+    "voidReason" TEXT,
+    "voidedAt" TIMESTAMP(3),
+    "voidedByUserId" INTEGER,
+    "idempotencyKey" VARCHAR(128),
+    "createdByUserId" INTEGER,
+    "updatedByUserId" INTEGER,
+    "administeredAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "nextDueDate" TIMESTAMP(3),
+    "batchNumber" TEXT,
+    "vetClinic" TEXT,
+    "notes" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "manufacturer" VARCHAR(128),
+    "certificateToken" VARCHAR(64),
+    "campaignBookingId" INTEGER,
+
+    CONSTRAINT "vaccinations_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "vaccination_reminders" (
+    "id" SERIAL NOT NULL,
+    "orgId" INTEGER NOT NULL,
+    "branchId" INTEGER NOT NULL,
+    "vaccinationId" INTEGER NOT NULL,
+    "petId" INTEGER NOT NULL,
+    "ownerUserId" INTEGER,
+    "dueDate" TIMESTAMP(3) NOT NULL,
+    "dueDateSnapshot" TIMESTAMP(3) NOT NULL,
+    "stage" "VaccinationReminderStage" NOT NULL,
+    "channel" "VaccinationReminderChannel" NOT NULL,
+    "status" "VaccinationReminderStatus" NOT NULL DEFAULT 'PENDING',
+    "scheduledFor" TIMESTAMP(3) NOT NULL,
+    "sentAt" TIMESTAMP(3),
+    "notificationId" INTEGER,
+    "attemptCount" INTEGER NOT NULL DEFAULT 0,
+    "lastError" TEXT,
+    "idempotencyKey" VARCHAR(191) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "vaccination_reminders_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "deworming_records" (
+    "id" SERIAL NOT NULL,
+    "petId" INTEGER NOT NULL,
+    "medicationName" TEXT NOT NULL,
+    "dosage" TEXT,
+    "weightAtTime" DOUBLE PRECISION,
+    "administeredAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "nextDueDate" TIMESTAMP(3),
+    "notes" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "deworming_records_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "medical_histories" (
+    "id" SERIAL NOT NULL,
+    "petId" INTEGER NOT NULL,
+    "condition" TEXT NOT NULL,
+    "treatment" TEXT,
+    "doctorName" TEXT,
+    "clinicName" TEXT,
+    "visitDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "followUpDate" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "medical_histories_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "reward_histories" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "action" TEXT NOT NULL,
+    "points" INTEGER NOT NULL,
+    "description" TEXT,
+    "referenceId" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "reward_histories_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "user_wallets" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "balance" DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    "availableBalance" DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    "pendingBalance" DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    "lockedBalance" DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    "currency" TEXT NOT NULL DEFAULT 'BDT',
+    "points" INTEGER NOT NULL DEFAULT 0,
+    "tier" TEXT NOT NULL DEFAULT 'Bronze',
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "user_wallets_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "wallet_transactions" (
+    "id" SERIAL NOT NULL,
+    "walletId" INTEGER NOT NULL,
+    "type" "TransactionType" NOT NULL,
+    "status" "TransactionStatus" NOT NULL DEFAULT 'PENDING',
+    "amount" DECIMAL(10,2) NOT NULL,
+    "method" "PaymentMethod",
+    "reference" TEXT,
+    "sourceType" "WalletSourceType",
+    "sourceId" INTEGER,
+    "note" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "wallet_transactions_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "wallet_withdraw_requests" (
+    "id" SERIAL NOT NULL,
+    "walletId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "amount" DECIMAL(10,2) NOT NULL,
+    "method" "PaymentMethod" NOT NULL,
+    "payoutDetailsJson" TEXT NOT NULL,
+    "provider" "PayoutProvider",
+    "providerPayoutId" TEXT,
+    "providerStatus" TEXT,
+    "providerResponseJson" TEXT,
+    "failureCode" TEXT,
+    "failureMessage" TEXT,
+    "attemptCount" INTEGER NOT NULL DEFAULT 0,
+    "nextRetryAt" TIMESTAMP(3),
+    "processingStartedAt" TIMESTAMP(3),
+    "completedAt" TIMESTAMP(3),
+    "status" "WalletWithdrawRequestStatus" NOT NULL DEFAULT 'SUBMITTED',
+    "note" TEXT,
+    "adminUserId" INTEGER,
+    "reviewedAt" TIMESTAMP(3),
+    "processedAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "wallet_withdraw_requests_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "payout_event_logs" (
+    "id" SERIAL NOT NULL,
+    "provider" "PayoutProvider" NOT NULL,
+    "providerEventId" TEXT,
+    "providerPayoutId" TEXT,
+    "withdrawRequestId" INTEGER,
+    "payloadJson" TEXT NOT NULL,
+    "signatureValid" BOOLEAN NOT NULL DEFAULT false,
+    "receivedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "payout_event_logs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "fundraising_updates" (
+    "id" SERIAL NOT NULL,
+    "campaignId" INTEGER NOT NULL,
+    "postId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deletedAt" TIMESTAMP(3),
+
+    CONSTRAINT "fundraising_updates_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "fundraising_accounts" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "status" "FundraisingAccountStatus" NOT NULL DEFAULT 'PENDING',
+    "accountType" "FundraisingAccountType",
+    "permanentAddress" TEXT,
+    "presentAddress" TEXT,
+    "occupation" TEXT,
+    "area" TEXT,
+    "rescueSinceYear" INTEGER,
+    "orgName" TEXT,
+    "orgDescription" TEXT,
+    "orgWorkType" TEXT,
+    "submittedAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deletedAt" TIMESTAMP(3),
+    "divisionId" INTEGER,
+    "districtId" INTEGER,
+    "upazilaId" INTEGER,
+    "areaId" INTEGER,
+    "dateOfBirth" TIMESTAMP(3),
+    "nationalIdNumber" TEXT,
+    "birthRegNumber" TEXT,
+    "studentIdNumber" TEXT,
+    "countryCode" VARCHAR(2),
+    "addressLine" TEXT,
+    "cityName" TEXT,
+    "countryName" TEXT,
+    "formattedAddress" TEXT,
+    "latitude" DOUBLE PRECISION,
+    "longitude" DOUBLE PRECISION,
+    "stateName" TEXT,
+
+    CONSTRAINT "fundraising_accounts_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "fundraising_account_status_logs" (
+    "id" SERIAL NOT NULL,
+    "accountId" INTEGER NOT NULL,
+    "fromStatus" "FundraisingAccountStatus" NOT NULL,
+    "toStatus" "FundraisingAccountStatus" NOT NULL,
+    "adminUserId" INTEGER,
+    "note" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "fundraising_account_status_logs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "fundraising_verification_documents" (
+    "id" SERIAL NOT NULL,
+    "accountId" INTEGER NOT NULL,
+    "title" TEXT NOT NULL,
+    "mediaId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "deletedAt" TIMESTAMP(3),
+
+    CONSTRAINT "fundraising_verification_documents_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "fundraising_campaigns" (
+    "id" SERIAL NOT NULL,
+    "postId" INTEGER NOT NULL,
+    "accountId" INTEGER NOT NULL,
+    "title" TEXT NOT NULL,
+    "targetAmount" INTEGER NOT NULL,
+    "deadline" TIMESTAMP(3) NOT NULL,
+    "category" TEXT,
+    "locationText" TEXT,
+    "status" "FundraisingCampaignStatus" NOT NULL DEFAULT 'ACTIVE',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deletedAt" TIMESTAMP(3),
+    "countryCode" VARCHAR(2),
+
+    CONSTRAINT "fundraising_campaigns_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "fundraising_campaign_stats" (
+    "campaignId" INTEGER NOT NULL,
+    "raisedAmount" INTEGER NOT NULL DEFAULT 0,
+    "withdrawnAmount" INTEGER NOT NULL DEFAULT 0,
+    "donorsCount" INTEGER NOT NULL DEFAULT 0,
+    "lastDonationAt" TIMESTAMP(3),
+    "lastPayoutAt" TIMESTAMP(3),
+
+    CONSTRAINT "fundraising_campaign_stats_pkey" PRIMARY KEY ("campaignId")
+);
+
+-- CreateTable
+CREATE TABLE "donations" (
+    "id" SERIAL NOT NULL,
+    "campaignId" INTEGER NOT NULL,
+    "donorId" INTEGER NOT NULL,
+    "amount" INTEGER NOT NULL,
+    "status" "TransactionStatus" NOT NULL DEFAULT 'SUCCESS',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "policyVersion" VARCHAR(64),
+    "idempotencyKey" VARCHAR(128),
+
+    CONSTRAINT "donations_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "fundraising_payout_method_catalog" (
+    "id" SERIAL NOT NULL,
+    "code" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "type" "PayoutMethodType" NOT NULL,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "requirementsJson" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "fundraising_payout_method_catalog_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "fundraising_payout_methods" (
+    "id" SERIAL NOT NULL,
+    "accountId" INTEGER NOT NULL,
+    "catalogId" INTEGER NOT NULL,
+    "label" TEXT,
+    "detailsJson" TEXT NOT NULL,
+    "isDefault" BOOLEAN NOT NULL DEFAULT false,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deletedAt" TIMESTAMP(3),
+
+    CONSTRAINT "fundraising_payout_methods_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "fundraising_withdraw_requests" (
+    "id" SERIAL NOT NULL,
+    "campaignId" INTEGER NOT NULL,
+    "accountId" INTEGER NOT NULL,
+    "methodId" INTEGER NOT NULL,
+    "amount" INTEGER NOT NULL,
+    "status" "FundraisingWithdrawRequestStatus" NOT NULL DEFAULT 'SUBMITTED',
+    "note" TEXT,
+    "adminUserId" INTEGER,
+    "reviewedAt" TIMESTAMP(3),
+    "processedAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "deletedAt" TIMESTAMP(3),
+
+    CONSTRAINT "fundraising_withdraw_requests_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "fundraising_payout_transfer_logs" (
+    "id" SERIAL NOT NULL,
+    "requestId" INTEGER NOT NULL,
+    "reference" TEXT,
+    "proofMediaId" INTEGER,
+    "methodSnapshotJson" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "fundraising_payout_transfer_logs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "reports" (
+    "id" SERIAL NOT NULL,
+    "type" "ReportTargetType" NOT NULL,
+    "targetId" INTEGER NOT NULL,
+    "reporterId" INTEGER NOT NULL,
+    "reasonCode" TEXT NOT NULL,
+    "details" TEXT,
+    "status" "ReportStatus" NOT NULL DEFAULT 'PENDING',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "reviewedAt" TIMESTAMP(3),
+
+    CONSTRAINT "reports_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "bd_divisions" (
+    "id" SERIAL NOT NULL,
+    "code" TEXT NOT NULL,
+    "nameEn" TEXT NOT NULL,
+    "nameBn" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "bd_divisions_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "bd_districts" (
+    "id" SERIAL NOT NULL,
+    "code" TEXT NOT NULL,
+    "nameEn" TEXT NOT NULL,
+    "nameBn" TEXT,
+    "divisionId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "latitude" DECIMAL(10,8),
+    "longitude" DECIMAL(11,8),
+
+    CONSTRAINT "bd_districts_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "bd_upazilas" (
+    "id" SERIAL NOT NULL,
+    "code" TEXT NOT NULL,
+    "nameEn" TEXT NOT NULL,
+    "nameBn" TEXT,
+    "districtId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "latitude" DECIMAL(10,8),
+    "longitude" DECIMAL(11,8),
+
+    CONSTRAINT "bd_upazilas_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "bd_unions" (
+    "id" SERIAL NOT NULL,
+    "code" TEXT NOT NULL,
+    "nameEn" TEXT NOT NULL,
+    "nameBn" TEXT,
+    "upazilaId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "latitude" DECIMAL(10,8),
+    "longitude" DECIMAL(11,8),
+
+    CONSTRAINT "bd_unions_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "bd_areas" (
+    "id" SERIAL NOT NULL,
+    "code" TEXT NOT NULL,
+    "nameEn" TEXT NOT NULL,
+    "nameBn" TEXT,
+    "type" TEXT NOT NULL,
+    "unionId" INTEGER,
+    "upazilaId" INTEGER,
+    "districtId" INTEGER,
+    "parentId" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "latitude" DECIMAL(10,8),
+    "longitude" DECIMAL(11,8),
+
+    CONSTRAINT "bd_areas_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "city_corporations" (
+    "id" SERIAL NOT NULL,
+    "code" TEXT NOT NULL,
+    "nameEn" TEXT NOT NULL,
+    "nameBn" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "city_corporations_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "areas" (
+    "id" SERIAL NOT NULL,
+    "cityCorporationId" INTEGER NOT NULL,
+    "parentId" INTEGER,
+    "nameEn" TEXT NOT NULL,
+    "nameBn" TEXT,
+    "searchKeywords" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "latitude" DECIMAL(10,8),
+    "longitude" DECIMAL(11,8),
+
+    CONSTRAINT "areas_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "location_coverage_assignments" (
+    "id" SERIAL NOT NULL,
+    "entityType" "LocationCoverageEntityType" NOT NULL,
+    "entityId" INTEGER NOT NULL,
+    "divisionId" INTEGER,
+    "districtId" INTEGER,
+    "upazilaId" INTEGER,
+    "unionId" INTEGER,
+    "areaId" INTEGER,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "priority" INTEGER NOT NULL DEFAULT 0,
+    "metadata" JSONB,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "location_coverage_assignments_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "coverage_zones" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
+    "description" TEXT,
+    "city" TEXT,
+    "zoneType" "CoverageZoneType" NOT NULL,
+    "sortOrder" INTEGER NOT NULL DEFAULT 0,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "coverage_zones_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "coverage_zone_areas" (
+    "id" SERIAL NOT NULL,
+    "coverageZoneId" INTEGER NOT NULL,
+    "bdAreaId" INTEGER,
+    "bdUnionId" INTEGER,
+    "bdUpazilaId" INTEGER,
+    "bdDistrictId" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "coverage_zone_areas_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "coverage_zone_metadata" (
+    "id" SERIAL NOT NULL,
+    "coverageZoneId" INTEGER NOT NULL,
+    "estimatedPetPopulation" INTEGER,
+    "estimatedClinicCount" INTEGER,
+    "estimatedPetShopCount" INTEGER,
+    "estimatedVolunteerCount" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "coverage_zone_metadata_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "audit_logs" (
+    "id" SERIAL NOT NULL,
+    "actorId" TEXT NOT NULL,
+    "actorRole" "AuditActorRole" NOT NULL,
+    "action" TEXT NOT NULL,
+    "entityType" "AuditEntityType" NOT NULL,
+    "entityId" TEXT NOT NULL,
+    "before" JSONB,
+    "after" JSONB,
+    "ip" TEXT,
+    "userAgent" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "audit_logs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "organizations" (
+    "id" SERIAL NOT NULL,
+    "ownerUserId" INTEGER NOT NULL,
+    "status" "PartnerStatus" NOT NULL DEFAULT 'PENDING_REVIEW',
+    "name" TEXT NOT NULL,
+    "supportPhone" TEXT,
+    "addressJson" JSONB,
+    "divisionId" INTEGER,
+    "districtId" INTEGER,
+    "upazilaId" INTEGER,
+    "unionId" INTEGER,
+    "areaId" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "countryId" INTEGER,
+    "deletedAt" TIMESTAMP(3),
+    "deletionScheduledAt" TIMESTAMP(3),
+    "location" JSONB NOT NULL DEFAULT '{}',
+    "payoutStatus" "OrganizationPayoutStatus" NOT NULL DEFAULT 'NOT_CONFIGURED',
+    "orgType" "OrgType" DEFAULT 'PARTNER',
+
+    CONSTRAINT "organizations_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "branches" (
+    "id" SERIAL NOT NULL,
+    "orgId" INTEGER NOT NULL,
+    "name" TEXT NOT NULL,
+    "status" "BranchStatus" NOT NULL DEFAULT 'DRAFT',
+    "capabilitiesJson" JSONB NOT NULL DEFAULT '{}',
+    "featuresJson" JSONB NOT NULL DEFAULT '{}',
+    "verificationStatus" "VerificationStatus" NOT NULL DEFAULT 'UNSUBMITTED',
+    "addressJson" JSONB,
+    "divisionId" INTEGER,
+    "districtId" INTEGER,
+    "upazilaId" INTEGER,
+    "unionId" INTEGER,
+    "areaId" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "location" JSONB NOT NULL DEFAULT '{}',
+    "clinicSettingsJson" JSONB NOT NULL DEFAULT '{}',
+    "code" TEXT,
+
+    CONSTRAINT "branches_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "branch_rooms" (
+    "id" SERIAL NOT NULL,
+    "orgId" INTEGER NOT NULL,
+    "branchId" INTEGER NOT NULL,
+    "name" VARCHAR(128) NOT NULL,
+    "roomType" VARCHAR(32) NOT NULL,
+    "capacity" INTEGER,
+    "status" VARCHAR(16) NOT NULL,
+    "notes" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "code" VARCHAR(32),
+    "floor" VARCHAR(32),
+    "zone" VARCHAR(64),
+    "operationalStatus" VARCHAR(24) NOT NULL DEFAULT 'AVAILABLE',
+    "bookable" BOOLEAN NOT NULL DEFAULT true,
+    "cleaningBufferMinutes" INTEGER,
+    "maintenanceBufferMinutes" INTEGER,
+    "supportsWalkIns" BOOLEAN NOT NULL DEFAULT true,
+    "emergencyOverrideAllowed" BOOLEAN NOT NULL DEFAULT false,
+    "preferredDoctorIds" JSONB DEFAULT '[]',
+    "allowedServiceIds" JSONB DEFAULT '[]',
+    "allowedPackageIds" JSONB DEFAULT '[]',
+
+    CONSTRAINT "branch_rooms_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "branch_policies" (
+    "id" SERIAL NOT NULL,
+    "orgId" INTEGER NOT NULL,
+    "branchId" INTEGER NOT NULL,
+    "maxDiscountPercent" DOUBLE PRECISION NOT NULL DEFAULT 30,
+    "maxRefundAmount" DOUBLE PRECISION NOT NULL DEFAULT 5000,
+    "maxPurchaseAmount" DOUBLE PRECISION NOT NULL DEFAULT 50000,
+    "requireOwnerApproval" JSONB NOT NULL DEFAULT '[]',
+    "autoApproveStockBelow" DOUBLE PRECISION NOT NULL DEFAULT 10000,
+    "allowManagerPricing" BOOLEAN NOT NULL DEFAULT false,
+    "allowManagerRefund" BOOLEAN NOT NULL DEFAULT true,
+    "shiftManagement" BOOLEAN NOT NULL DEFAULT true,
+    "leaveApproval" BOOLEAN NOT NULL DEFAULT true,
+    "customPoliciesJson" JSONB NOT NULL DEFAULT '{}',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "branch_policies_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "branch_members" (
+    "id" SERIAL NOT NULL,
+    "orgId" INTEGER NOT NULL,
+    "branchId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "role" "MemberRole" NOT NULL,
+    "status" "MemberStatus" NOT NULL DEFAULT 'ACTIVE',
+    "invitedByUserId" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "branch_members_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "appointments" (
+    "id" SERIAL NOT NULL,
+    "orgId" INTEGER NOT NULL,
+    "branchId" INTEGER NOT NULL,
+    "patientId" INTEGER,
+    "petId" INTEGER,
+    "doctorId" INTEGER,
+    "serviceId" INTEGER NOT NULL,
+    "scheduledStartAt" TIMESTAMP(3) NOT NULL,
+    "scheduledEndAt" TIMESTAMP(3) NOT NULL,
+    "status" "AppointmentStatus" NOT NULL DEFAULT 'BOOKED',
+    "source" "AppointmentSource" NOT NULL DEFAULT 'STAFF',
+    "priority" "AppointmentPriority" NOT NULL DEFAULT 'NORMAL',
+    "notes" TEXT,
+    "channelMeta" JSONB,
+    "cancellationReason" VARCHAR(256),
+    "cancelledByUserId" INTEGER,
+    "cancelledAt" TIMESTAMP(3),
+    "rescheduleFromAppointmentId" INTEGER,
+    "noShowMarkedByUserId" INTEGER,
+    "noShowAt" TIMESTAMP(3),
+    "createdByUserId" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "intakeStatus" VARCHAR(16) NOT NULL DEFAULT 'NOT_STARTED',
+    "visitType" VARCHAR(20) NOT NULL DEFAULT 'WALK_IN',
+    "isInstant" BOOLEAN NOT NULL DEFAULT false,
+    "isAnyDoctor" BOOLEAN NOT NULL DEFAULT false,
+    "paymentStatus" VARCHAR(16) NOT NULL DEFAULT 'UNPAID',
+    "paymentMethod" VARCHAR(32),
+    "paidAmount" DECIMAL(12,2),
+    "paidAt" TIMESTAMP(3),
+    "paidByUserId" INTEGER,
+    "channel" VARCHAR(20) NOT NULL DEFAULT 'COUNTER',
+    "tokenNo" VARCHAR(20),
+    "ownerNameSnapshot" VARCHAR(128),
+    "mobileSnapshot" VARCHAR(20),
+    "petNameSnapshot" VARCHAR(128),
+    "petTypeSnapshot" VARCHAR(64),
+    "appointmentMode" VARCHAR(20) NOT NULL DEFAULT 'STANDARD',
+    "appointmentType" VARCHAR(20) NOT NULL DEFAULT 'CONSULTATION',
+    "surgeryPackageId" INTEGER,
+    "durationMinutes" INTEGER,
+    "followUpFromId" INTEGER,
+    "specialInstructions" TEXT,
+    "priceSnapshot" JSONB,
+    "packageSnapshot" JSONB,
+    "doctorSnapshot" JSONB,
+    "discountSnapshot" JSONB,
+    "roomId" INTEGER,
+
+    CONSTRAINT "appointments_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "visits" (
+    "id" SERIAL NOT NULL,
+    "orgId" INTEGER NOT NULL,
+    "branchId" INTEGER NOT NULL,
+    "petId" INTEGER NOT NULL,
+    "patientId" INTEGER NOT NULL,
+    "doctorId" INTEGER,
+    "appointmentId" INTEGER,
+    "status" "VisitStatus" NOT NULL DEFAULT 'CHECKED_IN',
+    "startedAt" TIMESTAMP(3),
+    "completedAt" TIMESTAMP(3),
+    "followUpDate" TIMESTAMP(3),
+    "followUpNotes" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "treatmentCode" VARCHAR(32),
+
+    CONSTRAINT "visits_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "roles" (
+    "id" SERIAL NOT NULL,
+    "key" TEXT NOT NULL,
+    "label" TEXT NOT NULL,
+    "scope" "RoleScope" NOT NULL,
+    "isSystem" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "roles_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "orders" (
+    "id" SERIAL NOT NULL,
+    "orderNumber" TEXT NOT NULL,
+    "branchId" INTEGER NOT NULL,
+    "customerId" INTEGER,
+    "status" "OrderStatus" NOT NULL DEFAULT 'PENDING',
+    "totalAmount" DECIMAL(65,30) NOT NULL DEFAULT 0,
+    "paymentMethod" "PaymentMethod",
+    "paymentStatus" "PaymentStatus" NOT NULL DEFAULT 'PENDING',
+    "notes" TEXT,
+    "createdByUserId" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "fulfilmentInventoryLocationId" INTEGER,
+    "orderSource" "OrderSource",
+    "subtotalAmount" DECIMAL(12,2),
+    "discountPercent" DECIMAL(5,2),
+    "discountAmount" DECIMAL(12,2),
+    "taxPercent" DECIMAL(5,2),
+    "taxAmount" DECIMAL(12,2),
+    "invoiceNumber" TEXT,
+    "posShiftId" INTEGER,
+    "visitId" INTEGER,
+
+    CONSTRAINT "orders_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "order_payments" (
+    "id" SERIAL NOT NULL,
+    "orderId" INTEGER NOT NULL,
+    "method" "PaymentMethod" NOT NULL,
+    "amount" DECIMAL(12,2) NOT NULL,
+    "reference" VARCHAR(128),
+    "paymentStatus" "OrderPaymentStatus" NOT NULL DEFAULT 'PAID',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "order_payments_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "payment_transaction_logs" (
+    "id" SERIAL NOT NULL,
+    "orderId" INTEGER,
+    "provider" VARCHAR(32) NOT NULL,
+    "referenceId" VARCHAR(128) NOT NULL,
+    "providerTxId" VARCHAR(128),
+    "eventId" VARCHAR(256),
+    "phase" VARCHAR(24) NOT NULL,
+    "status" VARCHAR(24) NOT NULL,
+    "amount" DECIMAL(12,2),
+    "requestJson" JSONB,
+    "responseJson" JSONB,
+    "errorMessage" TEXT,
+    "idempotencyKey" VARCHAR(128),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "payment_transaction_logs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "payment_transactions" (
+    "id" SERIAL NOT NULL,
+    "bookingId" INTEGER,
+    "transactionId" VARCHAR(128) NOT NULL,
+    "gateway" VARCHAR(32) NOT NULL,
+    "amount" DECIMAL(10,2) NOT NULL,
+    "status" "PaymentTransactionStatus" NOT NULL DEFAULT 'PENDING',
+    "rawResponse" JSONB,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "payment_transactions_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "services" (
+    "id" SERIAL NOT NULL,
+    "orgId" INTEGER NOT NULL,
+    "branchId" INTEGER NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "category" "ServiceCategory" NOT NULL,
+    "status" "ServiceStatus" NOT NULL DEFAULT 'ACTIVE',
+    "price" DECIMAL(65,30) NOT NULL,
+    "duration" INTEGER,
+    "isRecurring" BOOLEAN NOT NULL DEFAULT false,
+    "createdByUserId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "department" "ServiceDepartment" NOT NULL DEFAULT 'DOCTOR_DESK',
+    "paymentGateRule" "PaymentGateRule" NOT NULL DEFAULT 'PAY_BEFORE_SERVICE',
+    "serviceCode" VARCHAR(32),
+    "prerequisiteRule" JSONB,
+    "allowDiscount" BOOLEAN NOT NULL DEFAULT true,
+    "maxDiscountPct" DECIMAL(5,2),
+    "discountNeedsApproval" BOOLEAN NOT NULL DEFAULT false,
+    "taxRuleJson" JSONB,
+    "applicableSpecies" JSONB,
+    "isCustom" BOOLEAN NOT NULL DEFAULT false,
+    "proposedByUserId" INTEGER,
+    "approvalStatus" "ServiceApprovalStatus",
+    "otRequired" BOOLEAN NOT NULL DEFAULT false,
+    "inventoryLinked" BOOLEAN NOT NULL DEFAULT false,
+    "packageAllowed" BOOLEAN NOT NULL DEFAULT false,
+    "specialtyTag" VARCHAR(64),
+    "doctorRequired" BOOLEAN NOT NULL DEFAULT true,
+    "estimatedCostJson" JSONB,
+    "allowedRoomTypes" JSONB DEFAULT '[]',
+    "ownerDiscountEligible" BOOLEAN NOT NULL DEFAULT false,
+    "baseCost" DECIMAL(12,2),
+    "minSafePrice" DECIMAL(12,2),
+    "staffInstructions" TEXT,
+    "pricingExplanation" TEXT,
+    "visibleToPublic" BOOLEAN NOT NULL DEFAULT true,
+    "preparationNotes" TEXT,
+    "aftercareNotes" TEXT,
+    "faqJson" JSONB,
+
+    CONSTRAINT "services_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "countries" (
+    "id" SERIAL NOT NULL,
+    "code" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "currencyCode" TEXT DEFAULT 'USD',
+    "timezoneDefault" TEXT DEFAULT 'UTC',
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "latitude" DECIMAL(10,8),
+    "longitude" DECIMAL(11,8),
+    "phoneCode" TEXT,
+    "controllerOrgId" INTEGER,
+
+    CONSTRAINT "countries_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "states" (
+    "id" SERIAL NOT NULL,
+    "countryId" INTEGER NOT NULL,
+    "code" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "latitude" DECIMAL(10,8),
+    "longitude" DECIMAL(11,8),
+
+    CONSTRAINT "states_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "location_cities" (
+    "id" SERIAL NOT NULL,
+    "stateId" INTEGER NOT NULL,
+    "name" TEXT NOT NULL,
+    "code" TEXT,
+    "latitude" DECIMAL(10,8),
+    "longitude" DECIMAL(11,8),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "location_cities_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "location_sub_districts" (
+    "id" SERIAL NOT NULL,
+    "cityId" INTEGER NOT NULL,
+    "name" TEXT NOT NULL,
+    "latitude" DECIMAL(10,8),
+    "longitude" DECIMAL(11,8),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "location_sub_districts_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "country_policies" (
+    "id" SERIAL NOT NULL,
+    "countryId" INTEGER NOT NULL,
+    "name" TEXT NOT NULL,
+    "status" TEXT NOT NULL,
+    "effectiveFrom" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "effectiveTo" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "country_policies_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "policy_features" (
+    "id" SERIAL NOT NULL,
+    "countryPolicyId" INTEGER NOT NULL,
+    "featureCode" TEXT NOT NULL,
+    "enabled" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "policy_features_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "policy_donation_rules" (
+    "id" SERIAL NOT NULL,
+    "countryPolicyId" INTEGER NOT NULL,
+    "ruleType" TEXT NOT NULL,
+    "maxAmountSingle" DECIMAL(18,2),
+    "maxAmountDaily" DECIMAL(18,2),
+    "enabled" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "policy_donation_rules_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "policy_payment_methods" (
+    "id" SERIAL NOT NULL,
+    "countryPolicyId" INTEGER NOT NULL,
+    "providerCode" TEXT NOT NULL,
+    "enabled" BOOLEAN NOT NULL DEFAULT false,
+    "configJson" JSONB,
+    "sortOrder" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "policy_payment_methods_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "policy_ads_rules" (
+    "id" SERIAL NOT NULL,
+    "countryPolicyId" INTEGER NOT NULL,
+    "ruleType" TEXT NOT NULL,
+    "valueJson" JSONB,
+    "enabled" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "policy_ads_rules_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "policy_rules" (
+    "id" SERIAL NOT NULL,
+    "countryPolicyId" INTEGER NOT NULL,
+    "ruleKey" TEXT NOT NULL,
+    "valueJson" JSONB,
+    "enabled" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "policy_rules_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "state_policies" (
+    "id" SERIAL NOT NULL,
+    "stateId" INTEGER NOT NULL,
+    "name" TEXT NOT NULL,
+    "status" TEXT NOT NULL,
+    "effectiveFrom" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "effectiveTo" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "state_policies_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "state_policy_features" (
+    "id" SERIAL NOT NULL,
+    "statePolicyId" INTEGER NOT NULL,
+    "featureCode" TEXT NOT NULL,
+    "enabled" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "state_policy_features_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "state_policy_rules" (
+    "id" SERIAL NOT NULL,
+    "statePolicyId" INTEGER NOT NULL,
+    "ruleKey" TEXT NOT NULL,
+    "valueJson" JSONB,
+    "enabled" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "state_policy_rules_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ads" (
+    "id" SERIAL NOT NULL,
+    "countryId" INTEGER NOT NULL,
+    "title" TEXT NOT NULL,
+    "body" TEXT,
+    "mediaId" INTEGER,
+    "linkUrl" VARCHAR(512),
+    "status" TEXT NOT NULL DEFAULT 'DRAFT',
+    "startAt" TIMESTAMP(3),
+    "endAt" TIMESTAMP(3),
+    "targetCountryCodes" VARCHAR(255),
+    "sortOrder" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "ads_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "inventory_locations" (
+    "id" SERIAL NOT NULL,
+    "branchId" INTEGER NOT NULL,
+    "type" "InventoryLocationType" NOT NULL,
+    "name" TEXT NOT NULL,
+    "code" TEXT,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "warehouseId" INTEGER,
+    "zoneId" INTEGER,
+    "binId" INTEGER,
+
+    CONSTRAINT "inventory_locations_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "owner_onboarding_states" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "status" "OnboardingStatus" NOT NULL DEFAULT 'NOT_STARTED',
+    "selectedPath" "OnboardingPath",
+    "lastCompletedStep" VARCHAR(32),
+    "draftDataJson" JSONB,
+    "isCompleted" BOOLEAN NOT NULL DEFAULT false,
+    "completedAt" TIMESTAMP(3),
+    "failureCode" VARCHAR(64),
+    "failureMessage" TEXT,
+    "retryCount" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "owner_onboarding_states_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "warehouses" (
+    "id" SERIAL NOT NULL,
+    "orgId" INTEGER NOT NULL,
+    "name" VARCHAR(200) NOT NULL,
+    "code" VARCHAR(50),
+    "type" "WarehouseType" NOT NULL DEFAULT 'CENTRAL',
+    "addressJson" JSONB,
+    "location" JSONB NOT NULL DEFAULT '{}',
+    "managerId" INTEGER,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "qcInboundEnabled" BOOLEAN NOT NULL DEFAULT false,
+    "qcEscalationFailedQtyThreshold" INTEGER,
+    "poReceiveEscalationMinTotal" DECIMAL(14,2),
+    "branchId" INTEGER,
+    "poOverReceiptTolerancePercent" DECIMAL(5,2),
+
+    CONSTRAINT "warehouses_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "campaigns" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
+    "description" TEXT,
+    "startDate" TIMESTAMP(3) NOT NULL,
+    "endDate" TIMESTAMP(3) NOT NULL,
+    "bookingStartAt" TIMESTAMP(3),
+    "bookingEndAt" TIMESTAMP(3),
+    "status" "CampaignStatus" NOT NULL DEFAULT 'DRAFT',
+    "visibility" "CampaignVisibility" NOT NULL DEFAULT 'PUBLIC',
+    "countdownEnabled" BOOLEAN NOT NULL DEFAULT false,
+    "pricingType" "CampaignPricingType" NOT NULL DEFAULT 'FREE',
+    "priceAmount" DECIMAL(10,2),
+    "vaccineCost" DECIMAL(10,2),
+    "serviceCharge" DECIMAL(10,2),
+    "packageFeatures" JSONB NOT NULL DEFAULT '[]',
+    "currency" TEXT NOT NULL DEFAULT 'BDT',
+    "maxPetsPerBooking" INTEGER NOT NULL DEFAULT 5,
+    "advanceBookingDays" INTEGER NOT NULL DEFAULT 30,
+    "minAdvanceHours" INTEGER NOT NULL DEFAULT 24,
+    "allowWalkIns" BOOLEAN NOT NULL DEFAULT true,
+    "walkInQuotaPercent" INTEGER NOT NULL DEFAULT 20,
+    "targetVaccinations" INTEGER NOT NULL DEFAULT 0,
+    "organizerId" INTEGER,
+    "metadataJson" JSONB,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "publishedAt" TIMESTAMP(3),
+
+    CONSTRAINT "campaigns_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "campaign_configs" (
+    "id" SERIAL NOT NULL,
+    "campaignId" INTEGER NOT NULL,
+    "version" INTEGER NOT NULL DEFAULT 1,
+    "bookingEnabled" BOOLEAN NOT NULL DEFAULT true,
+    "walkInAllowed" BOOLEAN NOT NULL DEFAULT true,
+    "approvalRequired" BOOLEAN NOT NULL DEFAULT false,
+    "slotRequired" BOOLEAN NOT NULL DEFAULT true,
+    "autoCloseWhenFull" BOOLEAN NOT NULL DEFAULT true,
+    "maxCapacity" INTEGER NOT NULL DEFAULT 0,
+    "maxCatsPerBooking" INTEGER NOT NULL DEFAULT 5,
+    "showRemainingSlots" BOOLEAN NOT NULL DEFAULT true,
+    "lateBookingAllowed" BOOLEAN NOT NULL DEFAULT false,
+    "onlinePaymentEnabled" BOOLEAN NOT NULL DEFAULT false,
+    "payAtVenueEnabled" BOOLEAN NOT NULL DEFAULT false,
+    "payment_channel_mode" "CampaignPaymentChannelMode" NOT NULL DEFAULT 'SMS_ONLY',
+    "metadataJson" JSONB,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "campaign_configs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "campaign_config_history" (
+    "id" SERIAL NOT NULL,
+    "campaignId" INTEGER NOT NULL,
+    "version" INTEGER NOT NULL,
+    "changedBy" INTEGER,
+    "changeReason" TEXT,
+    "configJson" JSONB NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "campaign_config_history_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "campaign_locations" (
+    "id" SERIAL NOT NULL,
+    "campaignId" INTEGER NOT NULL,
+    "name" TEXT NOT NULL,
+    "address" TEXT,
+    "addressJson" JSONB,
+    "latitude" DOUBLE PRECISION,
+    "longitude" DOUBLE PRECISION,
+    "contactName" TEXT,
+    "contactPhone" TEXT,
+    "dailyCapacity" INTEGER NOT NULL DEFAULT 100,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "campaign_locations_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "campaign_slots" (
+    "id" SERIAL NOT NULL,
+    "locationId" INTEGER NOT NULL,
+    "date" DATE NOT NULL,
+    "startTime" VARCHAR(5) NOT NULL,
+    "endTime" VARCHAR(5) NOT NULL,
+    "sessionName" VARCHAR(120),
+    "checkInStartTime" VARCHAR(5),
+    "bookingCutoffTime" VARCHAR(5),
+    "capacity" INTEGER NOT NULL DEFAULT 50,
+    "bookedCount" INTEGER NOT NULL DEFAULT 0,
+    "walkInCount" INTEGER NOT NULL DEFAULT 0,
+    "status" "CampaignSlotStatus" NOT NULL DEFAULT 'OPEN',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "campaign_slots_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "campaign_vaccine_types" (
+    "id" SERIAL NOT NULL,
+    "campaignId" INTEGER NOT NULL,
+    "vaccineTypeId" INTEGER NOT NULL,
+    "priceOverride" DECIMAL(10,2),
+    "allocatedDoses" INTEGER,
+    "usedDoses" INTEGER NOT NULL DEFAULT 0,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+
+    CONSTRAINT "campaign_vaccine_types_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "campaign_included_vaccines" (
+    "id" SERIAL NOT NULL,
+    "campaignId" INTEGER NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "coveredDiseases" JSONB NOT NULL DEFAULT '[]',
+    "displayOrder" INTEGER NOT NULL DEFAULT 0,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "campaign_included_vaccines_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "campaign_bookings" (
+    "id" SERIAL NOT NULL,
+    "bookingRef" VARCHAR(12) NOT NULL,
+    "qrToken" VARCHAR(32) NOT NULL,
+    "campaignId" INTEGER NOT NULL,
+    "locationId" INTEGER,
+    "slotId" INTEGER,
+    "bookingMode" "CampaignBookingMode" NOT NULL DEFAULT 'VENUE',
+    "ownerUserId" INTEGER,
+    "ownerPhone" VARCHAR(15) NOT NULL,
+    "ownerName" TEXT NOT NULL,
+    "ownerAddressJson" JSONB,
+    "bookingDate" DATE NOT NULL,
+    "petCount" INTEGER NOT NULL DEFAULT 1,
+    "status" "CampaignBookingStatus" NOT NULL DEFAULT 'CONFIRMED',
+    "checkedInAt" TIMESTAMP(3),
+    "checkedInByUserId" INTEGER,
+    "queueNumber" VARCHAR(10),
+    "completedAt" TIMESTAMP(3),
+    "isWalkIn" BOOLEAN NOT NULL DEFAULT false,
+    "paymentStatus" "CampaignPaymentStatus" NOT NULL DEFAULT 'NOT_REQUIRED',
+    "paymentOrderId" INTEGER,
+    "paidAmount" DECIMAL(10,2),
+    "cancelledAt" TIMESTAMP(3),
+    "cancelReason" TEXT,
+    "refundStatus" "CampaignRefundStatus",
+    "refundAmount" DECIMAL(10,2),
+    "linkSource" VARCHAR(32),
+    "linkedAt" TIMESTAMP(3),
+    "rolloutRegionId" INTEGER,
+    "coverageZoneId" INTEGER,
+    "coverageZoneName" VARCHAR(200),
+    "bdAreaId" INTEGER,
+    "bookingArea" VARCHAR(200),
+    "checkoutSessionId" VARCHAR(32),
+    "ownerAlternatePhone" VARCHAR(15),
+    "metadataJson" JSONB,
+    "smsSentAt" TIMESTAMP(3),
+    "smsReference" VARCHAR(64),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "campaign_bookings_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "campaign_pets" (
+    "id" SERIAL NOT NULL,
+    "bookingId" INTEGER NOT NULL,
+    "name" TEXT NOT NULL,
+    "animalTypeId" INTEGER NOT NULL DEFAULT 2,
+    "breedId" INTEGER,
+    "gender" "Gender",
+    "ageMonths" INTEGER,
+    "colorDescription" TEXT,
+    "permanentPetId" INTEGER,
+    "vaccinationStatus" "CampaignPetVaccinationStatus" NOT NULL DEFAULT 'PENDING',
+    "vaccinationId" INTEGER,
+    "ticketToken" VARCHAR(32),
+    "ticketIssuedAt" TIMESTAMP(3),
+    "certificateToken" VARCHAR(20),
+    "certificateGeneratedAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "campaign_pets_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "campaign_staff" (
+    "id" SERIAL NOT NULL,
+    "campaignId" INTEGER NOT NULL,
+    "locationId" INTEGER,
+    "userId" INTEGER NOT NULL,
+    "role" "CampaignStaffRole" NOT NULL,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "assignedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "campaign_staff_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "campaign_sms_templates" (
+    "id" SERIAL NOT NULL,
+    "campaignId" INTEGER NOT NULL,
+    "code" VARCHAR(50) NOT NULL,
+    "template" TEXT NOT NULL,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+
+    CONSTRAINT "campaign_sms_templates_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "campaign_sms_logs" (
+    "id" SERIAL NOT NULL,
+    "bookingId" INTEGER,
+    "campaignId" INTEGER NOT NULL,
+    "phone" VARCHAR(15) NOT NULL,
+    "templateCode" TEXT,
+    "message" TEXT NOT NULL,
+    "status" "CampaignSmsStatus" NOT NULL DEFAULT 'QUEUED',
+    "externalId" VARCHAR(64),
+    "provider" VARCHAR(32),
+    "segmentCount" INTEGER,
+    "estimatedCostBdt" DECIMAL(10,4),
+    "errorMessage" TEXT,
+    "queuedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "sentAt" TIMESTAMP(3),
+    "deliveredAt" TIMESTAMP(3),
+
+    CONSTRAINT "campaign_sms_logs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "sms_logs" (
+    "id" SERIAL NOT NULL,
+    "phone" VARCHAR(15) NOT NULL,
+    "message" TEXT NOT NULL,
+    "provider" VARCHAR(32) NOT NULL,
+    "status" "SmsLogStatus" NOT NULL DEFAULT 'QUEUED',
+    "response" TEXT,
+    "template" VARCHAR(64),
+    "externalId" VARCHAR(64),
+    "errorMessage" TEXT,
+    "attemptCount" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "sentAt" TIMESTAMP(3),
+
+    CONSTRAINT "sms_logs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "campaign_audit_logs" (
+    "id" SERIAL NOT NULL,
+    "campaignId" INTEGER NOT NULL,
+    "actorUserId" INTEGER,
+    "actorRole" TEXT,
+    "actorIp" VARCHAR(45),
+    "action" VARCHAR(64) NOT NULL,
+    "entityType" VARCHAR(32) NOT NULL,
+    "entityId" INTEGER,
+    "beforeJson" JSONB,
+    "afterJson" JSONB,
+    "metadataJson" JSONB,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "campaign_audit_logs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "campaign_rollout_phases" (
+    "id" SERIAL NOT NULL,
+    "campaignId" INTEGER NOT NULL,
+    "phaseCode" "CampaignRolloutPhaseCode" NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "status" "CampaignRolloutPhaseStatus" NOT NULL DEFAULT 'PLANNED',
+    "sortOrder" INTEGER NOT NULL DEFAULT 0,
+    "nationwideGoalPets" INTEGER NOT NULL DEFAULT 10000,
+    "startDate" TIMESTAMP(3),
+    "endDate" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "campaign_rollout_phases_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "campaign_rollout_regions" (
+    "id" SERIAL NOT NULL,
+    "phaseId" INTEGER NOT NULL,
+    "campaignId" INTEGER NOT NULL,
+    "divisionId" INTEGER,
+    "districtId" INTEGER,
+    "upazilaId" INTEGER,
+    "city" TEXT,
+    "venueName" TEXT,
+    "venueAddress" TEXT,
+    "locationId" INTEGER,
+    "startDate" TIMESTAMP(3),
+    "endDate" TIMESTAMP(3),
+    "targetCapacity" INTEGER NOT NULL DEFAULT 0,
+    "bookedCount" INTEGER NOT NULL DEFAULT 0,
+    "isActive" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "campaign_rollout_regions_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "campaign_pre_registrations" (
+    "id" SERIAL NOT NULL,
+    "campaignId" INTEGER NOT NULL,
+    "regionId" INTEGER,
+    "divisionId" INTEGER,
+    "districtId" INTEGER,
+    "upazilaId" INTEGER,
+    "phone" VARCHAR(20) NOT NULL,
+    "catCount" INTEGER NOT NULL DEFAULT 1,
+    "status" "CampaignPreRegistrationStatus" NOT NULL DEFAULT 'WAITING',
+    "notifiedAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "campaign_pre_registrations_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "campaign_checkout_sessions" (
+    "id" TEXT NOT NULL,
+    "campaignId" INTEGER NOT NULL,
+    "rolloutRegionId" INTEGER,
+    "ownerPhone" VARCHAR(15) NOT NULL,
+    "alternatePhone" VARCHAR(15),
+    "addressJson" JSONB NOT NULL,
+    "catCount" INTEGER NOT NULL,
+    "couponCode" VARCHAR(32),
+    "paymentMethod" VARCHAR(20),
+    "amount" DECIMAL(10,2) NOT NULL,
+    "status" "CampaignCheckoutStatus" NOT NULL DEFAULT 'PENDING',
+    "orderId" INTEGER,
+    "bookingId" INTEGER,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "campaign_checkout_sessions_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "animal_categories_code_key" ON "animal_categories"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "animal_types_name_key" ON "animal_types"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "animal_types_code_key" ON "animal_types"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "animal_sizes_code_key" ON "animal_sizes"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "animal_colors_code_key" ON "animal_colors"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "coat_patterns_code_key" ON "coat_patterns"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "breeds_name_animalTypeId_key" ON "breeds"("name", "animalTypeId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "sub_breeds_breedId_code_key" ON "sub_breeds"("breedId", "code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_auth_userId_key" ON "user_auth"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_auth_email_key" ON "user_auth"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_auth_phone_key" ON "user_auth"("phone");
+
+-- CreateIndex
+CREATE INDEX "user_auth_email_idx" ON "user_auth"("email");
+
+-- CreateIndex
+CREATE INDEX "user_auth_phone_idx" ON "user_auth"("phone");
+
+-- CreateIndex
+CREATE INDEX "user_auth_oauthSubject_idx" ON "user_auth"("oauthSubject");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_auth_provider_oauthSubject_key" ON "user_auth"("provider", "oauthSubject");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_profiles_userId_key" ON "user_profiles"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_profiles_username_key" ON "user_profiles"("username");
+
+-- CreateIndex
+CREATE INDEX "user_profiles_username_idx" ON "user_profiles"("username");
+
+-- CreateIndex
+CREATE INDEX "user_profiles_divisionId_idx" ON "user_profiles"("divisionId");
+
+-- CreateIndex
+CREATE INDEX "user_profiles_districtId_idx" ON "user_profiles"("districtId");
+
+-- CreateIndex
+CREATE INDEX "user_profiles_upazilaId_idx" ON "user_profiles"("upazilaId");
+
+-- CreateIndex
+CREATE INDEX "user_profiles_unionId_idx" ON "user_profiles"("unionId");
+
+-- CreateIndex
+CREATE INDEX "user_profiles_areaId_idx" ON "user_profiles"("areaId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_sessions_refreshTokenHash_key" ON "user_sessions"("refreshTokenHash");
+
+-- CreateIndex
+CREATE INDEX "user_sessions_userId_idx" ON "user_sessions"("userId");
+
+-- CreateIndex
+CREATE INDEX "user_sessions_expiresAt_idx" ON "user_sessions"("expiresAt");
+
+-- CreateIndex
+CREATE INDEX "user_follows_followingId_idx" ON "user_follows"("followingId");
+
+-- CreateIndex
+CREATE INDEX "user_follows_followerId_idx" ON "user_follows"("followerId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_follows_followerId_followingId_key" ON "user_follows"("followerId", "followingId");
+
+-- CreateIndex
+CREATE INDEX "user_profile_likes_userId_idx" ON "user_profile_likes"("userId");
+
+-- CreateIndex
+CREATE INDEX "user_profile_likes_likedById_idx" ON "user_profile_likes"("likedById");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_profile_likes_userId_likedById_key" ON "user_profile_likes"("userId", "likedById");
+
+-- CreateIndex
+CREATE INDEX "user_friend_requests_toUserId_idx" ON "user_friend_requests"("toUserId");
+
+-- CreateIndex
+CREATE INDEX "user_friend_requests_fromUserId_idx" ON "user_friend_requests"("fromUserId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_friend_requests_fromUserId_toUserId_key" ON "user_friend_requests"("fromUserId", "toUserId");
+
+-- CreateIndex
+CREATE INDEX "user_friends_userAId_idx" ON "user_friends"("userAId");
+
+-- CreateIndex
+CREATE INDEX "user_friends_userBId_idx" ON "user_friends"("userBId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_friends_userAId_userBId_key" ON "user_friends"("userAId", "userBId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "achievements_code_key" ON "achievements"("code");
+
+-- CreateIndex
+CREATE INDEX "user_achievements_userId_idx" ON "user_achievements"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_achievements_userId_achievementId_key" ON "user_achievements"("userId", "achievementId");
+
+-- CreateIndex
+CREATE INDEX "user_gallery_items_userId_createdAt_idx" ON "user_gallery_items"("userId", "createdAt");
+
+-- CreateIndex
+CREATE INDEX "places_latitude_longitude_idx" ON "places"("latitude", "longitude");
+
+-- CreateIndex
+CREATE INDEX "location_places_countryCode_admin1_city_idx" ON "location_places"("countryCode", "admin1", "city");
+
+-- CreateIndex
+CREATE INDEX "location_places_geoHash_idx" ON "location_places"("geoHash");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_location_profiles_userId_key" ON "user_location_profiles"("userId");
+
+-- CreateIndex
+CREATE INDEX "user_location_events_userId_timestamp_idx" ON "user_location_events"("userId", "timestamp" DESC);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "owner_profiles_userId_key" ON "owner_profiles"("userId");
+
+-- CreateIndex
+CREATE INDEX "owner_profiles_userId_idx" ON "owner_profiles"("userId");
+
+-- CreateIndex
+CREATE INDEX "owner_profiles_divisionId_idx" ON "owner_profiles"("divisionId");
+
+-- CreateIndex
+CREATE INDEX "owner_profiles_districtId_idx" ON "owner_profiles"("districtId");
+
+-- CreateIndex
+CREATE INDEX "owner_profiles_upazilaId_idx" ON "owner_profiles"("upazilaId");
+
+-- CreateIndex
+CREATE INDEX "owner_profiles_unionId_idx" ON "owner_profiles"("unionId");
+
+-- CreateIndex
+CREATE INDEX "owner_profiles_areaId_idx" ON "owner_profiles"("areaId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "owner_kyc_userId_key" ON "owner_kyc"("userId");
+
+-- CreateIndex
+CREATE INDEX "owner_kyc_verificationStatus_idx" ON "owner_kyc"("verificationStatus");
+
+-- CreateIndex
+CREATE INDEX "owner_kyc_reviewedByAdminId_idx" ON "owner_kyc"("reviewedByAdminId");
+
+-- CreateIndex
+CREATE INDEX "owner_kyc_expiresAt_idx" ON "owner_kyc"("expiresAt");
+
+-- CreateIndex
+CREATE INDEX "owner_kyc_documents_ownerKycId_idx" ON "owner_kyc_documents"("ownerKycId");
+
+-- CreateIndex
+CREATE INDEX "owner_kyc_documents_type_idx" ON "owner_kyc_documents"("type");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "org_legal_profiles_orgId_key" ON "org_legal_profiles"("orgId");
+
+-- CreateIndex
+CREATE INDEX "org_legal_profiles_verificationStatus_idx" ON "org_legal_profiles"("verificationStatus");
+
+-- CreateIndex
+CREATE INDEX "org_legal_profiles_reviewedByAdminId_idx" ON "org_legal_profiles"("reviewedByAdminId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "branch_profile_details_branchId_key" ON "branch_profile_details"("branchId");
+
+-- CreateIndex
+CREATE INDEX "branch_profile_details_verificationStatus_idx" ON "branch_profile_details"("verificationStatus");
+
+-- CreateIndex
+CREATE INDEX "branch_profile_details_reviewedByAdminId_idx" ON "branch_profile_details"("reviewedByAdminId");
+
+-- CreateIndex
+CREATE INDEX "verification_logs_entityType_entityId_idx" ON "verification_logs"("entityType", "entityId");
+
+-- CreateIndex
+CREATE INDEX "verification_logs_adminUserId_idx" ON "verification_logs"("adminUserId");
+
+-- CreateIndex
+CREATE INDEX "verification_cases_entityType_entityId_idx" ON "verification_cases"("entityType", "entityId");
+
+-- CreateIndex
+CREATE INDEX "verification_cases_status_idx" ON "verification_cases"("status");
+
+-- CreateIndex
+CREATE INDEX "verification_cases_reviewedByAdminId_idx" ON "verification_cases"("reviewedByAdminId");
+
+-- CreateIndex
+CREATE INDEX "verification_documents_caseId_idx" ON "verification_documents"("caseId");
+
+-- CreateIndex
+CREATE INDEX "verification_documents_docType_idx" ON "verification_documents"("docType");
+
+-- CreateIndex
+CREATE INDEX "verification_documents_status_idx" ON "verification_documents"("status");
+
+-- CreateIndex
+CREATE INDEX "verification_documents_checkedByAdminId_idx" ON "verification_documents"("checkedByAdminId");
+
+-- CreateIndex
+CREATE INDEX "verification_case_events_caseId_idx" ON "verification_case_events"("caseId");
+
+-- CreateIndex
+CREATE INDEX "verification_case_events_actorAdminId_idx" ON "verification_case_events"("actorAdminId");
+
+-- CreateIndex
+CREATE INDEX "notifications_userId_readAt_idx" ON "notifications"("userId", "readAt");
+
+-- CreateIndex
+CREATE INDEX "notifications_userId_createdAt_idx" ON "notifications"("userId", "createdAt");
+
+-- CreateIndex
+CREATE INDEX "notifications_type_idx" ON "notifications"("type");
+
+-- CreateIndex
+CREATE INDEX "notifications_dedupeKey_idx" ON "notifications"("dedupeKey");
+
+-- CreateIndex
+CREATE INDEX "notifications_orgId_idx" ON "notifications"("orgId");
+
+-- CreateIndex
+CREATE INDEX "notifications_branchId_idx" ON "notifications"("branchId");
+
+-- CreateIndex
+CREATE INDEX "notification_reads_userId_readAt_idx" ON "notification_reads"("userId", "readAt");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "notification_reads_notificationId_userId_key" ON "notification_reads"("notificationId", "userId");
+
+-- CreateIndex
+CREATE INDEX "notification_deliveries_notificationId_idx" ON "notification_deliveries"("notificationId");
+
+-- CreateIndex
+CREATE INDEX "notification_deliveries_channel_status_idx" ON "notification_deliveries"("channel", "status");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_notification_prefs_userId_key" ON "user_notification_prefs"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_app_settings_userId_key" ON "user_app_settings"("userId");
+
+-- CreateIndex
+CREATE INDEX "user_app_settings_lastActiveBranchId_idx" ON "user_app_settings"("lastActiveBranchId");
+
+-- CreateIndex
+CREATE INDEX "verification_locked_update_attempts_entityType_entityId_cre_idx" ON "verification_locked_update_attempts"("entityType", "entityId", "createdAt");
+
+-- CreateIndex
+CREATE INDEX "verification_locked_update_attempts_createdAt_idx" ON "verification_locked_update_attempts"("createdAt");
+
+-- CreateIndex
+CREATE INDEX "verification_locked_update_attempts_userId_idx" ON "verification_locked_update_attempts"("userId");
+
+-- CreateIndex
+CREATE INDEX "posts_authorId_createdAt_idx" ON "posts"("authorId", "createdAt");
+
+-- CreateIndex
+CREATE INDEX "post_media_postId_idx" ON "post_media"("postId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "post_media_postId_order_key" ON "post_media"("postId", "order");
+
+-- CreateIndex
+CREATE INDEX "post_likes_userId_idx" ON "post_likes"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "post_likes_postId_userId_key" ON "post_likes"("postId", "userId");
+
+-- CreateIndex
+CREATE INDEX "post_comments_postId_createdAt_idx" ON "post_comments"("postId", "createdAt");
+
+-- CreateIndex
+CREATE INDEX "post_comments_userId_idx" ON "post_comments"("userId");
+
+-- CreateIndex
+CREATE INDEX "post_comments_parentId_idx" ON "post_comments"("parentId");
+
+-- CreateIndex
+CREATE INDEX "post_comment_likes_userId_idx" ON "post_comment_likes"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "post_comment_likes_commentId_userId_key" ON "post_comment_likes"("commentId", "userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "media_hash_key" ON "media"("hash");
+
+-- CreateIndex
+CREATE INDEX "media_ownerUserId_idx" ON "media"("ownerUserId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "pets_profilePicId_key" ON "pets"("profilePicId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "pets_microchipNumber_key" ON "pets"("microchipNumber");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "pets_uniquePetId_key" ON "pets"("uniquePetId");
+
+-- CreateIndex
+CREATE INDEX "pets_clinicRegisteredBranchId_idx" ON "pets"("clinicRegisteredBranchId");
+
+-- CreateIndex
+CREATE INDEX "pet_family_members_petId_idx" ON "pet_family_members"("petId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "vaccine_types_name_key" ON "vaccine_types"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "vaccinations_certificateToken_key" ON "vaccinations"("certificateToken");
+
+-- CreateIndex
+CREATE INDEX "vaccinations_orgId_idx" ON "vaccinations"("orgId");
+
+-- CreateIndex
+CREATE INDEX "vaccinations_branchId_idx" ON "vaccinations"("branchId");
+
+-- CreateIndex
+CREATE INDEX "vaccinations_petId_idx" ON "vaccinations"("petId");
+
+-- CreateIndex
+CREATE INDEX "vaccinations_petId_status_idx" ON "vaccinations"("petId", "status");
+
+-- CreateIndex
+CREATE INDEX "vaccinations_nextDueDate_idx" ON "vaccinations"("nextDueDate");
+
+-- CreateIndex
+CREATE INDEX "vaccinations_branchId_administeredAt_idx" ON "vaccinations"("branchId", "administeredAt");
+
+-- CreateIndex
+CREATE INDEX "vaccinations_inventoryBatchId_idx" ON "vaccinations"("inventoryBatchId");
+
+-- CreateIndex
+CREATE INDEX "vaccinations_stockLedgerId_idx" ON "vaccinations"("stockLedgerId");
+
+-- CreateIndex
+CREATE INDEX "vaccinations_orderId_idx" ON "vaccinations"("orderId");
+
+-- CreateIndex
+CREATE INDEX "vaccinations_idempotencyKey_idx" ON "vaccinations"("idempotencyKey");
+
+-- CreateIndex
+CREATE INDEX "vaccinations_branchId_idempotencyKey_idx" ON "vaccinations"("branchId", "idempotencyKey");
+
+-- CreateIndex
+CREATE INDEX "vaccinations_campaignBookingId_idx" ON "vaccinations"("campaignBookingId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "vaccination_reminders_idempotencyKey_key" ON "vaccination_reminders"("idempotencyKey");
+
+-- CreateIndex
+CREATE INDEX "vaccination_reminders_branchId_status_scheduledFor_idx" ON "vaccination_reminders"("branchId", "status", "scheduledFor");
+
+-- CreateIndex
+CREATE INDEX "vaccination_reminders_vaccinationId_idx" ON "vaccination_reminders"("vaccinationId");
+
+-- CreateIndex
+CREATE INDEX "vaccination_reminders_petId_idx" ON "vaccination_reminders"("petId");
+
+-- CreateIndex
+CREATE INDEX "vaccination_reminders_dueDate_idx" ON "vaccination_reminders"("dueDate");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_wallets_userId_key" ON "user_wallets"("userId");
+
+-- CreateIndex
+CREATE INDEX "wallet_transactions_walletId_idx" ON "wallet_transactions"("walletId");
+
+-- CreateIndex
+CREATE INDEX "wallet_transactions_sourceType_sourceId_idx" ON "wallet_transactions"("sourceType", "sourceId");
+
+-- CreateIndex
+CREATE INDEX "wallet_withdraw_requests_walletId_createdAt_idx" ON "wallet_withdraw_requests"("walletId", "createdAt");
+
+-- CreateIndex
+CREATE INDEX "wallet_withdraw_requests_userId_createdAt_idx" ON "wallet_withdraw_requests"("userId", "createdAt");
+
+-- CreateIndex
+CREATE INDEX "wallet_withdraw_requests_status_createdAt_idx" ON "wallet_withdraw_requests"("status", "createdAt");
+
+-- CreateIndex
+CREATE INDEX "wallet_withdraw_requests_adminUserId_idx" ON "wallet_withdraw_requests"("adminUserId");
+
+-- CreateIndex
+CREATE INDEX "wallet_withdraw_requests_provider_providerPayoutId_idx" ON "wallet_withdraw_requests"("provider", "providerPayoutId");
+
+-- CreateIndex
+CREATE INDEX "payout_event_logs_provider_providerEventId_idx" ON "payout_event_logs"("provider", "providerEventId");
+
+-- CreateIndex
+CREATE INDEX "payout_event_logs_provider_providerPayoutId_idx" ON "payout_event_logs"("provider", "providerPayoutId");
+
+-- CreateIndex
+CREATE INDEX "payout_event_logs_withdrawRequestId_idx" ON "payout_event_logs"("withdrawRequestId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "fundraising_updates_postId_key" ON "fundraising_updates"("postId");
+
+-- CreateIndex
+CREATE INDEX "fundraising_updates_campaignId_createdAt_idx" ON "fundraising_updates"("campaignId", "createdAt");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "fundraising_accounts_userId_key" ON "fundraising_accounts"("userId");
+
+-- CreateIndex
+CREATE INDEX "fundraising_accounts_divisionId_idx" ON "fundraising_accounts"("divisionId");
+
+-- CreateIndex
+CREATE INDEX "fundraising_accounts_countryCode_idx" ON "fundraising_accounts"("countryCode");
+
+-- CreateIndex
+CREATE INDEX "fundraising_accounts_districtId_idx" ON "fundraising_accounts"("districtId");
+
+-- CreateIndex
+CREATE INDEX "fundraising_accounts_upazilaId_idx" ON "fundraising_accounts"("upazilaId");
+
+-- CreateIndex
+CREATE INDEX "fundraising_accounts_areaId_idx" ON "fundraising_accounts"("areaId");
+
+-- CreateIndex
+CREATE INDEX "fundraising_account_status_logs_accountId_createdAt_idx" ON "fundraising_account_status_logs"("accountId", "createdAt");
+
+-- CreateIndex
+CREATE INDEX "fundraising_account_status_logs_adminUserId_idx" ON "fundraising_account_status_logs"("adminUserId");
+
+-- CreateIndex
+CREATE INDEX "fundraising_verification_documents_accountId_idx" ON "fundraising_verification_documents"("accountId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "fundraising_campaigns_postId_key" ON "fundraising_campaigns"("postId");
+
+-- CreateIndex
+CREATE INDEX "fundraising_campaigns_accountId_createdAt_idx" ON "fundraising_campaigns"("accountId", "createdAt");
+
+-- CreateIndex
+CREATE INDEX "fundraising_campaigns_countryCode_idx" ON "fundraising_campaigns"("countryCode");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "donations_idempotencyKey_key" ON "donations"("idempotencyKey");
+
+-- CreateIndex
+CREATE INDEX "donations_campaignId_createdAt_idx" ON "donations"("campaignId", "createdAt");
+
+-- CreateIndex
+CREATE INDEX "donations_donorId_idx" ON "donations"("donorId");
+
+-- CreateIndex
+CREATE INDEX "donations_status_idx" ON "donations"("status");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "fundraising_payout_method_catalog_code_key" ON "fundraising_payout_method_catalog"("code");
+
+-- CreateIndex
+CREATE INDEX "fundraising_payout_method_catalog_isActive_idx" ON "fundraising_payout_method_catalog"("isActive");
+
+-- CreateIndex
+CREATE INDEX "fundraising_payout_methods_accountId_idx" ON "fundraising_payout_methods"("accountId");
+
+-- CreateIndex
+CREATE INDEX "fundraising_payout_methods_catalogId_idx" ON "fundraising_payout_methods"("catalogId");
+
+-- CreateIndex
+CREATE INDEX "fundraising_payout_methods_isDefault_idx" ON "fundraising_payout_methods"("isDefault");
+
+-- CreateIndex
+CREATE INDEX "fundraising_withdraw_requests_campaignId_createdAt_idx" ON "fundraising_withdraw_requests"("campaignId", "createdAt");
+
+-- CreateIndex
+CREATE INDEX "fundraising_withdraw_requests_accountId_createdAt_idx" ON "fundraising_withdraw_requests"("accountId", "createdAt");
+
+-- CreateIndex
+CREATE INDEX "fundraising_withdraw_requests_status_createdAt_idx" ON "fundraising_withdraw_requests"("status", "createdAt");
+
+-- CreateIndex
+CREATE INDEX "fundraising_withdraw_requests_adminUserId_idx" ON "fundraising_withdraw_requests"("adminUserId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "fundraising_payout_transfer_logs_requestId_key" ON "fundraising_payout_transfer_logs"("requestId");
+
+-- CreateIndex
+CREATE INDEX "fundraising_payout_transfer_logs_proofMediaId_idx" ON "fundraising_payout_transfer_logs"("proofMediaId");
+
+-- CreateIndex
+CREATE INDEX "reports_type_targetId_idx" ON "reports"("type", "targetId");
+
+-- CreateIndex
+CREATE INDEX "reports_reporterId_idx" ON "reports"("reporterId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "bd_divisions_code_key" ON "bd_divisions"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "bd_districts_code_key" ON "bd_districts"("code");
+
+-- CreateIndex
+CREATE INDEX "bd_districts_divisionId_idx" ON "bd_districts"("divisionId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "bd_upazilas_code_key" ON "bd_upazilas"("code");
+
+-- CreateIndex
+CREATE INDEX "bd_upazilas_districtId_idx" ON "bd_upazilas"("districtId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "bd_unions_code_key" ON "bd_unions"("code");
+
+-- CreateIndex
+CREATE INDEX "bd_unions_upazilaId_idx" ON "bd_unions"("upazilaId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "bd_areas_code_key" ON "bd_areas"("code");
+
+-- CreateIndex
+CREATE INDEX "bd_areas_unionId_idx" ON "bd_areas"("unionId");
+
+-- CreateIndex
+CREATE INDEX "bd_areas_upazilaId_idx" ON "bd_areas"("upazilaId");
+
+-- CreateIndex
+CREATE INDEX "bd_areas_districtId_idx" ON "bd_areas"("districtId");
+
+-- CreateIndex
+CREATE INDEX "bd_areas_parentId_idx" ON "bd_areas"("parentId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "bd_areas_parentId_nameEn_type_key" ON "bd_areas"("parentId", "nameEn", "type");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "city_corporations_code_key" ON "city_corporations"("code");
+
+-- CreateIndex
+CREATE INDEX "areas_cityCorporationId_idx" ON "areas"("cityCorporationId");
+
+-- CreateIndex
+CREATE INDEX "areas_parentId_idx" ON "areas"("parentId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "areas_cityCorporationId_parentId_nameEn_key" ON "areas"("cityCorporationId", "parentId", "nameEn");
+
+-- CreateIndex
+CREATE INDEX "location_coverage_assignment_lookup" ON "location_coverage_assignments"("entityType", "entityId", "isActive");
+
+-- CreateIndex
+CREATE INDEX "location_coverage_assignment_division_idx" ON "location_coverage_assignments"("divisionId");
+
+-- CreateIndex
+CREATE INDEX "location_coverage_assignment_district_idx" ON "location_coverage_assignments"("districtId");
+
+-- CreateIndex
+CREATE INDEX "location_coverage_assignment_upazila_idx" ON "location_coverage_assignments"("upazilaId");
+
+-- CreateIndex
+CREATE INDEX "location_coverage_assignment_union_idx" ON "location_coverage_assignments"("unionId");
+
+-- CreateIndex
+CREATE INDEX "location_coverage_assignment_area_idx" ON "location_coverage_assignments"("areaId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "location_coverage_assignment_unique" ON "location_coverage_assignments"("entityType", "entityId", "divisionId", "districtId", "upazilaId", "unionId", "areaId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "coverage_zones_slug_key" ON "coverage_zones"("slug");
+
+-- CreateIndex
+CREATE INDEX "coverage_zones_zoneType_isActive_idx" ON "coverage_zones"("zoneType", "isActive");
+
+-- CreateIndex
+CREATE INDEX "coverage_zones_city_idx" ON "coverage_zones"("city");
+
+-- CreateIndex
+CREATE INDEX "coverage_zone_areas_coverageZoneId_idx" ON "coverage_zone_areas"("coverageZoneId");
+
+-- CreateIndex
+CREATE INDEX "coverage_zone_areas_bdAreaId_idx" ON "coverage_zone_areas"("bdAreaId");
+
+-- CreateIndex
+CREATE INDEX "coverage_zone_areas_bdDistrictId_idx" ON "coverage_zone_areas"("bdDistrictId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "coverage_zone_area_zone_area_unique" ON "coverage_zone_areas"("coverageZoneId", "bdAreaId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "coverage_zone_metadata_coverageZoneId_key" ON "coverage_zone_metadata"("coverageZoneId");
+
+-- CreateIndex
+CREATE INDEX "audit_logs_actorId_idx" ON "audit_logs"("actorId");
+
+-- CreateIndex
+CREATE INDEX "audit_logs_entityType_entityId_idx" ON "audit_logs"("entityType", "entityId");
+
+-- CreateIndex
+CREATE INDEX "audit_logs_createdAt_idx" ON "audit_logs"("createdAt");
+
+-- CreateIndex
+CREATE INDEX "organizations_ownerUserId_idx" ON "organizations"("ownerUserId");
+
+-- CreateIndex
+CREATE INDEX "organizations_countryId_idx" ON "organizations"("countryId");
+
+-- CreateIndex
+CREATE INDEX "organizations_divisionId_idx" ON "organizations"("divisionId");
+
+-- CreateIndex
+CREATE INDEX "organizations_districtId_idx" ON "organizations"("districtId");
+
+-- CreateIndex
+CREATE INDEX "organizations_upazilaId_idx" ON "organizations"("upazilaId");
+
+-- CreateIndex
+CREATE INDEX "organizations_unionId_idx" ON "organizations"("unionId");
+
+-- CreateIndex
+CREATE INDEX "organizations_areaId_idx" ON "organizations"("areaId");
+
+-- CreateIndex
+CREATE INDEX "organizations_deletedAt_deletionScheduledAt_idx" ON "organizations"("deletedAt", "deletionScheduledAt");
+
+-- CreateIndex
+CREATE INDEX "organizations_orgType_idx" ON "organizations"("orgType");
+
+-- CreateIndex
+CREATE INDEX "branches_orgId_idx" ON "branches"("orgId");
+
+-- CreateIndex
+CREATE INDEX "branches_divisionId_idx" ON "branches"("divisionId");
+
+-- CreateIndex
+CREATE INDEX "branches_districtId_idx" ON "branches"("districtId");
+
+-- CreateIndex
+CREATE INDEX "branches_upazilaId_idx" ON "branches"("upazilaId");
+
+-- CreateIndex
+CREATE INDEX "branches_unionId_idx" ON "branches"("unionId");
+
+-- CreateIndex
+CREATE INDEX "branches_areaId_idx" ON "branches"("areaId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "branches_orgId_code_key" ON "branches"("orgId", "code");
+
+-- CreateIndex
+CREATE INDEX "branch_rooms_orgId_branchId_idx" ON "branch_rooms"("orgId", "branchId");
+
+-- CreateIndex
+CREATE INDEX "branch_rooms_branchId_status_idx" ON "branch_rooms"("branchId", "status");
+
+-- CreateIndex
+CREATE INDEX "branch_rooms_branchId_operationalStatus_idx" ON "branch_rooms"("branchId", "operationalStatus");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "branch_rooms_branchId_name_key" ON "branch_rooms"("branchId", "name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "branch_rooms_branchId_code_key" ON "branch_rooms"("branchId", "code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "branch_policies_branchId_key" ON "branch_policies"("branchId");
+
+-- CreateIndex
+CREATE INDEX "branch_policies_orgId_idx" ON "branch_policies"("orgId");
+
+-- CreateIndex
+CREATE INDEX "branch_members_orgId_branchId_role_idx" ON "branch_members"("orgId", "branchId", "role");
+
+-- CreateIndex
+CREATE INDEX "branch_members_userId_idx" ON "branch_members"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "branch_members_branchId_userId_key" ON "branch_members"("branchId", "userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "appointments_rescheduleFromAppointmentId_key" ON "appointments"("rescheduleFromAppointmentId");
+
+-- CreateIndex
+CREATE INDEX "appointments_orgId_branchId_idx" ON "appointments"("orgId", "branchId");
+
+-- CreateIndex
+CREATE INDEX "appointments_branchId_status_idx" ON "appointments"("branchId", "status");
+
+-- CreateIndex
+CREATE INDEX "appointments_patientId_idx" ON "appointments"("patientId");
+
+-- CreateIndex
+CREATE INDEX "appointments_scheduledStartAt_idx" ON "appointments"("scheduledStartAt");
+
+-- CreateIndex
+CREATE INDEX "appointments_branchId_tokenNo_idx" ON "appointments"("branchId", "tokenNo");
+
+-- CreateIndex
+CREATE INDEX "appointments_appointmentType_idx" ON "appointments"("appointmentType");
+
+-- CreateIndex
+CREATE INDEX "appointments_surgeryPackageId_idx" ON "appointments"("surgeryPackageId");
+
+-- CreateIndex
+CREATE INDEX "appointments_followUpFromId_idx" ON "appointments"("followUpFromId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "visits_appointmentId_key" ON "visits"("appointmentId");
+
+-- CreateIndex
+CREATE INDEX "visits_orgId_branchId_idx" ON "visits"("orgId", "branchId");
+
+-- CreateIndex
+CREATE INDEX "visits_branchId_status_idx" ON "visits"("branchId", "status");
+
+-- CreateIndex
+CREATE INDEX "visits_petId_idx" ON "visits"("petId");
+
+-- CreateIndex
+CREATE INDEX "visits_patientId_idx" ON "visits"("patientId");
+
+-- CreateIndex
+CREATE INDEX "visits_doctorId_idx" ON "visits"("doctorId");
+
+-- CreateIndex
+CREATE INDEX "visits_appointmentId_idx" ON "visits"("appointmentId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "roles_key_key" ON "roles"("key");
+
+-- CreateIndex
+CREATE INDEX "roles_scope_idx" ON "roles"("scope");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "orders_orderNumber_key" ON "orders"("orderNumber");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "orders_invoiceNumber_key" ON "orders"("invoiceNumber") WHERE ("invoiceNumber" IS NOT NULL);
+
+-- CreateIndex
+CREATE INDEX "orders_branchId_idx" ON "orders"("branchId");
+
+-- CreateIndex
+CREATE INDEX "orders_posShiftId_idx" ON "orders"("posShiftId");
+
+-- CreateIndex
+CREATE INDEX "orders_customerId_idx" ON "orders"("customerId");
+
+-- CreateIndex
+CREATE INDEX "orders_status_idx" ON "orders"("status");
+
+-- CreateIndex
+CREATE INDEX "orders_orderNumber_idx" ON "orders"("orderNumber");
+
+-- CreateIndex
+CREATE INDEX "orders_fulfilmentInventoryLocationId_idx" ON "orders"("fulfilmentInventoryLocationId");
+
+-- CreateIndex
+CREATE INDEX "orders_orderSource_idx" ON "orders"("orderSource");
+
+-- CreateIndex
+CREATE INDEX "orders_visitId_idx" ON "orders"("visitId");
+
+-- CreateIndex
+CREATE INDEX "order_payments_orderId_idx" ON "order_payments"("orderId");
+
+-- CreateIndex
+CREATE INDEX "order_payments_method_idx" ON "order_payments"("method");
+
+-- CreateIndex
+CREATE INDEX "payment_transaction_logs_referenceId_idx" ON "payment_transaction_logs"("referenceId");
+
+-- CreateIndex
+CREATE INDEX "payment_transaction_logs_providerTxId_idx" ON "payment_transaction_logs"("providerTxId");
+
+-- CreateIndex
+CREATE INDEX "payment_transaction_logs_orderId_idx" ON "payment_transaction_logs"("orderId");
+
+-- CreateIndex
+CREATE INDEX "payment_transaction_logs_status_phase_createdAt_idx" ON "payment_transaction_logs"("status", "phase", "createdAt");
+
+-- CreateIndex
+CREATE INDEX "payment_transactions_bookingId_idx" ON "payment_transactions"("bookingId");
+
+-- CreateIndex
+CREATE INDEX "payment_transactions_status_createdAt_idx" ON "payment_transactions"("status", "createdAt");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "payment_transactions_gateway_transactionId_key" ON "payment_transactions"("gateway", "transactionId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "services_serviceCode_key" ON "services"("serviceCode");
+
+-- CreateIndex
+CREATE INDEX "services_orgId_branchId_idx" ON "services"("orgId", "branchId");
+
+-- CreateIndex
+CREATE INDEX "services_branchId_status_idx" ON "services"("branchId", "status");
+
+-- CreateIndex
+CREATE INDEX "services_category_idx" ON "services"("category");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "countries_code_key" ON "countries"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "countries_controllerOrgId_key" ON "countries"("controllerOrgId");
+
+-- CreateIndex
+CREATE INDEX "countries_controllerOrgId_idx" ON "countries"("controllerOrgId");
+
+-- CreateIndex
+CREATE INDEX "states_countryId_idx" ON "states"("countryId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "states_countryId_code_key" ON "states"("countryId", "code");
+
+-- CreateIndex
+CREATE INDEX "location_cities_stateId_idx" ON "location_cities"("stateId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "location_cities_stateId_name_key" ON "location_cities"("stateId", "name");
+
+-- CreateIndex
+CREATE INDEX "location_sub_districts_cityId_idx" ON "location_sub_districts"("cityId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "location_sub_districts_cityId_name_key" ON "location_sub_districts"("cityId", "name");
+
+-- CreateIndex
+CREATE INDEX "country_policies_countryId_status_idx" ON "country_policies"("countryId", "status");
+
+-- CreateIndex
+CREATE INDEX "policy_features_countryPolicyId_idx" ON "policy_features"("countryPolicyId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "policy_features_countryPolicyId_featureCode_key" ON "policy_features"("countryPolicyId", "featureCode");
+
+-- CreateIndex
+CREATE INDEX "policy_donation_rules_countryPolicyId_idx" ON "policy_donation_rules"("countryPolicyId");
+
+-- CreateIndex
+CREATE INDEX "policy_payment_methods_countryPolicyId_idx" ON "policy_payment_methods"("countryPolicyId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "policy_payment_methods_countryPolicyId_providerCode_key" ON "policy_payment_methods"("countryPolicyId", "providerCode");
+
+-- CreateIndex
+CREATE INDEX "policy_ads_rules_countryPolicyId_idx" ON "policy_ads_rules"("countryPolicyId");
+
+-- CreateIndex
+CREATE INDEX "policy_rules_countryPolicyId_idx" ON "policy_rules"("countryPolicyId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "policy_rules_countryPolicyId_ruleKey_key" ON "policy_rules"("countryPolicyId", "ruleKey");
+
+-- CreateIndex
+CREATE INDEX "state_policies_stateId_status_idx" ON "state_policies"("stateId", "status");
+
+-- CreateIndex
+CREATE INDEX "state_policy_features_statePolicyId_idx" ON "state_policy_features"("statePolicyId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "state_policy_features_statePolicyId_featureCode_key" ON "state_policy_features"("statePolicyId", "featureCode");
+
+-- CreateIndex
+CREATE INDEX "state_policy_rules_statePolicyId_idx" ON "state_policy_rules"("statePolicyId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "state_policy_rules_statePolicyId_ruleKey_key" ON "state_policy_rules"("statePolicyId", "ruleKey");
+
+-- CreateIndex
+CREATE INDEX "ads_countryId_status_idx" ON "ads"("countryId", "status");
+
+-- CreateIndex
+CREATE INDEX "ads_status_startAt_endAt_idx" ON "ads"("status", "startAt", "endAt");
+
+-- CreateIndex
+CREATE INDEX "inventory_locations_type_idx" ON "inventory_locations"("type");
+
+-- CreateIndex
+CREATE INDEX "inventory_locations_branchId_idx" ON "inventory_locations"("branchId");
+
+-- CreateIndex
+CREATE INDEX "inventory_locations_warehouseId_idx" ON "inventory_locations"("warehouseId");
+
+-- CreateIndex
+CREATE INDEX "inventory_locations_warehouseId_isActive_idx" ON "inventory_locations"("warehouseId", "isActive");
+
+-- CreateIndex
+CREATE INDEX "inventory_locations_branchId_warehouseId_idx" ON "inventory_locations"("branchId", "warehouseId");
+
+-- CreateIndex
+CREATE INDEX "inventory_locations_zoneId_idx" ON "inventory_locations"("zoneId");
+
+-- CreateIndex
+CREATE INDEX "inventory_locations_binId_idx" ON "inventory_locations"("binId");
+
+-- CreateIndex
+CREATE INDEX "inventory_locations_isActive_idx" ON "inventory_locations"("isActive");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "owner_onboarding_states_userId_key" ON "owner_onboarding_states"("userId");
+
+-- CreateIndex
+CREATE INDEX "owner_onboarding_states_userId_idx" ON "owner_onboarding_states"("userId");
+
+-- CreateIndex
+CREATE INDEX "owner_onboarding_states_status_idx" ON "owner_onboarding_states"("status");
+
+-- CreateIndex
+CREATE INDEX "warehouses_orgId_idx" ON "warehouses"("orgId");
+
+-- CreateIndex
+CREATE INDEX "warehouses_orgId_isActive_idx" ON "warehouses"("orgId", "isActive");
+
+-- CreateIndex
+CREATE INDEX "warehouses_branchId_idx" ON "warehouses"("branchId");
+
+-- CreateIndex
+CREATE INDEX "warehouses_isActive_idx" ON "warehouses"("isActive");
+
+-- CreateIndex
+CREATE INDEX "warehouses_managerId_idx" ON "warehouses"("managerId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "campaigns_slug_key" ON "campaigns"("slug");
+
+-- CreateIndex
+CREATE INDEX "campaigns_status_idx" ON "campaigns"("status");
+
+-- CreateIndex
+CREATE INDEX "campaigns_startDate_endDate_idx" ON "campaigns"("startDate", "endDate");
+
+-- CreateIndex
+CREATE INDEX "campaigns_bookingStartAt_bookingEndAt_idx" ON "campaigns"("bookingStartAt", "bookingEndAt");
+
+-- CreateIndex
+CREATE INDEX "campaigns_slug_idx" ON "campaigns"("slug");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "campaign_configs_campaignId_key" ON "campaign_configs"("campaignId");
+
+-- CreateIndex
+CREATE INDEX "campaign_config_history_campaignId_version_idx" ON "campaign_config_history"("campaignId", "version");
+
+-- CreateIndex
+CREATE INDEX "campaign_locations_campaignId_idx" ON "campaign_locations"("campaignId");
+
+-- CreateIndex
+CREATE INDEX "campaign_locations_isActive_idx" ON "campaign_locations"("isActive");
+
+-- CreateIndex
+CREATE INDEX "campaign_slots_locationId_date_idx" ON "campaign_slots"("locationId", "date");
+
+-- CreateIndex
+CREATE INDEX "campaign_slots_status_idx" ON "campaign_slots"("status");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "campaign_slots_locationId_date_startTime_key" ON "campaign_slots"("locationId", "date", "startTime");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "campaign_vaccine_types_campaignId_vaccineTypeId_key" ON "campaign_vaccine_types"("campaignId", "vaccineTypeId");
+
+-- CreateIndex
+CREATE INDEX "campaign_included_vaccines_campaignId_displayOrder_idx" ON "campaign_included_vaccines"("campaignId", "displayOrder");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "campaign_bookings_bookingRef_key" ON "campaign_bookings"("bookingRef");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "campaign_bookings_qrToken_key" ON "campaign_bookings"("qrToken");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "campaign_bookings_checkoutSessionId_key" ON "campaign_bookings"("checkoutSessionId");
+
+-- CreateIndex
+CREATE INDEX "campaign_bookings_campaignId_bookingDate_idx" ON "campaign_bookings"("campaignId", "bookingDate");
+
+-- CreateIndex
+CREATE INDEX "campaign_bookings_rolloutRegionId_idx" ON "campaign_bookings"("rolloutRegionId");
+
+-- CreateIndex
+CREATE INDEX "campaign_bookings_coverageZoneId_idx" ON "campaign_bookings"("coverageZoneId");
+
+-- CreateIndex
+CREATE INDEX "campaign_bookings_bdAreaId_idx" ON "campaign_bookings"("bdAreaId");
+
+-- CreateIndex
+CREATE INDEX "campaign_bookings_bookingMode_idx" ON "campaign_bookings"("bookingMode");
+
+-- CreateIndex
+CREATE INDEX "campaign_bookings_ownerPhone_idx" ON "campaign_bookings"("ownerPhone");
+
+-- CreateIndex
+CREATE INDEX "campaign_bookings_slotId_status_idx" ON "campaign_bookings"("slotId", "status");
+
+-- CreateIndex
+CREATE INDEX "campaign_bookings_qrToken_idx" ON "campaign_bookings"("qrToken");
+
+-- CreateIndex
+CREATE INDEX "campaign_bookings_bookingRef_idx" ON "campaign_bookings"("bookingRef");
+
+-- CreateIndex
+CREATE INDEX "campaign_bookings_status_bookingDate_idx" ON "campaign_bookings"("status", "bookingDate");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "campaign_pets_vaccinationId_key" ON "campaign_pets"("vaccinationId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "campaign_pets_ticketToken_key" ON "campaign_pets"("ticketToken");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "campaign_pets_certificateToken_key" ON "campaign_pets"("certificateToken");
+
+-- CreateIndex
+CREATE INDEX "campaign_pets_bookingId_idx" ON "campaign_pets"("bookingId");
+
+-- CreateIndex
+CREATE INDEX "campaign_pets_permanentPetId_idx" ON "campaign_pets"("permanentPetId");
+
+-- CreateIndex
+CREATE INDEX "campaign_pets_vaccinationStatus_idx" ON "campaign_pets"("vaccinationStatus");
+
+-- CreateIndex
+CREATE INDEX "campaign_staff_campaignId_idx" ON "campaign_staff"("campaignId");
+
+-- CreateIndex
+CREATE INDEX "campaign_staff_userId_idx" ON "campaign_staff"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "campaign_staff_campaignId_locationId_userId_key" ON "campaign_staff"("campaignId", "locationId", "userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "campaign_sms_templates_campaignId_code_key" ON "campaign_sms_templates"("campaignId", "code");
+
+-- CreateIndex
+CREATE INDEX "campaign_sms_logs_bookingId_idx" ON "campaign_sms_logs"("bookingId");
+
+-- CreateIndex
+CREATE INDEX "campaign_sms_logs_campaignId_status_idx" ON "campaign_sms_logs"("campaignId", "status");
+
+-- CreateIndex
+CREATE INDEX "campaign_sms_logs_phone_idx" ON "campaign_sms_logs"("phone");
+
+-- CreateIndex
+CREATE INDEX "sms_logs_phone_idx" ON "sms_logs"("phone");
+
+-- CreateIndex
+CREATE INDEX "sms_logs_status_idx" ON "sms_logs"("status");
+
+-- CreateIndex
+CREATE INDEX "sms_logs_createdAt_idx" ON "sms_logs"("createdAt");
+
+-- CreateIndex
+CREATE INDEX "campaign_audit_logs_campaignId_createdAt_idx" ON "campaign_audit_logs"("campaignId", "createdAt");
+
+-- CreateIndex
+CREATE INDEX "campaign_audit_logs_actorUserId_idx" ON "campaign_audit_logs"("actorUserId");
+
+-- CreateIndex
+CREATE INDEX "campaign_audit_logs_entityType_entityId_idx" ON "campaign_audit_logs"("entityType", "entityId");
+
+-- CreateIndex
+CREATE INDEX "campaign_rollout_phases_campaignId_status_idx" ON "campaign_rollout_phases"("campaignId", "status");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "campaign_rollout_phases_campaignId_phaseCode_key" ON "campaign_rollout_phases"("campaignId", "phaseCode");
+
+-- CreateIndex
+CREATE INDEX "campaign_rollout_regions_campaignId_isActive_idx" ON "campaign_rollout_regions"("campaignId", "isActive");
+
+-- CreateIndex
+CREATE INDEX "campaign_rollout_regions_phaseId_idx" ON "campaign_rollout_regions"("phaseId");
+
+-- CreateIndex
+CREATE INDEX "campaign_rollout_regions_divisionId_districtId_upazilaId_idx" ON "campaign_rollout_regions"("divisionId", "districtId", "upazilaId");
+
+-- CreateIndex
+CREATE INDEX "campaign_pre_registrations_campaignId_status_idx" ON "campaign_pre_registrations"("campaignId", "status");
+
+-- CreateIndex
+CREATE INDEX "campaign_pre_registrations_phone_idx" ON "campaign_pre_registrations"("phone");
+
+-- CreateIndex
+CREATE INDEX "campaign_pre_registrations_districtId_idx" ON "campaign_pre_registrations"("districtId");
+
+-- CreateIndex
+CREATE INDEX "campaign_checkout_sessions_ownerPhone_idx" ON "campaign_checkout_sessions"("ownerPhone");
+
+-- CreateIndex
+CREATE INDEX "campaign_checkout_sessions_status_expiresAt_idx" ON "campaign_checkout_sessions"("status", "expiresAt");
+
+-- CreateIndex
+CREATE INDEX "campaign_checkout_sessions_campaignId_idx" ON "campaign_checkout_sessions"("campaignId");
+
+-- AddForeignKey
+ALTER TABLE "animal_types" ADD CONSTRAINT "animal_types_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "animal_categories"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "breeds" ADD CONSTRAINT "breeds_animalTypeId_fkey" FOREIGN KEY ("animalTypeId") REFERENCES "animal_types"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "breeds" ADD CONSTRAINT "breeds_defaultSizeId_fkey" FOREIGN KEY ("defaultSizeId") REFERENCES "animal_sizes"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "sub_breeds" ADD CONSTRAINT "sub_breeds_breedId_fkey" FOREIGN KEY ("breedId") REFERENCES "breeds"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_auth" ADD CONSTRAINT "user_auth_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_profiles" ADD CONSTRAINT "user_profiles_avatarMediaId_fkey" FOREIGN KEY ("avatarMediaId") REFERENCES "media"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_profiles" ADD CONSTRAINT "user_profiles_coverMediaId_fkey" FOREIGN KEY ("coverMediaId") REFERENCES "media"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_profiles" ADD CONSTRAINT "user_profiles_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_stats_cache" ADD CONSTRAINT "user_stats_cache_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_sessions" ADD CONSTRAINT "user_sessions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_follows" ADD CONSTRAINT "user_follows_followerId_fkey" FOREIGN KEY ("followerId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_follows" ADD CONSTRAINT "user_follows_followingId_fkey" FOREIGN KEY ("followingId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_profile_likes" ADD CONSTRAINT "user_profile_likes_likedById_fkey" FOREIGN KEY ("likedById") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_profile_likes" ADD CONSTRAINT "user_profile_likes_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_friend_requests" ADD CONSTRAINT "user_friend_requests_fromUserId_fkey" FOREIGN KEY ("fromUserId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_friend_requests" ADD CONSTRAINT "user_friend_requests_toUserId_fkey" FOREIGN KEY ("toUserId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_friends" ADD CONSTRAINT "user_friends_userAId_fkey" FOREIGN KEY ("userAId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_friends" ADD CONSTRAINT "user_friends_userBId_fkey" FOREIGN KEY ("userBId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "achievements" ADD CONSTRAINT "achievements_iconMediaId_fkey" FOREIGN KEY ("iconMediaId") REFERENCES "media"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_achievements" ADD CONSTRAINT "user_achievements_achievementId_fkey" FOREIGN KEY ("achievementId") REFERENCES "achievements"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_achievements" ADD CONSTRAINT "user_achievements_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_gallery_items" ADD CONSTRAINT "user_gallery_items_mediaId_fkey" FOREIGN KEY ("mediaId") REFERENCES "media"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_gallery_items" ADD CONSTRAINT "user_gallery_items_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "users" ADD CONSTRAINT "users_currentPlaceId_fkey" FOREIGN KEY ("currentPlaceId") REFERENCES "places"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_location_profiles" ADD CONSTRAINT "user_location_profiles_currentPlaceId_fkey" FOREIGN KEY ("currentPlaceId") REFERENCES "location_places"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_location_profiles" ADD CONSTRAINT "user_location_profiles_homePlaceId_fkey" FOREIGN KEY ("homePlaceId") REFERENCES "location_places"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_location_profiles" ADD CONSTRAINT "user_location_profiles_manualOverridePlaceId_fkey" FOREIGN KEY ("manualOverridePlaceId") REFERENCES "location_places"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_location_profiles" ADD CONSTRAINT "user_location_profiles_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_location_events" ADD CONSTRAINT "user_location_events_placeId_fkey" FOREIGN KEY ("placeId") REFERENCES "location_places"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_location_events" ADD CONSTRAINT "user_location_events_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "owner_profiles" ADD CONSTRAINT "owner_profiles_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "owner_kyc" ADD CONSTRAINT "owner_kyc_reviewedByAdminId_fkey" FOREIGN KEY ("reviewedByAdminId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "owner_kyc" ADD CONSTRAINT "owner_kyc_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "owner_kyc_documents" ADD CONSTRAINT "owner_kyc_documents_mediaId_fkey" FOREIGN KEY ("mediaId") REFERENCES "media"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "owner_kyc_documents" ADD CONSTRAINT "owner_kyc_documents_ownerKycId_fkey" FOREIGN KEY ("ownerKycId") REFERENCES "owner_kyc"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "org_legal_profiles" ADD CONSTRAINT "org_legal_profiles_orgId_fkey" FOREIGN KEY ("orgId") REFERENCES "organizations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "org_legal_profiles" ADD CONSTRAINT "org_legal_profiles_reviewedByAdminId_fkey" FOREIGN KEY ("reviewedByAdminId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "branch_profile_details" ADD CONSTRAINT "branch_profile_details_branchId_fkey" FOREIGN KEY ("branchId") REFERENCES "branches"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "branch_profile_details" ADD CONSTRAINT "branch_profile_details_reviewedByAdminId_fkey" FOREIGN KEY ("reviewedByAdminId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "verification_logs" ADD CONSTRAINT "verification_logs_adminUserId_fkey" FOREIGN KEY ("adminUserId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "verification_cases" ADD CONSTRAINT "verification_cases_reviewedByAdminId_fkey" FOREIGN KEY ("reviewedByAdminId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "verification_documents" ADD CONSTRAINT "verification_documents_caseId_fkey" FOREIGN KEY ("caseId") REFERENCES "verification_cases"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "verification_documents" ADD CONSTRAINT "verification_documents_checkedByAdminId_fkey" FOREIGN KEY ("checkedByAdminId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "verification_documents" ADD CONSTRAINT "verification_documents_mediaId_fkey" FOREIGN KEY ("mediaId") REFERENCES "media"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "verification_case_events" ADD CONSTRAINT "verification_case_events_actorAdminId_fkey" FOREIGN KEY ("actorAdminId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "verification_case_events" ADD CONSTRAINT "verification_case_events_caseId_fkey" FOREIGN KEY ("caseId") REFERENCES "verification_cases"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "notifications" ADD CONSTRAINT "notifications_senderId_fkey" FOREIGN KEY ("senderId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "notifications" ADD CONSTRAINT "notifications_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "notification_reads" ADD CONSTRAINT "notification_reads_notificationId_fkey" FOREIGN KEY ("notificationId") REFERENCES "notifications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "notification_reads" ADD CONSTRAINT "notification_reads_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "notification_deliveries" ADD CONSTRAINT "notification_deliveries_notificationId_fkey" FOREIGN KEY ("notificationId") REFERENCES "notifications"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_notification_prefs" ADD CONSTRAINT "user_notification_prefs_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_app_settings" ADD CONSTRAINT "user_app_settings_lastActiveBranchId_fkey" FOREIGN KEY ("lastActiveBranchId") REFERENCES "branches"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_app_settings" ADD CONSTRAINT "user_app_settings_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "verification_locked_update_attempts" ADD CONSTRAINT "verification_locked_update_attempts_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "posts" ADD CONSTRAINT "posts_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "post_media" ADD CONSTRAINT "post_media_mediaId_fkey" FOREIGN KEY ("mediaId") REFERENCES "media"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "post_media" ADD CONSTRAINT "post_media_postId_fkey" FOREIGN KEY ("postId") REFERENCES "posts"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "post_likes" ADD CONSTRAINT "post_likes_postId_fkey" FOREIGN KEY ("postId") REFERENCES "posts"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "post_likes" ADD CONSTRAINT "post_likes_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "post_comments" ADD CONSTRAINT "post_comments_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "post_comments"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "post_comments" ADD CONSTRAINT "post_comments_postId_fkey" FOREIGN KEY ("postId") REFERENCES "posts"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "post_comments" ADD CONSTRAINT "post_comments_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "post_comment_likes" ADD CONSTRAINT "post_comment_likes_commentId_fkey" FOREIGN KEY ("commentId") REFERENCES "post_comments"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "post_comment_likes" ADD CONSTRAINT "post_comment_likes_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "media" ADD CONSTRAINT "media_ownerUserId_fkey" FOREIGN KEY ("ownerUserId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "pets" ADD CONSTRAINT "pets_animalTypeId_fkey" FOREIGN KEY ("animalTypeId") REFERENCES "animal_types"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "pets" ADD CONSTRAINT "pets_breedId_fkey" FOREIGN KEY ("breedId") REFERENCES "breeds"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "pets" ADD CONSTRAINT "pets_clinicRegisteredBranchId_fkey" FOREIGN KEY ("clinicRegisteredBranchId") REFERENCES "branches"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "pets" ADD CONSTRAINT "pets_coatPatternId_fkey" FOREIGN KEY ("coatPatternId") REFERENCES "coat_patterns"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "pets" ADD CONSTRAINT "pets_colorId_fkey" FOREIGN KEY ("colorId") REFERENCES "animal_colors"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "pets" ADD CONSTRAINT "pets_profilePicId_fkey" FOREIGN KEY ("profilePicId") REFERENCES "media"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "pets" ADD CONSTRAINT "pets_sizeId_fkey" FOREIGN KEY ("sizeId") REFERENCES "animal_sizes"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "pets" ADD CONSTRAINT "pets_subBreedId_fkey" FOREIGN KEY ("subBreedId") REFERENCES "sub_breeds"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "pets" ADD CONSTRAINT "pets_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "pet_family_members" ADD CONSTRAINT "pet_family_members_avatarMediaId_fkey" FOREIGN KEY ("avatarMediaId") REFERENCES "media"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "pet_family_members" ADD CONSTRAINT "pet_family_members_petId_fkey" FOREIGN KEY ("petId") REFERENCES "pets"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "pet_weights" ADD CONSTRAINT "pet_weights_petId_fkey" FOREIGN KEY ("petId") REFERENCES "pets"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "vaccine_types" ADD CONSTRAINT "vaccine_types_targetAnimalTypeId_fkey" FOREIGN KEY ("targetAnimalTypeId") REFERENCES "animal_types"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "vaccinations" ADD CONSTRAINT "vaccinations_petId_fkey" FOREIGN KEY ("petId") REFERENCES "pets"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "vaccinations" ADD CONSTRAINT "vaccinations_vaccineTypeId_fkey" FOREIGN KEY ("vaccineTypeId") REFERENCES "vaccine_types"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "vaccinations" ADD CONSTRAINT "vaccinations_campaignBookingId_fkey" FOREIGN KEY ("campaignBookingId") REFERENCES "campaign_bookings"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "vaccination_reminders" ADD CONSTRAINT "vaccination_reminders_branchId_fkey" FOREIGN KEY ("branchId") REFERENCES "branches"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "vaccination_reminders" ADD CONSTRAINT "vaccination_reminders_notificationId_fkey" FOREIGN KEY ("notificationId") REFERENCES "notifications"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "vaccination_reminders" ADD CONSTRAINT "vaccination_reminders_orgId_fkey" FOREIGN KEY ("orgId") REFERENCES "organizations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "vaccination_reminders" ADD CONSTRAINT "vaccination_reminders_petId_fkey" FOREIGN KEY ("petId") REFERENCES "pets"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "vaccination_reminders" ADD CONSTRAINT "vaccination_reminders_vaccinationId_fkey" FOREIGN KEY ("vaccinationId") REFERENCES "vaccinations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "deworming_records" ADD CONSTRAINT "deworming_records_petId_fkey" FOREIGN KEY ("petId") REFERENCES "pets"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "medical_histories" ADD CONSTRAINT "medical_histories_petId_fkey" FOREIGN KEY ("petId") REFERENCES "pets"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "reward_histories" ADD CONSTRAINT "reward_histories_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_wallets" ADD CONSTRAINT "user_wallets_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "wallet_transactions" ADD CONSTRAINT "wallet_transactions_walletId_fkey" FOREIGN KEY ("walletId") REFERENCES "user_wallets"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "wallet_withdraw_requests" ADD CONSTRAINT "wallet_withdraw_requests_adminUserId_fkey" FOREIGN KEY ("adminUserId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "wallet_withdraw_requests" ADD CONSTRAINT "wallet_withdraw_requests_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "wallet_withdraw_requests" ADD CONSTRAINT "wallet_withdraw_requests_walletId_fkey" FOREIGN KEY ("walletId") REFERENCES "user_wallets"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "payout_event_logs" ADD CONSTRAINT "payout_event_logs_withdrawRequestId_fkey" FOREIGN KEY ("withdrawRequestId") REFERENCES "wallet_withdraw_requests"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fundraising_updates" ADD CONSTRAINT "fundraising_updates_campaignId_fkey" FOREIGN KEY ("campaignId") REFERENCES "fundraising_campaigns"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fundraising_updates" ADD CONSTRAINT "fundraising_updates_postId_fkey" FOREIGN KEY ("postId") REFERENCES "posts"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fundraising_accounts" ADD CONSTRAINT "fundraising_accounts_areaId_fkey" FOREIGN KEY ("areaId") REFERENCES "bd_areas"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fundraising_accounts" ADD CONSTRAINT "fundraising_accounts_districtId_fkey" FOREIGN KEY ("districtId") REFERENCES "bd_districts"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fundraising_accounts" ADD CONSTRAINT "fundraising_accounts_divisionId_fkey" FOREIGN KEY ("divisionId") REFERENCES "bd_divisions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fundraising_accounts" ADD CONSTRAINT "fundraising_accounts_upazilaId_fkey" FOREIGN KEY ("upazilaId") REFERENCES "bd_upazilas"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fundraising_accounts" ADD CONSTRAINT "fundraising_accounts_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fundraising_account_status_logs" ADD CONSTRAINT "fundraising_account_status_logs_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "fundraising_accounts"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fundraising_account_status_logs" ADD CONSTRAINT "fundraising_account_status_logs_adminUserId_fkey" FOREIGN KEY ("adminUserId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fundraising_verification_documents" ADD CONSTRAINT "fundraising_verification_documents_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "fundraising_accounts"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fundraising_verification_documents" ADD CONSTRAINT "fundraising_verification_documents_mediaId_fkey" FOREIGN KEY ("mediaId") REFERENCES "media"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fundraising_campaigns" ADD CONSTRAINT "fundraising_campaigns_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "fundraising_accounts"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fundraising_campaigns" ADD CONSTRAINT "fundraising_campaigns_postId_fkey" FOREIGN KEY ("postId") REFERENCES "posts"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fundraising_campaign_stats" ADD CONSTRAINT "fundraising_campaign_stats_campaignId_fkey" FOREIGN KEY ("campaignId") REFERENCES "fundraising_campaigns"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "donations" ADD CONSTRAINT "donations_campaignId_fkey" FOREIGN KEY ("campaignId") REFERENCES "fundraising_campaigns"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "donations" ADD CONSTRAINT "donations_donorId_fkey" FOREIGN KEY ("donorId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fundraising_payout_methods" ADD CONSTRAINT "fundraising_payout_methods_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "fundraising_accounts"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fundraising_payout_methods" ADD CONSTRAINT "fundraising_payout_methods_catalogId_fkey" FOREIGN KEY ("catalogId") REFERENCES "fundraising_payout_method_catalog"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fundraising_withdraw_requests" ADD CONSTRAINT "fundraising_withdraw_requests_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "fundraising_accounts"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fundraising_withdraw_requests" ADD CONSTRAINT "fundraising_withdraw_requests_adminUserId_fkey" FOREIGN KEY ("adminUserId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fundraising_withdraw_requests" ADD CONSTRAINT "fundraising_withdraw_requests_campaignId_fkey" FOREIGN KEY ("campaignId") REFERENCES "fundraising_campaigns"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fundraising_withdraw_requests" ADD CONSTRAINT "fundraising_withdraw_requests_methodId_fkey" FOREIGN KEY ("methodId") REFERENCES "fundraising_payout_methods"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fundraising_payout_transfer_logs" ADD CONSTRAINT "fundraising_payout_transfer_logs_proofMediaId_fkey" FOREIGN KEY ("proofMediaId") REFERENCES "media"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "fundraising_payout_transfer_logs" ADD CONSTRAINT "fundraising_payout_transfer_logs_requestId_fkey" FOREIGN KEY ("requestId") REFERENCES "fundraising_withdraw_requests"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "reports" ADD CONSTRAINT "reports_reporterId_fkey" FOREIGN KEY ("reporterId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "bd_districts" ADD CONSTRAINT "bd_districts_divisionId_fkey" FOREIGN KEY ("divisionId") REFERENCES "bd_divisions"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "bd_upazilas" ADD CONSTRAINT "bd_upazilas_districtId_fkey" FOREIGN KEY ("districtId") REFERENCES "bd_districts"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "bd_unions" ADD CONSTRAINT "bd_unions_upazilaId_fkey" FOREIGN KEY ("upazilaId") REFERENCES "bd_upazilas"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "bd_areas" ADD CONSTRAINT "bd_areas_districtId_fkey" FOREIGN KEY ("districtId") REFERENCES "bd_districts"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "bd_areas" ADD CONSTRAINT "bd_areas_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "bd_areas"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "bd_areas" ADD CONSTRAINT "bd_areas_unionId_fkey" FOREIGN KEY ("unionId") REFERENCES "bd_unions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "bd_areas" ADD CONSTRAINT "bd_areas_upazilaId_fkey" FOREIGN KEY ("upazilaId") REFERENCES "bd_upazilas"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "areas" ADD CONSTRAINT "areas_cityCorporationId_fkey" FOREIGN KEY ("cityCorporationId") REFERENCES "city_corporations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "areas" ADD CONSTRAINT "areas_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "areas"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "coverage_zone_areas" ADD CONSTRAINT "coverage_zone_areas_coverageZoneId_fkey" FOREIGN KEY ("coverageZoneId") REFERENCES "coverage_zones"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "coverage_zone_areas" ADD CONSTRAINT "coverage_zone_areas_bdAreaId_fkey" FOREIGN KEY ("bdAreaId") REFERENCES "bd_areas"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "coverage_zone_areas" ADD CONSTRAINT "coverage_zone_areas_bdUnionId_fkey" FOREIGN KEY ("bdUnionId") REFERENCES "bd_unions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "coverage_zone_areas" ADD CONSTRAINT "coverage_zone_areas_bdUpazilaId_fkey" FOREIGN KEY ("bdUpazilaId") REFERENCES "bd_upazilas"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "coverage_zone_areas" ADD CONSTRAINT "coverage_zone_areas_bdDistrictId_fkey" FOREIGN KEY ("bdDistrictId") REFERENCES "bd_districts"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "coverage_zone_metadata" ADD CONSTRAINT "coverage_zone_metadata_coverageZoneId_fkey" FOREIGN KEY ("coverageZoneId") REFERENCES "coverage_zones"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "organizations" ADD CONSTRAINT "organizations_countryId_fkey" FOREIGN KEY ("countryId") REFERENCES "countries"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "organizations" ADD CONSTRAINT "organizations_ownerUserId_fkey" FOREIGN KEY ("ownerUserId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "branches" ADD CONSTRAINT "branches_orgId_fkey" FOREIGN KEY ("orgId") REFERENCES "organizations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "branch_rooms" ADD CONSTRAINT "branch_rooms_branchId_fkey" FOREIGN KEY ("branchId") REFERENCES "branches"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "branch_rooms" ADD CONSTRAINT "branch_rooms_orgId_fkey" FOREIGN KEY ("orgId") REFERENCES "organizations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "branch_policies" ADD CONSTRAINT "branch_policies_branchId_fkey" FOREIGN KEY ("branchId") REFERENCES "branches"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "branch_policies" ADD CONSTRAINT "branch_policies_orgId_fkey" FOREIGN KEY ("orgId") REFERENCES "organizations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "branch_members" ADD CONSTRAINT "branch_members_branchId_fkey" FOREIGN KEY ("branchId") REFERENCES "branches"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "branch_members" ADD CONSTRAINT "branch_members_invitedByUserId_fkey" FOREIGN KEY ("invitedByUserId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "branch_members" ADD CONSTRAINT "branch_members_orgId_fkey" FOREIGN KEY ("orgId") REFERENCES "organizations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "branch_members" ADD CONSTRAINT "branch_members_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "appointments" ADD CONSTRAINT "appointments_branchId_fkey" FOREIGN KEY ("branchId") REFERENCES "branches"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "appointments" ADD CONSTRAINT "appointments_doctorId_fkey" FOREIGN KEY ("doctorId") REFERENCES "branch_members"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "appointments" ADD CONSTRAINT "appointments_followUpFromId_fkey" FOREIGN KEY ("followUpFromId") REFERENCES "appointments"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "appointments" ADD CONSTRAINT "appointments_orgId_fkey" FOREIGN KEY ("orgId") REFERENCES "organizations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "appointments" ADD CONSTRAINT "appointments_patientId_fkey" FOREIGN KEY ("patientId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "appointments" ADD CONSTRAINT "appointments_petId_fkey" FOREIGN KEY ("petId") REFERENCES "pets"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "appointments" ADD CONSTRAINT "appointments_rescheduleFromAppointmentId_fkey" FOREIGN KEY ("rescheduleFromAppointmentId") REFERENCES "appointments"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "appointments" ADD CONSTRAINT "appointments_roomId_fkey" FOREIGN KEY ("roomId") REFERENCES "branch_rooms"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "appointments" ADD CONSTRAINT "appointments_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "services"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "visits" ADD CONSTRAINT "visits_appointmentId_fkey" FOREIGN KEY ("appointmentId") REFERENCES "appointments"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "visits" ADD CONSTRAINT "visits_branchId_fkey" FOREIGN KEY ("branchId") REFERENCES "branches"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "visits" ADD CONSTRAINT "visits_doctorId_fkey" FOREIGN KEY ("doctorId") REFERENCES "branch_members"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "visits" ADD CONSTRAINT "visits_orgId_fkey" FOREIGN KEY ("orgId") REFERENCES "organizations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "visits" ADD CONSTRAINT "visits_patientId_fkey" FOREIGN KEY ("patientId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "visits" ADD CONSTRAINT "visits_petId_fkey" FOREIGN KEY ("petId") REFERENCES "pets"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "orders" ADD CONSTRAINT "orders_branchId_fkey" FOREIGN KEY ("branchId") REFERENCES "branches"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "orders" ADD CONSTRAINT "orders_createdByUserId_fkey" FOREIGN KEY ("createdByUserId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "orders" ADD CONSTRAINT "orders_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "orders" ADD CONSTRAINT "orders_fulfilmentInventoryLocationId_fkey" FOREIGN KEY ("fulfilmentInventoryLocationId") REFERENCES "inventory_locations"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "orders" ADD CONSTRAINT "orders_visitId_fkey" FOREIGN KEY ("visitId") REFERENCES "visits"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "order_payments" ADD CONSTRAINT "order_payments_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "orders"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "payment_transaction_logs" ADD CONSTRAINT "payment_transaction_logs_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "orders"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "payment_transactions" ADD CONSTRAINT "payment_transactions_bookingId_fkey" FOREIGN KEY ("bookingId") REFERENCES "campaign_bookings"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "services" ADD CONSTRAINT "services_branchId_fkey" FOREIGN KEY ("branchId") REFERENCES "branches"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "services" ADD CONSTRAINT "services_createdByUserId_fkey" FOREIGN KEY ("createdByUserId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "services" ADD CONSTRAINT "services_orgId_fkey" FOREIGN KEY ("orgId") REFERENCES "organizations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "countries" ADD CONSTRAINT "countries_controllerOrgId_fkey" FOREIGN KEY ("controllerOrgId") REFERENCES "organizations"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "states" ADD CONSTRAINT "states_countryId_fkey" FOREIGN KEY ("countryId") REFERENCES "countries"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "location_cities" ADD CONSTRAINT "location_cities_stateId_fkey" FOREIGN KEY ("stateId") REFERENCES "states"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "location_sub_districts" ADD CONSTRAINT "location_sub_districts_cityId_fkey" FOREIGN KEY ("cityId") REFERENCES "location_cities"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "country_policies" ADD CONSTRAINT "country_policies_countryId_fkey" FOREIGN KEY ("countryId") REFERENCES "countries"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "policy_features" ADD CONSTRAINT "policy_features_countryPolicyId_fkey" FOREIGN KEY ("countryPolicyId") REFERENCES "country_policies"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "policy_donation_rules" ADD CONSTRAINT "policy_donation_rules_countryPolicyId_fkey" FOREIGN KEY ("countryPolicyId") REFERENCES "country_policies"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "policy_payment_methods" ADD CONSTRAINT "policy_payment_methods_countryPolicyId_fkey" FOREIGN KEY ("countryPolicyId") REFERENCES "country_policies"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "policy_ads_rules" ADD CONSTRAINT "policy_ads_rules_countryPolicyId_fkey" FOREIGN KEY ("countryPolicyId") REFERENCES "country_policies"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "policy_rules" ADD CONSTRAINT "policy_rules_countryPolicyId_fkey" FOREIGN KEY ("countryPolicyId") REFERENCES "country_policies"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "state_policies" ADD CONSTRAINT "state_policies_stateId_fkey" FOREIGN KEY ("stateId") REFERENCES "states"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "state_policy_features" ADD CONSTRAINT "state_policy_features_statePolicyId_fkey" FOREIGN KEY ("statePolicyId") REFERENCES "state_policies"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "state_policy_rules" ADD CONSTRAINT "state_policy_rules_statePolicyId_fkey" FOREIGN KEY ("statePolicyId") REFERENCES "state_policies"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ads" ADD CONSTRAINT "ads_countryId_fkey" FOREIGN KEY ("countryId") REFERENCES "countries"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ads" ADD CONSTRAINT "ads_mediaId_fkey" FOREIGN KEY ("mediaId") REFERENCES "media"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "inventory_locations" ADD CONSTRAINT "inventory_locations_branchId_fkey" FOREIGN KEY ("branchId") REFERENCES "branches"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "inventory_locations" ADD CONSTRAINT "inventory_locations_warehouseId_fkey" FOREIGN KEY ("warehouseId") REFERENCES "warehouses"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "owner_onboarding_states" ADD CONSTRAINT "owner_onboarding_states_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "warehouses" ADD CONSTRAINT "warehouses_branchId_fkey" FOREIGN KEY ("branchId") REFERENCES "branches"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "warehouses" ADD CONSTRAINT "warehouses_managerId_fkey" FOREIGN KEY ("managerId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "warehouses" ADD CONSTRAINT "warehouses_orgId_fkey" FOREIGN KEY ("orgId") REFERENCES "organizations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaigns" ADD CONSTRAINT "campaigns_organizerId_fkey" FOREIGN KEY ("organizerId") REFERENCES "organizations"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_configs" ADD CONSTRAINT "campaign_configs_campaignId_fkey" FOREIGN KEY ("campaignId") REFERENCES "campaigns"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_locations" ADD CONSTRAINT "campaign_locations_campaignId_fkey" FOREIGN KEY ("campaignId") REFERENCES "campaigns"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_slots" ADD CONSTRAINT "campaign_slots_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "campaign_locations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_vaccine_types" ADD CONSTRAINT "campaign_vaccine_types_campaignId_fkey" FOREIGN KEY ("campaignId") REFERENCES "campaigns"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_vaccine_types" ADD CONSTRAINT "campaign_vaccine_types_vaccineTypeId_fkey" FOREIGN KEY ("vaccineTypeId") REFERENCES "vaccine_types"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_included_vaccines" ADD CONSTRAINT "campaign_included_vaccines_campaignId_fkey" FOREIGN KEY ("campaignId") REFERENCES "campaigns"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_bookings" ADD CONSTRAINT "campaign_bookings_campaignId_fkey" FOREIGN KEY ("campaignId") REFERENCES "campaigns"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_bookings" ADD CONSTRAINT "campaign_bookings_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "campaign_locations"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_bookings" ADD CONSTRAINT "campaign_bookings_slotId_fkey" FOREIGN KEY ("slotId") REFERENCES "campaign_slots"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_bookings" ADD CONSTRAINT "campaign_bookings_rolloutRegionId_fkey" FOREIGN KEY ("rolloutRegionId") REFERENCES "campaign_rollout_regions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_bookings" ADD CONSTRAINT "campaign_bookings_coverageZoneId_fkey" FOREIGN KEY ("coverageZoneId") REFERENCES "coverage_zones"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_bookings" ADD CONSTRAINT "campaign_bookings_bdAreaId_fkey" FOREIGN KEY ("bdAreaId") REFERENCES "bd_areas"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_bookings" ADD CONSTRAINT "campaign_bookings_checkoutSessionId_fkey" FOREIGN KEY ("checkoutSessionId") REFERENCES "campaign_checkout_sessions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_bookings" ADD CONSTRAINT "campaign_bookings_ownerUserId_fkey" FOREIGN KEY ("ownerUserId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_bookings" ADD CONSTRAINT "campaign_bookings_checkedInByUserId_fkey" FOREIGN KEY ("checkedInByUserId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_bookings" ADD CONSTRAINT "campaign_bookings_paymentOrderId_fkey" FOREIGN KEY ("paymentOrderId") REFERENCES "orders"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_pets" ADD CONSTRAINT "campaign_pets_bookingId_fkey" FOREIGN KEY ("bookingId") REFERENCES "campaign_bookings"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_pets" ADD CONSTRAINT "campaign_pets_animalTypeId_fkey" FOREIGN KEY ("animalTypeId") REFERENCES "animal_types"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_pets" ADD CONSTRAINT "campaign_pets_breedId_fkey" FOREIGN KEY ("breedId") REFERENCES "breeds"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_pets" ADD CONSTRAINT "campaign_pets_permanentPetId_fkey" FOREIGN KEY ("permanentPetId") REFERENCES "pets"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_pets" ADD CONSTRAINT "campaign_pets_vaccinationId_fkey" FOREIGN KEY ("vaccinationId") REFERENCES "vaccinations"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_staff" ADD CONSTRAINT "campaign_staff_campaignId_fkey" FOREIGN KEY ("campaignId") REFERENCES "campaigns"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_staff" ADD CONSTRAINT "campaign_staff_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "campaign_locations"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_staff" ADD CONSTRAINT "campaign_staff_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_sms_templates" ADD CONSTRAINT "campaign_sms_templates_campaignId_fkey" FOREIGN KEY ("campaignId") REFERENCES "campaigns"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_sms_logs" ADD CONSTRAINT "campaign_sms_logs_bookingId_fkey" FOREIGN KEY ("bookingId") REFERENCES "campaign_bookings"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_audit_logs" ADD CONSTRAINT "campaign_audit_logs_campaignId_fkey" FOREIGN KEY ("campaignId") REFERENCES "campaigns"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_audit_logs" ADD CONSTRAINT "campaign_audit_logs_actorUserId_fkey" FOREIGN KEY ("actorUserId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_rollout_phases" ADD CONSTRAINT "campaign_rollout_phases_campaignId_fkey" FOREIGN KEY ("campaignId") REFERENCES "campaigns"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_rollout_regions" ADD CONSTRAINT "campaign_rollout_regions_phaseId_fkey" FOREIGN KEY ("phaseId") REFERENCES "campaign_rollout_phases"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_rollout_regions" ADD CONSTRAINT "campaign_rollout_regions_campaignId_fkey" FOREIGN KEY ("campaignId") REFERENCES "campaigns"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_rollout_regions" ADD CONSTRAINT "campaign_rollout_regions_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "campaign_locations"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_pre_registrations" ADD CONSTRAINT "campaign_pre_registrations_campaignId_fkey" FOREIGN KEY ("campaignId") REFERENCES "campaigns"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_pre_registrations" ADD CONSTRAINT "campaign_pre_registrations_regionId_fkey" FOREIGN KEY ("regionId") REFERENCES "campaign_rollout_regions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_checkout_sessions" ADD CONSTRAINT "campaign_checkout_sessions_campaignId_fkey" FOREIGN KEY ("campaignId") REFERENCES "campaigns"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_checkout_sessions" ADD CONSTRAINT "campaign_checkout_sessions_rolloutRegionId_fkey" FOREIGN KEY ("rolloutRegionId") REFERENCES "campaign_rollout_regions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "campaign_checkout_sessions" ADD CONSTRAINT "campaign_checkout_sessions_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "orders"("id") ON DELETE SET NULL ON UPDATE CASCADE;

@@ -126,7 +126,7 @@ model UserAuth {
   lockedUntil       DateTime?
   createdAt         DateTime     @default(now())
   updatedAt         DateTime     @updatedAt
-  /// OIDC subject (e.g. Google "sub") Ã¢â‚¬â€ set for OAuth-linked accounts
+  /// OIDC subject (e.g. Google "sub") â€” set for OAuth-linked accounts
   oauthSubject      String?
   user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -2705,7 +2705,7 @@ model CampaignSlot {
   startTime String   @db.VarChar(5) // "09:00"
   endTime   String   @db.VarChar(5) // "12:00"
 
-  // Session (optional Ã¢â‚¬â€ legacy rows use API inference)
+  // Session (optional â€” legacy rows use API inference)
   sessionName        String? @db.VarChar(120)
   checkInStartTime   String? @db.VarChar(5)
   bookingCutoffTime  String? @db.VarChar(5)
@@ -3408,11 +3408,52 @@ enum AuditActorRole {
   USER
 }
 
+enum WorkspaceTaskStatus {
+  TODO
+  IN_PROGRESS
+  BLOCKED
+  DONE
+}
 
+enum WorkspaceTaskType {
+  INVENTORY
+  STAFF
+  ORDER
+  COMPLIANCE
+  SYSTEM
+}
 
+enum WorkspaceTaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
 
+enum WorkspaceAlertType {
+  LOW_STOCK
+  HIGH_CANCEL_RATE
+  STAFF_INACTIVITY
+  LOGIN_OUTSIDE_SHIFT
+  PERMISSION_VIOLATION
+  OVERDUE_TASK
+  OTHER
+}
 
+enum WorkspaceApprovalType {
+  STAFF_INVITE
+  ROLE_CHANGE
+  BRANCH_TRANSFER
+  REFUND_OVERRIDE
+  DISCOUNT_EXCEPTION
+  OTHER
+}
 
+enum WorkspaceApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
 
 enum PartnerStatus {
   NOT_APPLIED
@@ -3437,6 +3478,17 @@ enum BranchStatus {
   BLOCKED
 }
 
+enum BranchTypeCode {
+  CLINIC
+  PET_SHOP
+  DELIVERY_HUB
+  WAREHOUSE_DC
+  GROOMING_SPA
+  BOARDING_DAYCARE
+  FOSTER_SHELTER
+  TRAINING_BEHAVIOR
+  PHARMACY_DIAGNOSTICS
+}
 
 enum VerificationStatus {
   UNSUBMITTED
@@ -3522,16 +3574,61 @@ enum RegistrationType {
   NGO
 }
 
+enum PublishRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
 
 enum OrgType {
   PARTNER
   COUNTRY_CHAPTER
 }
 
+enum ClinicApprovalRequestType {
+  PACKAGE_CREATE
+  PACKAGE_UPDATE
+  DOCTOR_INVITE
+  DOCTOR_SCHEDULE
+  DISCOUNT_CHANGE
+  SERVICE_CREATE
+  INVENTORY_PURCHASE
+  DOCTOR_FEE_CHANGE
+  DOCTOR_ACTIVATION
+  DOCTOR_DEACTIVATION
+  DOCTOR_SERVICE_PRIVILEGE
+  DOCTOR_PACKAGE_PRIVILEGE
+  DOCTOR_LEAVE
+  DOCTOR_CREDENTIAL
+}
 
+enum DoctorLeaveType {
+  FULL_DAY
+  HALF_DAY
+  EMERGENCY
+  HOLIDAY_EXEMPTION
+}
 
+enum DoctorLeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
 
+enum DoctorPackageRole {
+  PRIMARY
+  ASSISTANT
+  CONSULTANT
+  SURGEON
+  BACKUP
+}
 
+enum DoctorServiceMappingStatus {
+  ACTIVE
+  INACTIVE
+  PENDING_APPROVAL
+}
 
 enum MemberRole {
   OWNER
@@ -3560,10 +3657,36 @@ enum MemberStatus {
   SUSPENDED
 }
 
+enum ChangeRequestType {
+  CREATE_PRODUCT
+  CREATE_VARIANT
+  EDIT_PRODUCT
+}
 
+enum ChangeRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
 
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+}
 
+enum DoctorRequestType {
+  VISIT_FEE_CHANGE
+  SCHEDULE_CHANGE
+  APPOINTMENT_CANCEL
+  LEAVE_CLINIC
+  JOIN_CLINIC
+}
 
+enum DoctorRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
 
 enum AppointmentStatus {
   BOOKED
@@ -3596,11 +3719,49 @@ enum AppointmentPriority {
   VIP
 }
 
+enum QueueSessionStatus {
+  OPEN
+  PAUSED
+  CLOSED
+}
 
+enum QueueSessionType {
+  GENERAL
+  DOCTOR_SPECIFIC
+  SERVICE_SPECIFIC
+}
 
+enum QueueTicketStatus {
+  CREATED
+  WAITING
+  CALLED
+  SKIPPED
+  IN_SERVICE
+  DONE
+  CANCELLED
+  NO_SHOW
+}
 
+enum QueueTicketPriority {
+  NORMAL
+  EMERGENCY
+  FOLLOWUP
+}
 
+enum DoctorScheduleExceptionType {
+  OFF
+  EXTRA_SHIFT
+  CUSTOM_SLOTS
+  LEAVE
+  EMERGENCY_AVAILABLE
+}
 
+enum DoctorCredentialStatus {
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+}
 
 enum VisitStatus {
   CHECKED_IN
@@ -3609,8 +3770,26 @@ enum VisitStatus {
   CANCELLED
 }
 
+enum ClinicalNoteType {
+  SOAP
+  FOLLOW_UP
+  DISCHARGE
+  REFERRAL
+}
 
+enum PrescriptionStatus {
+  DRAFT
+  FINALIZED
+  DISPENSED
+}
 
+enum BranchAccessPermissionStatus {
+  PENDING
+  APPROVED
+  REVOKED
+  EXPIRED
+  SUSPENDED
+}
 
 enum InventoryLocationType {
   CLINIC
@@ -3626,36 +3805,258 @@ enum InventoryLocationType {
   STAGING
 }
 
+enum LocationChannel {
+  POS_ONLY
+  ONLINE_ONLY
+  BOTH
+}
 
+enum StockLedgerType {
+  OPENING
+  SALE_POS
+  RESERVE_ONLINE
+  RELEASE_RESERVE
+  SALE_ONLINE
+  TRANSFER_OUT
+  TRANSFER_IN
+  ADJUSTMENT
+  DAMAGE
+  EXPIRED
+  RETURN_IN
+  RETURN_OUT
+  LOSS
+  SALE_CLINIC
+  GRN_IN
+  PURCHASE_IN
+  PRODUCTION_IN
+  QC_REJECT
+  QUARANTINE_IN
+  QUARANTINE_OUT
+  RECALL_QUARANTINE
+  QC_QUARANTINE_RELEASE
+  QC_QUARANTINE_DISPOSE
+  WRITE_OFF
+  /// Warehouse allocation confirm: moves qty from unreserved to reserved (same balance semantics as RESERVE_ONLINE).
+  RESERVE_FULFILLMENT
+  /// Release fulfillment reservation (same balance semantics as RELEASE_RESERVE).
+  RELEASE_FULFILLMENT_RESERVE
+}
 
+enum RecallSeverity {
+  STANDARD
+  URGENT
+  CRITICAL
+}
 
+enum RecallStatus {
+  ACTIVE
+  QUARANTINED
+  RESOLVED
+  CANCELLED
+}
 
+enum RecallCampaignStatus {
+  ACTIVE
+  CLOSED
+  CANCELLED
+}
 
+enum NetworkTransferRecommendationStatus {
+  OPEN
+  ACCEPTED
+  DISMISSED
+}
 
+enum NetworkTransferTargetType {
+  WTO
+  STOCK_REQUEST
+  NONE
+}
 
+enum ReverseLogisticsCaseType {
+  CUSTOMER
+  BRANCH_TO_DC
+  DC_TO_VENDOR
+  RECALL_RELATED
+}
 
+enum ReverseLogisticsCaseStatus {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+  CANCELLED
+}
 
+enum StockReturnDisposition {
+  PENDING
+  RESTOCK_SELLABLE
+  RESTOCK_QUARANTINE
+  RETURN_TO_VENDOR
+  DESTROY
+  REWORK
+  DISPUTED
+}
 
+enum WriteOffReason {
+  DAMAGE
+  THEFT
+  OBSOLETE
+  SAMPLE
+  OTHER
+}
 
+enum WriteOffRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  POSTED
+}
 
+enum VendorReturnStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  DISPATCHED
+  RECEIVED_BY_VENDOR
+  CREDITED
+  CANCELLED
+}
 
+enum WarehouseTransferOrderStatus {
+  DRAFT
+  APPROVED
+  PICKING
+  IN_TRANSIT
+  RECEIVED
+  CLOSED
+}
 
+enum ProductApprovalStatus {
+  DRAFT
+  PENDING_APPROVAL
+  APPROVED
+  PUBLISHED
+}
 
+enum ProductPublishStatus {
+  DRAFT
+  NEEDS_FIX
+  READY_TO_PUBLISH
+  PUBLISHED
+}
 
+enum ReturnCondition {
+  RESELLABLE
+  DAMAGED
+  EXPIRED
+}
 
+enum VendorListingStatus {
+  DRAFT
+  PENDING
+  APPROVED
+  REJECTED
+}
 
+enum StockTransferStatus {
+  DRAFT
+  SENT
+  RECEIVED
+  PARTIAL
+  IN_TRANSIT
+  DISPUTED
+  CANCELLED
+  PARTIAL_RECEIVED
+  COMPLETED
+}
 
+enum StockRequestStatus {
+  DRAFT
+  SUBMITTED
+  OWNER_REVIEW
+  FULFILLED_PARTIAL
+  FULFILLED_FULL
+  DISPATCHED
+  RECEIVED_PARTIAL
+  RECEIVED_FULL
+  CLOSED
+  CANCELLED
+  APPROVED
+  PARTIALLY_DISPATCHED
+  REJECTED
+  PARTIALLY_RECEIVED
+  RECEIVED
+}
 
+enum StockRequestIntent {
+  INTERNAL_TRANSFER
+  PROCUREMENT
+}
 
+enum StockRequestItemLineKind {
+  REQUESTED
+  EXTRA
+}
 
+enum StockRequestItemBackorderStatus {
+  NONE
+  PENDING_PROCUREMENT
+  PROCUREMENT_LINKED
+  READY_TO_FULFILL
+}
 
+enum ProcurementDemandStatus {
+  PENDING
+  PO_LINKED
+  PARTIALLY_RECEIVED
+  FULFILLED
+  DISPATCHED
+  CANCELLED
+}
 
+enum StockDispatchStatus {
+  CREATED
+  PACKED
+  IN_TRANSIT
+  DELIVERED
+  CANCELLED
+  FAILED
+}
 
+enum ReturnRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  RECEIVED
+}
 
+enum StockDiscrepancyStatus {
+  PENDING
+  RESOLVED
+}
 
+enum StockAdjustmentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
 
+enum StockCountSessionStatus {
+  DRAFT
+  FROZEN
+  SUBMITTED
+  POSTED
+}
 
+enum CommissionRuleType {
+  PERCENT
+  FIXED
+}
 
+enum PayoutAccountType {
+  BANK
+  MFS
+}
 
 enum ProductImportSourceType {
   CSV
@@ -3684,9 +4085,29 @@ enum IntegrationMappingType {
   UNIT
 }
 
+enum StaffInviteStatus {
+  PENDING
+  ACCEPTED
+  REVOKED
+  EXPIRED
+}
 
+enum StaffInviteTargetType {
+  BRANCH
+  WAREHOUSE
+}
 
+enum AccessInviteStatus {
+  PENDING
+  ACCEPTED
+  REVOKED
+  EXPIRED
+}
 
+enum AccessInviteScope {
+  COUNTRY
+  STATE
+}
 
 enum RoleScope {
   ORG
@@ -3787,52 +4208,390 @@ enum ServiceCategory {
   PHARMACY
 }
 
+enum DoctorServiceFeeModel {
+  FIXED
+  PERCENT_OF_LIST
+  HYBRID
+}
 
+enum ServiceMediaKind {
+  HERO
+  GALLERY
+  VIDEO
+}
 
+enum PackageStatus {
+  DRAFT
+  ACTIVE
+  SCHEDULED
+  EXPIRED
+  ARCHIVED
+  INACTIVE
+}
 
+enum PackageType {
+  STANDARD
+  PREMIUM
+  WELFARE
+  EMERGENCY
+  PROMOTIONAL
+  DOCTOR_SPECIFIC
+  BRANCH_SPECIFIC
+}
 
+enum PackageItemType {
+  INCLUDED
+  INFORMATIONAL
+  ADDON_ELIGIBLE
+  INTERNAL_USE
+  SEPARATE_BILL
+  DOCTOR_COMPONENT
+  SERVICE_COMPONENT
+}
 
+enum ClinicalItemDomain {
+  MEDICINE
+  SURGICAL_CONSUMABLE
+  DRESSING_SUPPLY
+  CLINIC_SUPPLY
+  INSTRUMENT
+  IMPLANT
+  SERVICE_SUPPORT
+  PACKAGE_ONLY
+}
 
+enum ConsumableType {
+  SUTURE
+  BLADE
+  GAUZE
+  SYRINGE
+  GLOVE
+  IV_SET
+  DRESSING
+  OT_DISPOSABLE
+  OTHER
+}
 
+enum InstrumentType {
+  SCISSORS
+  FORCEPS
+  CLAMP
+  HOLDER
+  RETRACTOR
+  SCALPEL
+  OTHER
+}
 
+enum ClinicalItemLifecycleState {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
 
+enum ItemAuditAction {
+  CREATE
+  UPDATE
+  ACTIVATE
+  DEACTIVATE
+  BRANCH_MAP
+  PACKAGE_MAP
+  PRICE_CHANGE
+  STOCK_CHANGE
+  APPROVE
+  CONSUME
+  WASTAGE
+  RETURN
+  STERILIZE
+}
 
+enum ItemApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
 
+enum CostBucketType {
+  DOCTOR_FEE
+  CLINIC_FACILITY
+  CONSUMABLE
+  MEDICATION
+  SUPPORT_ASSISTANT
+}
 
+enum DoctorContractType {
+  REVENUE_SHARE
+  FIXED_FEE
+  VISITING_SPECIALIST
+  SALARY_INCENTIVE
+  WELFARE_NGO
+  HYBRID
+}
 
+enum DiscountType {
+  CAMPAIGN
+  MANAGER
+  DOCTOR_DISCRETION
+  OWNER
+  PACKAGE
+  LOYALTY
+  WELFARE_RESCUE
+  PROMOTIONAL
+  BRANCH_EVENT
+}
 
+enum DiscountScope {
+  WHOLE_INVOICE
+  SERVICE_LEVEL
+  PACKAGE_LEVEL
+  DOCTOR_FEE_EXCLUDED
+  CLINIC_FEE_ONLY
+  ADDON_ONLY
+  POST_OP_MEDS_ONLY
+}
 
+enum DiscountCalcType {
+  PERCENTAGE
+  FLAT_AMOUNT
+  CAPPED_AMOUNT
+  CONDITIONAL
+  BUNDLE
+}
 
+enum DiscountAbsorptionMode {
+  CLINIC_ABSORBS
+  PROPORTIONAL
+  DOCTOR_PROTECTED
+  APPROVAL_BASED_SPLIT
+  DOCTOR_ONLY
+  EQUAL_SPLIT
+  MANUAL_SPLIT
+  CLINIC_ONLY
+}
 
+enum SettlementStatusEnterprise {
+  PENDING_ACCRUAL
+  ACCRUED
+  UNDER_REVIEW
+  APPROVED
+  PAID
+  PARTIALLY_PAID
+  DISPUTED
+  REVERSED
+}
 
+enum SettlementCycle {
+  DAILY
+  WEEKLY
+  BIWEEKLY
+  MONTHLY
+}
 
+enum ConsumptionMode {
+  PLANNED
+  ACTUAL
+}
 
+enum ClinicalCaseStatus {
+  OPEN
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  ON_HOLD
+}
 
+enum ProcedureOrderStatus {
+  DRAFT
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  ABORTED
+}
 
+enum SurgeryCaseStatus {
+  DRAFT
+  SCHEDULED
+  PRE_OP
+  READY_FOR_OT
+  IN_PROGRESS
+  POST_OP
+  COMPLETED
+  CANCELLED
+}
 
+enum SurgeryCasePriority {
+  NORMAL
+  URGENT
+  EMERGENCY
+}
 
+enum SurgeryStaffRole {
+  PRIMARY_SURGEON
+  ASSISTANT_SURGEON
+  ANESTHETIST
+  OT_NURSE
+  TECHNICIAN
+}
 
+enum PricingAuditEntityType {
+  PRODUCT_PRICING
+  BRANCH_PRICING
+  LOCATION_PRICE
+  RETAIL_DISCOUNT_RULE
+  ORG_PRICING_POLICY
+  BATCH_PRICING_RULE
+}
 
+enum RetailDiscountApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
 
+enum PriceScheduleStatus {
+  PENDING
+  APPLIED
+  CANCELLED
+}
 
+enum PriceChangeApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
 
+enum EnterpriseDiscountRuleKind {
+  BRAND
+  CATEGORY
+  VARIANT
+  INVOICE_SLAB
+  BUNDLE
+  OTHER
+}
 
+enum EnterpriseDiscountScopeKind {
+  ORG_WIDE
+  BRANCH_SPECIFIC
+}
 
+enum EnterpriseDiscountTargetKind {
+  BRAND
+  CATEGORY
+  VARIANT
+  ALL_PRODUCTS
+}
 
+enum EnterpriseDiscountMethod {
+  PERCENT
+  FIXED_AMOUNT
+  FIXED_PRICE
+}
 
+enum PricingCampaignType {
+  FLASH_SALE
+  SEASONAL
+  CLEARANCE
+  BRAND_ACTIVATION
+  EXPIRY_LIQUIDATION
+  OTHER
+}
 
+enum PricingCampaignStatus {
+  DRAFT
+  SCHEDULED
+  ACTIVE
+  PAUSED
+  ENDED
+}
 
+enum PriceApprovalTriggerKind {
+  DISCOUNT_ABOVE_THRESHOLD
+  BELOW_FLOOR
+  BELOW_COST
+  BRANCH_OVERRIDE
+  CAMPAIGN_ACTIVATION
+  BULK_PRICE_UPDATE
+}
 
+enum BranchOverrideRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
 
+enum BatchPricingRuleStatus {
+  ACTIVE
+  INACTIVE
+}
 
+enum AiReplenishmentSuggestionStatus {
+  OPEN
+  ACCEPTED
+  DISMISSED
+}
 
+enum AiJobRunStatus {
+  RUNNING
+  SUCCESS
+  FAILED
+}
 
+enum AiOverrideScope {
+  VARIANT
+  BRANCH
+  ORG
+}
 
+enum AiPlanningScope {
+  BRANCH
+  WAREHOUSE
+}
 
+enum DecisionPackageStatus {
+  PROPOSED
+  PENDING_APPROVAL
+  APPROVED
+  REJECTED
+  DEFERRED
+  SUPERSEDED
+}
 
+enum DecisionPackageItemState {
+  OPEN
+  APPROVED
+  REJECTED
+  SUPERSEDED
+}
 
+enum DecisionApprovalEventType {
+  SUBMITTED
+  APPROVED
+  REJECTED
+  DEFERRED
+  OVERRIDE
+  ESCALATED
+}
 
+enum ScenarioRunStatus {
+  DRAFT
+  QUEUED
+  RUNNING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+}
 
+enum PosCartStatus {
+  ACTIVE
+  HELD
+  CHECKOUT
+  PAID
+  ABANDONED
+}
 
 enum OrderPaymentStatus {
   PENDING
@@ -3840,39 +4599,258 @@ enum OrderPaymentStatus {
   FAILED
 }
 
+enum PosShiftStatus {
+  OPEN
+  CLOSED
+}
 
+enum StockReturnReason {
+  DAMAGED
+  WRONG_ITEM
+  NEAR_EXPIRY
+  OVERSTOCK
+  OTHER
+}
 
+enum StockReturnStatus {
+  CREATED
+  IN_TRANSIT
+  RECEIVED
+  CANCELLED
+}
 
+enum VendorType {
+  DISTRIBUTOR
+  WHOLESALER
+  IMPORTER
+  LOCAL
+  MANUFACTURER
+  OTHER
+}
 
+enum VendorStatus {
+  ACTIVE
+  INACTIVE
+  BLACKLISTED
+}
 
+enum VendorAttachmentType {
+  TRADE_LICENSE
+  INVOICE
+  CHALLAN
+  OTHER
+}
 
+enum VendorLedgerSourceType {
+  PURCHASE_ORDER
+  GRN
+  PAYMENT
+  ADJUSTMENT
+  RETURN
+}
 
+enum GrnStatus {
+  DRAFT
+  RECEIVED
+  VOIDED
+}
 
+enum VendorReceiveSessionStatus {
+  DRAFT
+  AWAITING_CONFIRMATION
+  POSTED
+  CANCELLED
+}
 
+enum DispatchReceiveSessionStatus {
+  DRAFT
+  AWAITING_CONFIRMATION
+  POSTED
+  CANCELLED
+}
 
+enum CatalogEnableRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
 
+enum ProducerOrgStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+  SUSPENDED
+}
 
+enum AuthProductStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  CHANGES_REQUESTED
+  APPROVED
+  REJECTED
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
 
+enum AuthBatchStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  GENERATED
+  CODES_ALLOCATED
+  PRINTED
+  VOIDED
+  ARCHIVED
+}
 
+enum AuthCodeStatus {
+  UNUSED
+  VERIFIED
+  BLOCKED
+  EXPIRED
+  SOLD
+}
 
+enum AuthVerifyResult {
+  GENUINE
+  ALREADY_VERIFIED
+  INVALID
+  BLOCKED
+}
 
+enum TicketCategory {
+  BATCH_CODE
+  PRODUCT_GOVERNANCE
+  ACCOUNT_KYC
+  PAYMENT
+  TECHNICAL
+  FRAUD_ABUSE
+  OTHER
+}
 
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
 
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_ON_PRODUCER
+  RESOLVED
+  CLOSED
+  ESCALATED
+}
 
+enum TicketMessageSenderType {
+  PRODUCER
+  ADMIN
+  SYSTEM
+}
 
+enum TicketAuditEventType {
+  STATUS_CHANGED
+  ASSIGNED
+  PRIORITY_CHANGED
+  CATEGORY_CHANGED
+  ESCALATED
+  CLOSED
+  REOPENED
+}
 
+enum ProducerOrgStaffStatus {
+  INVITED
+  ACTIVE
+  SUSPENDED
+  REMOVED
+  DISABLED
+}
 
+enum ProducerStaffInviteStatus {
+  PENDING
+  SENT
+  ACCEPTED
+  DECLINED
+  EXPIRED
+  CANCELLED
+  DELETED
+}
 
+enum ProducerApprovalEntityType {
+  PRODUCT
+  BATCH
+}
 
+enum ProducerApprovalStatus {
+  SUBMITTED
+  APPROVED
+  REJECTED
+}
 
+enum OrgQuotaResetPeriod {
+  DAILY
+  MONTHLY
+}
 
+enum BatchSerialAllocationActionType {
+  PRINT
+  DOWNLOAD_EXPORT
+  EMAIL_EXPORT
+}
 
+enum BatchSerialAllocationFileType {
+  CSV
+  XLSX
+}
 
+enum BatchSerialAllocationStatus {
+  ISSUED
+  REVOKED
+}
 
+enum ProductVersionStatus {
+  DRAFT
+  PENDING
+  APPROVED
+  REJECTED
+}
 
+enum BatchStatus {
+  PENDING
+  APPROVED
+  ISSUED
+  CLOSED
+}
 
+enum SerialStatus {
+  ISSUED
+  ACTIVATED
+  SOLD
+  VOID
+  RECALLED
+}
 
+enum ScanAction {
+  PRODUCED
+  SHIPPED
+  RECEIVED
+  SOLD
+  VERIFY
+}
 
+enum ScanActorRole {
+  FACTORY
+  DISTRIBUTOR
+  RETAILER
+  CUSTOMER
+  ADMIN
+}
 
 enum LocationPrecisionLevel {
   COARSE
@@ -3923,31 +4901,205 @@ enum CoverageZoneType {
   BUSINESS_READINESS
 }
 
+enum TeamInvitationStatus {
+  PENDING
+  ACCEPTED
+  REVOKED
+  EXPIRED
+}
 
+enum MedicineDestructionRule {
+  AFTER_RETENTION
+  IMMEDIATE_ON_EXPIRY
+  MANUAL_APPROVAL_ONLY
+}
 
+enum VialStatus {
+  SEALED
+  ISSUED
+  OPENED
+  PARTIALLY_USED
+  EXHAUSTED
+  RETURNED
+  QUARANTINED
+  DESTROYED
+}
 
+enum VialHolderType {
+  PHARMACY
+  ROOM
+  STAFF
+  AUDIT_BIN
+}
 
+enum DispenseStatus {
+  PENDING
+  APPROVED
+  ISSUED
+  PARTIALLY_ISSUED
+  REJECTED
+  CANCELLED
+}
 
+enum DispenseUrgencyLevel {
+  NORMAL
+  URGENT
+  EMERGENCY
+}
 
+enum VialSessionStatus {
+  ACTIVE
+  PARTIALLY_USED
+  EXHAUSTED
+  EXPIRED
+  RETURNED
+  QUARANTINED
+  DESTROYED
+}
 
+enum VialEventType {
+  OPENED
+  DOSE_USED
+  RETURNED
+  EXPIRED
+  DESTROYED
+  TRANSFERRED
+  QUARANTINED
+}
 
+enum InjectionTokenStatus {
+  PENDING
+  USED
+  EXPIRED
+  CANCELLED
+}
 
+enum MedicineSource {
+  INTERNAL_CLINIC
+  CLINIC_PROVIDED_MEDICINE
+  OUTSIDE_PRESCRIPTION_PATIENT_BROUGHT
+}
 
+enum InjectionEncounterKind {
+  INTERNAL_VISIT
+  EXTERNAL_WALK_IN
+}
 
+enum VialReturnCondition {
+  EMPTY
+  PARTIAL
+  EXPIRED
+  CONTAMINATED
+  SUSPICIOUS
+}
 
+enum VialReturnVerificationStatus {
+  PENDING
+  VERIFIED
+  QUARANTINED
+  REJECTED
+}
 
+enum AuditBinType {
+  EMPTY_VIAL
+  PARTIAL_RETURN
+  EXPIRED_MIXED
+  QUARANTINE
+}
 
+enum AuditBinStatus {
+  OPEN
+  SEALED
+  UNDER_REVIEW
+  DESTROYED
+}
 
+enum AuditBinItemStatus {
+  HELD
+  VERIFIED
+  DESTROYED
+  ESCALATED
+}
 
+enum TreatmentDayStatus {
+  PENDING
+  COMPLETED
+  SKIPPED
+  MISSED
+}
 
+enum TreatmentDayItemStatus {
+  DUE
+  ADMINISTERED
+  SKIPPED
+  HELD
+}
 
+enum TreatmentRevisionChangeType {
+  MEDICINE_ADDED
+  MEDICINE_REMOVED
+  DOSE_CHANGED
+  DAY_MODIFIED
+  HOLD
+  RESUME
+  STOP
+}
 
+enum MedicineApprovalRequestType {
+  NO_RETURN_OVERRIDE
+  BREAKAGE
+  EMERGENCY_ISSUE
+  STOCK_VARIANCE
+  SUSPICIOUS_RETURN
+  DESTRUCTION
+}
 
+enum MedicineApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  ESCALATED
+}
 
+enum MedicineApprovalActionType {
+  APPROVE
+  REJECT
+  ESCALATE
+  COMMENT
+}
 
+enum MedicineIncidentType {
+  MISSING_VIAL
+  SUSPECTED_THEFT
+  TAMPERED_RETURN
+  STOCK_VARIANCE
+  EXCESSIVE_BREAKAGE
+  REPEATED_VIAL_MISMATCH
+  FREQUENT_OVERRIDE
+  TOKEN_UNUSED_INJECTIONS
+  EXPIRED_VIAL_USE
+}
 
+enum MedicineIncidentSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
 
+enum MedicineIncidentStatus {
+  OPEN
+  INVESTIGATING
+  RESOLVED
+  CLOSED
+}
 
+enum ReconciliationStatus {
+  PENDING
+  RECONCILED
+  FLAGGED
+  ACKNOWLEDGED
+}
 
 enum OnboardingStatus {
   NOT_STARTED
@@ -3964,10 +5116,54 @@ enum OnboardingPath {
   JOIN_EXISTING
 }
 
+enum MedicineImportBatchStatus {
+  UPLOADED
+  PARSED
+  PREVIEW_READY
+  CONFIRMED
+  APPLYING
+  APPLIED
+  PARTIALLY_APPLIED
+  FAILED
+  CANCELLED
+}
 
+enum MedicineImportRowClassification {
+  INVALID
+  DUPLICATE_IN_FILE
+  EXISTS_IN_DB
+  NEW
+  NEEDS_REVIEW
+}
 
+enum MedicineImportRowApplyStatus {
+  PENDING
+  APPLIED
+  SKIPPED
+  FAILED
+}
 
+enum MedicineRequisitionStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  APPROVED
+  PARTIALLY_APPROVED
+  REJECTED
+  READY_TO_DISPATCH
+  DISPATCHED
+  IN_TRANSIT
+  PARTIALLY_RECEIVED
+  RECEIVED
+  COMPLETED
+  CANCELLED
+}
 
+enum MedicineRequisitionUrgency {
+  NORMAL
+  URGENT
+  CRITICAL
+}
 
 enum WarehouseType {
   CENTRAL
@@ -3975,28 +5171,195 @@ enum WarehouseType {
   TRANSIT
 }
 
+enum WarehouseStaffRole {
+  WAREHOUSE_MANAGER
+  RECEIVING_STAFF
+  DISPATCH_STAFF
+  INVENTORY_CONTROLLER
+  QC_OFFICER
+  AUDIT_OFFICER
+}
 
+enum DeliveryAssignmentStatus {
+  ASSIGNED
+  EN_ROUTE
+  ARRIVED
+  COMPLETED
+  FAILED
+}
 
+enum PurchaseOrderStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  PARTIALLY_RECEIVED
+  RECEIVED
+  CANCELLED
+  REJECTED
+}
 
+enum AllocationPlanStatus {
+  DRAFT
+  CONFIRMED
+  PICKING
+  PICKED
+  DISPATCHED
+  CANCELLED
+  ALLOCATED
+  PARTIALLY_ALLOCATED
+  ON_HOLD
+  FAILED
+  PARTIALLY_CONFIRMED
+  PARTIALLY_DISPATCHED
+}
 
+enum AllocationScope {
+  SINGLE_SOURCE
+  MULTI_SOURCE
+}
 
+enum AllocationSourceStatus {
+  PENDING
+  CONFIRMED
+  PICKING
+  PICKED
+  DISPATCHED
+  CANCELLED
+  SKIPPED
+}
 
+enum BackorderStatus {
+  OPEN
+  LINKED
+  PROCUREMENT_LINKED
+  PARTIALLY_FULFILLED
+  FULFILLED
+  CLOSED
+  CANCELLED
+}
 
+enum PickListStatus {
+  DRAFT
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
 
+enum PurchaseRequisitionStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  REJECTED
+  CONVERTED
+}
 
+enum InboundShipmentStatus {
+  ANNOUNCED
+  IN_TRANSIT
+  ARRIVED
+  CLOSED
+  CANCELLED
+}
 
+enum PutawayTaskStatus {
+  OPEN
+  COMPLETED
+  CANCELLED
+}
 
+enum InboundDiscrepancyStatus {
+  OPEN
+  RESOLVED
+  CANCELLED
+}
 
+enum WarehouseZonePurpose {
+  RECEIVING
+  STORAGE
+  PICKING
+  PACKING
+  DAMAGE
+  RETURN_HOLD
+  QUARANTINE
+  STAGING
+  GENERAL
+}
 
+enum QcInspectionStatus {
+  PENDING
+  PASSED
+  FAILED
+  PARTIAL
+}
 
+enum QcDisposition {
+  ACCEPT
+  QUARANTINE
+  REJECT
+  RETURN_TO_VENDOR
+}
 
+enum WarehouseAuditCategory {
+  QC
+  QUARANTINE
+  RECALL
+  ZONE
+  ESCALATION
+  OPERATIONS
+}
 
+enum FinIntelCostGrain {
+  GRN_LINE
+  VARIANT_BRANCH_PERIOD
+  DISPATCH
+}
 
+enum FinIntelCostComponent {
+  MATERIAL
+  INBOUND_ALLOC
+  TRANSFER_PROXY
+  SHRINK
+  LABOR_FACILITY
+}
 
+enum SloMeasurementDomain {
+  INVENTORY
+  SUPPORT
+  RECALL
+  PROCUREMENT
+  CLINIC_QUEUE
+}
 
+enum SloTargetKind {
+  TIME_TO_COMPLETE
+  PERCENT_WITHIN_WINDOW
+  COUNT_BREACH
+}
 
+enum OpsExceptionSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
 
+enum OpsExceptionStatus {
+  OPEN
+  ACKNOWLEDGED
+  IN_PROGRESS
+  RESOLVED
+  SNOOZED
+}
 
+enum OpsRcaPrimaryCause {
+  DATA_ENTRY
+  SYSTEM_BUG
+  VENDOR_SHORT
+  THEFT
+  TRAINING
+  UNKNOWN
+  OTHER
+}
 
 enum CampaignStatus {
   DRAFT
