@@ -1,3 +1,8 @@
+// [WPA-CLEANUP Phase 3] NOT MOUNTED — this file is not imported by app.ts or routes.ts.
+// Legacy Phase 0 sample/dev routes for branch/audit endpoints using x-user-id test headers.
+// References enterprise branch/rbac modules. Not required by WPA Flutter app.
+// Schedule for deletion in Phase 4.
+
 import { Router } from "express";
 import { requirePerm } from "../modules/rbac/rbac.middleware";
 import { prisma } from "../lib/prisma";

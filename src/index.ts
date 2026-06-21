@@ -25,23 +25,28 @@ try {
 } catch (e) {
   console.error("[JOB_INIT] staffInviteCleanup failed", e);
 }
-try {
-  const { runExpiryEngineJob } = require("./common/jobs/expiryEngine.job");
-  const expiryIntervalMs = Number(process.env.EXPIRY_ENGINE_INTERVAL_MS || 24 * 60 * 60 * 1000);
-  function runExpiry() {
-    runExpiryEngineJob().catch((err) => console.error("[JOB_INIT] expiryEngine error", err));
-  }
-  runExpiry();
-  setInterval(runExpiry, expiryIntervalMs).unref?.();
-} catch (e) {
-  console.error("[JOB_INIT] expiryEngine failed", e);
-}
-try {
-  const { startOwnersTeamAutomation } = require("./common/jobs/ownersTeamAutomation.job");
-  startOwnersTeamAutomation();
-} catch (e) {
-  console.error("[JOB_INIT] ownersTeamAutomation failed", e);
-}
+// [WPA-CLEANUP Phase 3] expiryEngine disabled — imports inventory/ledger.service
+// which is an enterprise inventory module not required by WPA Flutter app.
+// Remove this job entirely in Phase 4 when inventory module is deleted.
+// try {
+//   const { runExpiryEngineJob } = require("./common/jobs/expiryEngine.job");
+//   const expiryIntervalMs = Number(process.env.EXPIRY_ENGINE_INTERVAL_MS || 24 * 60 * 60 * 1000);
+//   function runExpiry() {
+//     runExpiryEngineJob().catch((err) => console.error("[JOB_INIT] expiryEngine error", err));
+//   }
+//   runExpiry();
+//   setInterval(runExpiry, expiryIntervalMs).unref?.();
+// } catch (e) {
+//   console.error("[JOB_INIT] expiryEngine failed", e);
+// }
+// [WPA-CLEANUP Phase 3] ownersTeamAutomation disabled — enterprise owner/org module
+// not required by WPA Flutter app. Re-enable only if WPA admin panel needs it.
+// try {
+//   const { startOwnersTeamAutomation } = require("./common/jobs/ownersTeamAutomation.job");
+//   startOwnersTeamAutomation();
+// } catch (e) {
+//   console.error("[JOB_INIT] ownersTeamAutomation failed", e);
+// }
 try {
   const { runNotificationRetentionJob } = require("./common/jobs/notificationRetention.job");
   const retentionIntervalMs = Number(process.env.NOTIFICATION_RETENTION_INTERVAL_MS || 24 * 60 * 60 * 1000);

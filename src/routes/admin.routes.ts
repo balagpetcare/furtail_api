@@ -1,3 +1,8 @@
+// [WPA-CLEANUP Phase 3] NOT MOUNTED — this file is not imported by app.ts or routes.ts.
+// Contains partner application admin routes (approve/reject partner applications).
+// This is enterprise/BPA-specific functionality not required by the WPA Flutter app.
+// Schedule for deletion in Phase 4.
+
 import type { Response } from "express";
 import { Router } from "express";
 import type { AuthedRequest } from "../middleware/auth";

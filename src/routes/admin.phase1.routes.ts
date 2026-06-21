@@ -1,3 +1,9 @@
+// [WPA-CLEANUP Phase 3] NOT MOUNTED — this file is not imported by app.ts or routes.ts.
+// Contains legacy Phase 1 admin routes for branch/role/staff/permission management
+// tied to the enterprise clinic/org system. Not required by WPA Flutter app.
+// The admin_branches, admin_roles, admin_staff, admin_permissions modules it references
+// are all enterprise-only. Schedule for deletion in Phase 4.
+
 import { Router } from "express";
 import { requirePerm } from "../modules/rbac/rbac.middleware";
 
