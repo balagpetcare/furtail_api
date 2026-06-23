@@ -5,6 +5,9 @@ import { PrismaClient } from "@prisma/client";
  * Creates a comprehensive category tree for pet products
  */
 export default async function seedPetCategories(prisma: PrismaClient) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const db = prisma as any;
+  if (!db.category) { console.warn("⚠️  seedPetCategories: Category model not found — skipping."); return; }
   console.log("🌱 Seeding Pet Categories and Subcategories...");
 
   // Category structure: { name, slug, children: [...] }
@@ -153,12 +156,12 @@ export default async function seedPetCategories(prisma: PrismaClient) {
 
   for (const category of categoryStructure) {
     // Create or get parent category
-    let parentCategory = await prisma.category.findFirst({
+    let parentCategory = await db.category.findFirst({
       where: { slug: category.slug, parentId: null },
     });
 
     if (!parentCategory) {
-      parentCategory = await prisma.category.create({
+      parentCategory = await db.category.create({
         data: {
           name: category.name,
           slug: category.slug,
@@ -176,7 +179,7 @@ export default async function seedPetCategories(prisma: PrismaClient) {
     // Create subcategories
     if (parentCategory && category.children) {
       for (const subcat of category.children) {
-        const existing = await prisma.category.findFirst({
+        const existing = await db.category.findFirst({
           where: {
             slug: subcat.slug,
             parentId: parentCategory.id,
@@ -184,7 +187,7 @@ export default async function seedPetCategories(prisma: PrismaClient) {
         });
 
         if (!existing) {
-          await prisma.category.create({
+          await db.category.create({
             data: {
               name: subcat.name,
               slug: subcat.slug,

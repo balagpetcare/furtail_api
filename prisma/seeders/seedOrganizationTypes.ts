@@ -45,9 +45,11 @@ const DEFAULT_ORG_TYPES = [
 
 export default async function seedOrganizationTypes(prisma: PrismaClient) {
   // If migration not applied yet, Prisma will throw. We keep seed resilient.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const db = prisma as any;
   try {
     for (const it of DEFAULT_ORG_TYPES) {
-      await prisma.organizationType.upsert({
+      await db.organizationType.upsert({
         where: { code: it.code },
         update: {
           nameEn: it.nameEn,

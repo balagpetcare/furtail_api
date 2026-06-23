@@ -346,10 +346,16 @@ const bodiesNormalized = REGULATORY_BODIES.map((b) => ({
 })).filter((b) => b.countryCode);
 
 export default async function seedVetRegulatoryBodies(prisma: PrismaClient): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const db = prisma as any;
+  if (!db.vetCountry || !db.vetRegulatoryBody) {
+    console.warn("⚠️  seedVetRegulatoryBodies: VetCountry/VetRegulatoryBody models not found — skipping.");
+    return;
+  }
   const countryIdByCode: Record<string, number> = {};
 
   for (const c of COUNTRIES) {
-    const created = await prisma.vetCountry.upsert({
+    const created = await db.vetCountry.upsert({
       where: { code: c.code },
       update: { name: c.name, region: c.region, hasVetLicensing: true, isActive: true },
       create: { code: c.code, name: c.name, region: c.region, hasVetLicensing: true, isActive: true },
@@ -362,9 +368,9 @@ export default async function seedVetRegulatoryBodies(prisma: PrismaClient): Pro
     const countryId = countryIdByCode[b.countryCode];
     if (!countryId) continue;
 
-    let body = await prisma.vetRegulatoryBody.findFirst({ where: { countryId, name: b.name } });
+    let body = await db.vetRegulatoryBody.findFirst({ where: { countryId, name: b.name } });
     if (body) {
-      await prisma.vetRegulatoryBody.update({
+      await db.vetRegulatoryBody.update({
         where: { id: body.id },
         data: {
           abbreviation: b.abbreviation ?? null,
@@ -381,7 +387,7 @@ export default async function seedVetRegulatoryBodies(prisma: PrismaClient): Pro
         },
       });
     } else {
-      body = await prisma.vetRegulatoryBody.create({
+      body = await db.vetRegulatoryBody.create({
         data: {
           countryId,
           name: b.name,
@@ -401,11 +407,11 @@ export default async function seedVetRegulatoryBodies(prisma: PrismaClient): Pro
     }
 
     for (const dt of DEFAULT_DOC_TYPES) {
-      const existing = await prisma.vetRequiredDocType.findFirst({
+      const existing = await db.vetRequiredDocType.findFirst({
         where: { regulatoryBodyId: body.id, documentType: dt.documentType },
       });
       if (!existing) {
-        await prisma.vetRequiredDocType.create({
+        await db.vetRequiredDocType.create({
           data: {
             regulatoryBodyId: body.id,
             documentType: dt.documentType,
@@ -426,7 +432,7 @@ export default async function seedVetRegulatoryBodies(prisma: PrismaClient): Pro
     const hasBody = bodiesNormalized.some((b) => b.countryCode === c.code);
     if (hasBody || !countryId) continue;
 
-    const generic = await prisma.vetRegulatoryBody.create({
+    const generic = await db.vetRegulatoryBody.create({
       data: {
         countryId,
         name: `${c.name} Veterinary Authority`,
@@ -435,7 +441,7 @@ export default async function seedVetRegulatoryBodies(prisma: PrismaClient): Pro
       },
     });
     for (const dt of DEFAULT_DOC_TYPES) {
-      await prisma.vetRequiredDocType.create({
+      await db.vetRequiredDocType.create({
         data: {
           regulatoryBodyId: generic.id,
           documentType: dt.documentType,

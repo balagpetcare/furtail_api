@@ -1,6 +1,13 @@
 import { PrismaClient } from "@prisma/client";
 
 export default async function seedProductsMasterData(prisma: PrismaClient) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const db = prisma as any;
+  // Probe: if Category/Unit/Flavor tables were removed, skip gracefully
+  if (!db.category || !db.unit || !db.flavor) {
+    console.warn("⚠️  seedProductsMasterData: product catalog models not found — skipping.");
+    return;
+  }
   console.log("🌱 Seeding Products Master Data...");
 
   // 1. Categories (tree structure)
@@ -20,18 +27,18 @@ export default async function seedProductsMasterData(prisma: PrismaClient) {
     let parentId = null;
     if (cat.slug === "dry-food" || cat.slug === "wet-food") {
       // Find Food category
-      const foodCat = await prisma.category.findFirst({
+      const foodCat = await db.category.findFirst({
         where: { slug: "food", parentId: null },
       });
       if (foodCat) parentId = foodCat.id;
     }
 
-    const existing = await prisma.category.findFirst({
+    const existing = await db.category.findFirst({
       where: { slug: cat.slug, parentId },
     });
 
     if (!existing) {
-      const created = await prisma.category.create({
+      const created = await db.category.create({
         data: {
           name: cat.name,
           slug: cat.slug,
@@ -59,12 +66,12 @@ export default async function seedProductsMasterData(prisma: PrismaClient) {
   ];
 
   for (const unit of units) {
-    const existing = await prisma.unit.findUnique({
+    const existing = await db.unit.findUnique({
       where: { code: unit.code },
     });
 
     if (!existing) {
-      await prisma.unit.create({
+      await db.unit.create({
         data: unit,
       });
       console.log(`  ✓ Created unit: ${unit.code} (${unit.name})`);
@@ -88,12 +95,12 @@ export default async function seedProductsMasterData(prisma: PrismaClient) {
   ];
 
   for (const flavorName of flavors) {
-    const existing = await prisma.flavor.findFirst({
+    const existing = await db.flavor.findFirst({
       where: { name: flavorName },
     });
 
     if (!existing) {
-      await prisma.flavor.create({
+      await db.flavor.create({
         data: { name: flavorName },
       });
       console.log(`  ✓ Created flavor: ${flavorName}`);

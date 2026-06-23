@@ -7,335 +7,375 @@ export const LOCAL_INDIGENOUS_BREED_NAME = "Local / Indigenous";
 export const LOCAL_INDIGENOUS_ALIAS_NAMES: string[] = ["Local", "Indigenous", "Deshi", "Native"];
 
 /**
- * Enterprise animal taxonomy seed: categories → types → breeds → sub-breeds;
+ * Enterprise animal taxonomy seed: categories → types → breeds;
  * standalone: colors, coat patterns, sizes.
  * Single source of truth for GET /api/v1/common/* taxonomy endpoints.
- * Uses type assertion so this file compiles when Prisma client may not yet include taxonomy models; run `npx prisma generate` after schema changes.
+ * Uses type assertion so this file compiles when Prisma client may not yet include taxonomy models.
+ * Run `npx prisma generate` after schema changes before running seed.
  */
 export default async function seedAnimalTaxonomy(prisma: PrismaClient) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const db = prisma as any;
-  console.log("Seeding enterprise animal taxonomy...");
+  console.log("🌱 Seeding enterprise animal taxonomy...");
 
-  // 1) Animal categories
+  // ── 1) Animal categories ──────────────────────────────────────────────────
   const categories: { code: string; name: string; displayOrder: number }[] = [
-    { code: "mammal", name: "Mammal", displayOrder: 1 },
-    { code: "bird", name: "Bird", displayOrder: 2 },
-    { code: "reptile", name: "Reptile", displayOrder: 3 },
-    { code: "fish", name: "Fish", displayOrder: 4 },
+    { code: "mammal",    name: "Mammal",    displayOrder: 1 },
+    { code: "bird",      name: "Bird",      displayOrder: 2 },
+    { code: "reptile",   name: "Reptile",   displayOrder: 3 },
+    { code: "fish",      name: "Fish",      displayOrder: 4 },
     { code: "amphibian", name: "Amphibian", displayOrder: 5 },
-    { code: "exotic", name: "Exotic", displayOrder: 6 },
-    { code: "other", name: "Other", displayOrder: 7 },
+    { code: "exotic",    name: "Exotic",    displayOrder: 6 },
+    { code: "other",     name: "Other",     displayOrder: 7 },
   ];
   for (const c of categories) {
     await db.animalCategory.upsert({
-      where: { code: c.code },
+      where:  { code: c.code },
       update: { name: c.name, displayOrder: c.displayOrder },
       create: { code: c.code, name: c.name, displayOrder: c.displayOrder },
     });
   }
-  const mammalCat = await db.animalCategory.findUnique({ where: { code: "mammal" } });
-  const birdCat = await db.animalCategory.findUnique({ where: { code: "bird" } });
-  const reptileCat = await db.animalCategory.findUnique({ where: { code: "reptile" } });
-  const fishCat = await db.animalCategory.findUnique({ where: { code: "fish" } });
-  const otherCat = await db.animalCategory.findUnique({ where: { code: "other" } });
 
-  // 2) Animal sizes
+  const mammalCat  = await db.animalCategory.findUnique({ where: { code: "mammal"  } });
+  const birdCat    = await db.animalCategory.findUnique({ where: { code: "bird"    } });
+  const reptileCat = await db.animalCategory.findUnique({ where: { code: "reptile" } });
+  const fishCat    = await db.animalCategory.findUnique({ where: { code: "fish"    } });
+  const otherCat   = await db.animalCategory.findUnique({ where: { code: "other"   } });
+
+  // ── 2) Animal sizes ───────────────────────────────────────────────────────
   const sizes: { code: string; name: string; minKg?: number; maxKg?: number; order: number }[] = [
-    { code: "extra_small", name: "Extra Small", maxKg: 2.5, order: 1 },
-    { code: "toy", name: "Toy", minKg: 2.5, maxKg: 5, order: 2 },
-    { code: "small", name: "Small", minKg: 5, maxKg: 12, order: 3 },
-    { code: "medium", name: "Medium", minKg: 12, maxKg: 25, order: 4 },
-    { code: "large", name: "Large", minKg: 25, maxKg: 45, order: 5 },
-    { code: "giant", name: "Giant", minKg: 45, order: 6 },
+    { code: "extra_small", name: "Extra Small",                  maxKg: 2.5,  order: 1 },
+    { code: "toy",         name: "Toy",         minKg: 2.5,      maxKg: 5,    order: 2 },
+    { code: "small",       name: "Small",        minKg: 5,        maxKg: 12,   order: 3 },
+    { code: "medium",      name: "Medium",       minKg: 12,       maxKg: 25,   order: 4 },
+    { code: "large",       name: "Large",        minKg: 25,       maxKg: 45,   order: 5 },
+    { code: "giant",       name: "Giant",        minKg: 45,                    order: 6 },
   ];
   const sizeIds: Record<string, number> = {};
   for (const s of sizes) {
     const row = await db.animalSize.upsert({
-      where: { code: s.code },
+      where:  { code: s.code },
       update: { name: s.name, minWeightKg: s.minKg ?? null, maxWeightKg: s.maxKg ?? null, displayOrder: s.order },
       create: { code: s.code, name: s.name, minWeightKg: s.minKg ?? null, maxWeightKg: s.maxKg ?? null, displayOrder: s.order },
     });
     sizeIds[s.code] = row.id;
   }
 
-  // 3) Animal colors
+  // ── 3) Animal colors ──────────────────────────────────────────────────────
   const colors: { code: string; name: string; hex?: string; order: number }[] = [
-    { code: "black", name: "Black", hex: "#1a1a1a", order: 1 },
-    { code: "white", name: "White", hex: "#f5f5f5", order: 2 },
-    { code: "brown", name: "Brown", hex: "#8B4513", order: 3 },
-    { code: "golden", name: "Golden", hex: "#DAA520", order: 4 },
-    { code: "grey", name: "Grey", hex: "#808080", order: 5 },
-    { code: "cream", name: "Cream", hex: "#FFFDD0", order: 6 },
-    { code: "orange", name: "Orange", hex: "#FF8C00", order: 7 },
-    { code: "red", name: "Red", hex: "#CD5C5C", order: 8 },
-    { code: "fawn", name: "Fawn", hex: "#E5AA70", order: 9 },
-    { code: "blue", name: "Blue", hex: "#4682B4", order: 10 },
-    { code: "silver", name: "Silver", hex: "#C0C0C0", order: 11 },
-    { code: "chocolate", name: "Chocolate", hex: "#D2691E", order: 12 },
-    { code: "tan", name: "Tan", hex: "#D2B48C", order: 13 },
-    { code: "yellow", name: "Yellow", hex: "#FFD700", order: 14 },
-    { code: "buff", name: "Buff", hex: "#F0DC82", order: 15 },
-    { code: "lavender", name: "Lavender", hex: "#E6E6FA", order: 16 },
-    { code: "apricot", name: "Apricot", hex: "#FBCEB1", order: 17 },
-    { code: "sable", name: "Sable", hex: "#6B4423", order: 18 },
-    { code: "black_white", name: "Black & White", order: 19 },
-    { code: "brown_white", name: "Brown & White", order: 20 },
-    { code: "tricolor", name: "Tricolor", order: 21 },
-    { code: "bicolor", name: "Bicolor", order: 22 },
-    { code: "brindle", name: "Brindle", order: 23 },
-    { code: "merle", name: "Merle", order: 24 },
-    { code: "mixed", name: "Mixed", order: 25 },
+    { code: "black",         name: "Black",          hex: "#1a1a1a", order: 1  },
+    { code: "white",         name: "White",          hex: "#f5f5f5", order: 2  },
+    { code: "brown",         name: "Brown",          hex: "#8B4513", order: 3  },
+    { code: "golden",        name: "Golden",         hex: "#DAA520", order: 4  },
+    { code: "cream",         name: "Cream",          hex: "#FFFDD0", order: 5  },
+    { code: "grey",          name: "Grey",           hex: "#808080", order: 6  },
+    { code: "blue_grey",     name: "Blue Grey",      hex: "#6699AA", order: 7  },
+    { code: "orange",        name: "Orange",         hex: "#FF8C00", order: 8  },
+    { code: "ginger",        name: "Ginger",         hex: "#B5451B", order: 9  },
+    { code: "calico",        name: "Calico",                         order: 10 },
+    { code: "tortoiseshell", name: "Tortoiseshell",                  order: 11 },
+    { code: "tabby",         name: "Tabby",                          order: 12 },
+    { code: "spotted",       name: "Spotted",                        order: 13 },
+    { code: "mixed",         name: "Mixed",                          order: 14 },
+    { code: "other",         name: "Other",                          order: 15 },
+    // Legacy extras kept for backward compat
+    { code: "red",           name: "Red",            hex: "#CD5C5C", order: 16 },
+    { code: "fawn",          name: "Fawn",           hex: "#E5AA70", order: 17 },
+    { code: "blue",          name: "Blue",           hex: "#4682B4", order: 18 },
+    { code: "silver",        name: "Silver",         hex: "#C0C0C0", order: 19 },
+    { code: "chocolate",     name: "Chocolate",      hex: "#D2691E", order: 20 },
+    { code: "tan",           name: "Tan",            hex: "#D2B48C", order: 21 },
+    { code: "yellow",        name: "Yellow",         hex: "#FFD700", order: 22 },
+    { code: "black_white",   name: "Black & White",                  order: 23 },
+    { code: "brown_white",   name: "Brown & White",                  order: 24 },
+    { code: "tricolor",      name: "Tricolor",                       order: 25 },
+    { code: "bicolor",       name: "Bicolor",                        order: 26 },
+    { code: "brindle",       name: "Brindle",                        order: 27 },
+    { code: "merle",         name: "Merle",                          order: 28 },
   ];
   for (const c of colors) {
     await db.animalColor.upsert({
-      where: { code: c.code },
+      where:  { code: c.code },
       update: { name: c.name, hexPreview: c.hex ?? null, displayOrder: c.order },
       create: { code: c.code, name: c.name, hexPreview: c.hex ?? null, displayOrder: c.order },
     });
   }
 
-  // 4) Coat patterns
+  // ── 4) Coat patterns ──────────────────────────────────────────────────────
   const coatPatterns: { code: string; name: string; order: number }[] = [
-    { code: "solid", name: "Solid", order: 1 },
-    { code: "tabby", name: "Tabby", order: 2 },
-    { code: "calico", name: "Calico", order: 3 },
-    { code: "brindle", name: "Brindle", order: 4 },
-    { code: "spotted", name: "Spotted", order: 5 },
-    { code: "bicolor", name: "Bicolor", order: 6 },
-    { code: "tricolor", name: "Tricolor", order: 7 },
-    { code: "striped", name: "Striped", order: 8 },
-    { code: "merle", name: "Merle", order: 9 },
-    { code: "tortoiseshell", name: "Tortoiseshell", order: 10 },
-    { code: "harlequin", name: "Harlequin", order: 11 },
-    { code: "mixed", name: "Mixed", order: 12 },
+    { code: "solid",         name: "Solid",          order: 1  },
+    { code: "bicolor",       name: "Bi-color",       order: 2  },
+    { code: "tricolor",      name: "Tri-color",      order: 3  },
+    { code: "tabby",         name: "Tabby",          order: 4  },
+    { code: "calico",        name: "Calico",         order: 5  },
+    { code: "tortoiseshell", name: "Tortoiseshell",  order: 6  },
+    { code: "spotted",       name: "Spotted",        order: 7  },
+    { code: "striped",       name: "Striped",        order: 8  },
+    { code: "merle",         name: "Merle",          order: 9  },
+    { code: "brindle",       name: "Brindle",        order: 10 },
+    { code: "mixed",         name: "Mixed",          order: 11 },
+    { code: "other",         name: "Other",          order: 12 },
+    // Legacy kept for backward compat
+    { code: "harlequin",     name: "Harlequin",      order: 13 },
   ];
   for (const p of coatPatterns) {
     await db.coatPattern.upsert({
-      where: { code: p.code },
+      where:  { code: p.code },
       update: { name: p.name, displayOrder: p.order },
       create: { code: p.code, name: p.name, displayOrder: p.order },
     });
   }
 
-  // 5) Animal types (with category)
+  // ── 5) Animal types ───────────────────────────────────────────────────────
+  // Required by Flutter app: Dog, Cat, Bird, Rabbit, Hamster, Guinea Pig, Fish, Turtle, Reptile, Other
+  // Legacy types kept to avoid FK violations on existing pet records.
   const typeRows: { name: string; code: string; categoryId: number | null; order: number }[] = [
-    { name: "Dog", code: "dog", categoryId: mammalCat!.id, order: 1 },
-    { name: "Cat", code: "cat", categoryId: mammalCat!.id, order: 2 },
-    { name: "Rabbit", code: "rabbit", categoryId: mammalCat!.id, order: 3 },
-    { name: "Guinea Pig", code: "guinea_pig", categoryId: mammalCat!.id, order: 4 },
-    { name: "Hamster", code: "hamster", categoryId: mammalCat!.id, order: 5 },
-    { name: "Parrot", code: "parrot", categoryId: birdCat!.id, order: 6 },
-    { name: "Pigeon", code: "pigeon", categoryId: birdCat!.id, order: 7 },
-    { name: "Budgerigar", code: "budgerigar", categoryId: birdCat!.id, order: 8 },
-    { name: "Cow", code: "cow", categoryId: mammalCat!.id, order: 9 },
-    { name: "Goat", code: "goat", categoryId: mammalCat!.id, order: 10 },
-    { name: "Horse", code: "horse", categoryId: mammalCat!.id, order: 11 },
-    { name: "Turtle", code: "turtle", categoryId: reptileCat!.id, order: 12 },
-    { name: "Snake", code: "snake", categoryId: reptileCat!.id, order: 13 },
-    { name: "Fish", code: "fish", categoryId: fishCat!.id, order: 14 },
-    { name: "Other", code: "other", categoryId: otherCat!.id, order: 15 },
+    // Primary types (Flutter dropdown)
+    { name: "Dog",         code: "dog",         categoryId: mammalCat!.id,  order: 1  },
+    { name: "Cat",         code: "cat",         categoryId: mammalCat!.id,  order: 2  },
+    { name: "Bird",        code: "bird",        categoryId: birdCat!.id,    order: 3  },
+    { name: "Rabbit",      code: "rabbit",      categoryId: mammalCat!.id,  order: 4  },
+    { name: "Hamster",     code: "hamster",     categoryId: mammalCat!.id,  order: 5  },
+    { name: "Guinea Pig",  code: "guinea_pig",  categoryId: mammalCat!.id,  order: 6  },
+    { name: "Fish",        code: "fish",        categoryId: fishCat!.id,    order: 7  },
+    { name: "Turtle",      code: "turtle",      categoryId: reptileCat!.id, order: 8  },
+    { name: "Reptile",     code: "reptile",     categoryId: reptileCat!.id, order: 9  },
+    { name: "Other",       code: "other",       categoryId: otherCat!.id,   order: 10 },
+    // Legacy types (kept for FK safety; not shown in main Flutter dropdown)
+    { name: "Parrot",      code: "parrot",      categoryId: birdCat!.id,    order: 11 },
+    { name: "Pigeon",      code: "pigeon",      categoryId: birdCat!.id,    order: 12 },
+    { name: "Budgerigar",  code: "budgerigar",  categoryId: birdCat!.id,    order: 13 },
+    { name: "Snake",       code: "snake",       categoryId: reptileCat!.id, order: 14 },
+    { name: "Cow",         code: "cow",         categoryId: mammalCat!.id,  order: 15 },
+    { name: "Goat",        code: "goat",        categoryId: mammalCat!.id,  order: 16 },
+    { name: "Horse",       code: "horse",       categoryId: mammalCat!.id,  order: 17 },
   ];
+
   const typeIds: Record<string, number> = {};
   for (const t of typeRows) {
     const row = await db.animalType.upsert({
-      where: { name: t.name },
+      where:  { name: t.name },
       update: { code: t.code, categoryId: t.categoryId, displayOrder: t.order, isActive: true },
       create: { name: t.name, code: t.code, categoryId: t.categoryId, displayOrder: t.order, isActive: true },
     });
     typeIds[t.code] = row.id;
   }
 
-  // 6) Breeds by animal type
-  const dogBreeds: { name: string; aliasNames?: string[]; defaultSize?: string; isMixed?: boolean; isOther?: boolean }[] = [
-    { name: "Labrador Retriever", defaultSize: "large" },
-    { name: "Golden Retriever", defaultSize: "large" },
-    { name: "German Shepherd", defaultSize: "large" },
-    { name: "Beagle", defaultSize: "medium" },
-    { name: "Bulldog", defaultSize: "medium" },
-    { name: "French Bulldog", defaultSize: "small" },
-    { name: "Poodle", defaultSize: "medium" },
-    { name: "Rottweiler", defaultSize: "large" },
-    { name: "Yorkshire Terrier", defaultSize: "toy" },
-    { name: "Boxer", defaultSize: "large" },
-    { name: "Dachshund", defaultSize: "small" },
-    { name: "Siberian Husky", defaultSize: "large" },
-    { name: "Doberman Pinscher", defaultSize: "large" },
-    { name: "Chihuahua", defaultSize: "toy" },
-    { name: "Pomeranian", defaultSize: "toy" },
-    { name: "Shih Tzu", defaultSize: "small" },
-    { name: "Cocker Spaniel", defaultSize: "medium" },
-    { name: "Maltese", defaultSize: "toy" },
-    { name: "Pug", defaultSize: "small" },
-    { name: "Dalmatian", defaultSize: "large" },
-    { name: "Australian Shepherd", defaultSize: "medium" },
-    { name: "Border Collie", defaultSize: "medium" },
-    { name: "Corgi", defaultSize: "small" },
-    { name: "Jack Russell Terrier", defaultSize: "small" },
-    { name: "Lhasa Apso", defaultSize: "small" },
-    { name: "Pekingese", defaultSize: "small" },
-    { name: "Spitz", defaultSize: "small" },
-    { name: "St. Bernard", defaultSize: "giant" },
-    { name: "Great Dane", defaultSize: "giant" },
-    { name: "Mastiff", defaultSize: "giant" },
-    { name: "Akita", defaultSize: "large" },
-    { name: "Alaskan Malamute", defaultSize: "large" },
-    { name: "Basset Hound", defaultSize: "medium" },
-    { name: "Boston Terrier", defaultSize: "small" },
-    { name: "Bull Terrier", defaultSize: "medium" },
-    { name: "Cane Corso", defaultSize: "large" },
-    { name: "Cavalier King Charles Spaniel", defaultSize: "small" },
-    { name: "Collie", defaultSize: "large" },
-    { name: "English Springer Spaniel", defaultSize: "medium" },
-    { name: "German Shorthaired Pointer", defaultSize: "large" },
-    { name: "Greyhound", defaultSize: "large" },
-    { name: "Havanese", defaultSize: "small" },
-    { name: "Irish Setter", defaultSize: "large" },
-    { name: "Italian Greyhound", defaultSize: "small" },
-    { name: "Miniature Schnauzer", defaultSize: "small" },
-    { name: "Papillon", defaultSize: "toy" },
-    { name: "Pit Bull Terrier", defaultSize: "medium" },
-    { name: "Samoyed", defaultSize: "medium" },
-    { name: "Shetland Sheepdog", defaultSize: "small" },
-    { name: "Staffordshire Bull Terrier", defaultSize: "medium" },
-    { name: "Weimaraner", defaultSize: "large" },
-    { name: "West Highland White Terrier", defaultSize: "small" },
-    { name: "Whippet", defaultSize: "medium" },
-    { name: LOCAL_INDIGENOUS_BREED_NAME, aliasNames: [...LOCAL_INDIGENOUS_ALIAS_NAMES, "Local Dog"], defaultSize: "medium" },
-    { name: "Mixed", isMixed: true, defaultSize: "medium" },
-    { name: "Other", isOther: true },
+  // ── 6) Breeds ─────────────────────────────────────────────────────────────
+
+  type BreedDef = {
+    name: string;
+    aliasNames?: string[];
+    defaultSize?: string;
+    isMixed?: boolean;
+    isOther?: boolean;
+    order?: number;
+  };
+
+  async function upsertBreeds(animalTypeId: number, breeds: BreedDef[]) {
+    for (let i = 0; i < breeds.length; i++) {
+      const b = breeds[i];
+      const base = {
+        aliasNames:    b.aliasNames ? (b.aliasNames as Prisma.InputJsonValue) : null,
+        defaultSizeId: b.defaultSize ? (sizeIds[b.defaultSize] ?? null) : null,
+        isMixed:       b.isMixed  ?? false,
+        isOther:       b.isOther  ?? false,
+        displayOrder:  b.order ?? i + 1,
+        isActive:      true,
+      };
+      await db.breed.upsert({
+        where:  { name_animalTypeId: { name: b.name, animalTypeId } },
+        update: base,
+        create: { name: b.name, animalTypeId, ...base },
+      });
+    }
+  }
+
+  // Dog breeds
+  await upsertBreeds(typeIds.dog, [
+    { name: "Labrador Retriever",  defaultSize: "large",  order: 1  },
+    { name: "Golden Retriever",    defaultSize: "large",  order: 2  },
+    { name: "German Shepherd",     defaultSize: "large",  order: 3  },
+    { name: "Rottweiler",          defaultSize: "large",  order: 4  },
+    { name: "Doberman Pinscher",   defaultSize: "large",  aliasNames: ["Doberman"], order: 5 },
+    { name: "Beagle",              defaultSize: "medium", order: 6  },
+    { name: "Pug",                 defaultSize: "small",  order: 7  },
+    { name: "Shih Tzu",            defaultSize: "small",  order: 8  },
+    { name: "Spitz",               defaultSize: "small",  order: 9  },
+    { name: "Siberian Husky",      defaultSize: "large",  aliasNames: ["Husky"], order: 10 },
+    { name: "Pomeranian",          defaultSize: "toy",    order: 11 },
+    { name: "Cocker Spaniel",      defaultSize: "medium", order: 12 },
+    { name: "Indie / Local Dog",   defaultSize: "medium", aliasNames: ["Indie", "Deshi Dog", "Street Dog", "Local Dog", "Parish Dog"], order: 13 },
+    { name: "Bulldog",             defaultSize: "medium", order: 20 },
+    { name: "French Bulldog",      defaultSize: "small",  order: 21 },
+    { name: "Poodle",              defaultSize: "medium", order: 22 },
+    { name: "Yorkshire Terrier",   defaultSize: "toy",    order: 23 },
+    { name: "Boxer",               defaultSize: "large",  order: 24 },
+    { name: "Dachshund",           defaultSize: "small",  order: 25 },
+    { name: "Chihuahua",           defaultSize: "toy",    order: 26 },
+    { name: "Maltese",             defaultSize: "toy",    order: 27 },
+    { name: "Dalmatian",           defaultSize: "large",  order: 28 },
+    { name: "Border Collie",       defaultSize: "medium", order: 29 },
+    { name: "Akita",               defaultSize: "large",  order: 30 },
+    { name: "St. Bernard",         defaultSize: "giant",  order: 31 },
+    { name: "Great Dane",          defaultSize: "giant",  order: 32 },
+    { name: "Australian Shepherd", defaultSize: "medium", order: 33 },
+    { name: "Samoyed",             defaultSize: "medium", order: 34 },
+    { name: "Lhasa Apso",          defaultSize: "small",  order: 35 },
+    { name: "Mixed Breed",         isMixed: true,  defaultSize: "medium", order: 98 },
+    { name: "Other",               isOther: true,                         order: 99 },
+  ]);
+
+  // Cat breeds
+  await upsertBreeds(typeIds.cat, [
+    { name: "Persian",              defaultSize: "medium", order: 1  },
+    { name: "Bengal",               defaultSize: "medium", order: 2  },
+    { name: "Siamese",              defaultSize: "medium", order: 3  },
+    { name: "Maine Coon",           defaultSize: "large",  order: 4  },
+    { name: "British Shorthair",    defaultSize: "medium", order: 5  },
+    { name: "Scottish Fold",        defaultSize: "medium", order: 6  },
+    { name: "Ragdoll",              defaultSize: "large",  order: 7  },
+    { name: "Domestic Shorthair",   defaultSize: "medium", order: 8  },
+    { name: "Domestic Longhair",    defaultSize: "medium", order: 9  },
+    { name: "Local Cat",            defaultSize: "medium", aliasNames: ["Deshi Cat", "Indigenous Cat"], order: 10 },
+    { name: "Abyssinian",           defaultSize: "medium", order: 11 },
+    { name: "Sphynx",               defaultSize: "medium", order: 12 },
+    { name: "Russian Blue",         defaultSize: "medium", order: 13 },
+    { name: "Burmese",              defaultSize: "medium", order: 14 },
+    { name: "Himalayan",            defaultSize: "medium", order: 15 },
+    { name: "American Shorthair",   defaultSize: "medium", order: 16 },
+    { name: "Exotic Shorthair",     defaultSize: "medium", order: 17 },
+    { name: "Norwegian Forest Cat", defaultSize: "large",  order: 18 },
+    { name: "Turkish Angora",       defaultSize: "medium", order: 19 },
+    { name: "Birman",               defaultSize: "medium", order: 20 },
+    { name: "Tonkinese",            defaultSize: "medium", order: 21 },
+    { name: "Savannah",             defaultSize: "large",  order: 22 },
+    { name: "Devon Rex",            defaultSize: "small",  order: 23 },
+    { name: "Cornish Rex",          defaultSize: "small",  order: 24 },
+    { name: "Mixed Breed",          isMixed: true, defaultSize: "medium", order: 98 },
+    { name: "Other",                isOther: true,                        order: 99 },
+  ]);
+
+  // Bird breeds (under the unified "Bird" type)
+  await upsertBreeds(typeIds.bird, [
+    { name: "Budgerigar",  aliasNames: ["Budgie", "Parakeet"], order: 1 },
+    { name: "Cockatiel",                                        order: 2 },
+    { name: "Lovebird",                                         order: 3 },
+    { name: "Parrot",      aliasNames: ["African Grey"],        order: 4 },
+    { name: "Macaw",                                            order: 5 },
+    { name: "Canary",                                           order: 6 },
+    { name: "Finch",                                            order: 7 },
+    { name: "Pigeon",      aliasNames: ["Racing Pigeon"],       order: 8 },
+    { name: "Dove",                                             order: 9 },
+    { name: "Cockatoo",                                         order: 10 },
+    { name: "Conure",                                           order: 11 },
+    { name: "Other",       isOther: true,                       order: 99 },
+  ]);
+
+  // Rabbit breeds
+  await upsertBreeds(typeIds.rabbit, [
+    { name: "Holland Lop",       order: 1  },
+    { name: "Netherland Dwarf",  order: 2  },
+    { name: "Lionhead",          order: 3  },
+    { name: "Mini Rex",          order: 4  },
+    { name: "Angora",            order: 5  },
+    { name: "Flemish Giant",     order: 6  },
+    { name: "Dutch",             order: 7  },
+    { name: "Rex",               order: 8  },
+    { name: "New Zealand",       order: 9  },
+    { name: "Local Rabbit",      aliasNames: ["Deshi Rabbit", "Indigenous Rabbit"], order: 10 },
+    { name: "Mixed Breed",       isMixed: true, order: 98 },
+    { name: "Other",             isOther: true, order: 99 },
+  ]);
+
+  // Hamster breeds
+  await upsertBreeds(typeIds.hamster, [
+    { name: "Syrian",          aliasNames: ["Golden Hamster"], order: 1 },
+    { name: "Dwarf Campbell",  order: 2 },
+    { name: "Roborovski",      aliasNames: ["Robo Dwarf"],     order: 3 },
+    { name: "Winter White",    aliasNames: ["Djungarian"],     order: 4 },
+    { name: "Chinese Hamster", order: 5 },
+    { name: "Other",           isOther: true,                  order: 99 },
+  ]);
+
+  // Guinea Pig breeds
+  await upsertBreeds(typeIds.guinea_pig, [
+    { name: "American",   order: 1 },
+    { name: "Abyssinian", order: 2 },
+    { name: "Peruvian",   order: 3 },
+    { name: "Teddy",      order: 4 },
+    { name: "Silkie",     order: 5 },
+    { name: "Other",      isOther: true, order: 99 },
+  ]);
+
+  // Fish breeds
+  await upsertBreeds(typeIds.fish, [
+    { name: "Goldfish",   order: 1  },
+    { name: "Betta",      aliasNames: ["Fighting Fish", "Siamese Fighting Fish"], order: 2 },
+    { name: "Guppy",      order: 3  },
+    { name: "Molly",      order: 4  },
+    { name: "Platy",      order: 5  },
+    { name: "Angelfish",  order: 6  },
+    { name: "Koi",        order: 7  },
+    { name: "Oscar",      order: 8  },
+    { name: "Neon Tetra", order: 9  },
+    { name: "Flowerhorn", order: 10 },
+    { name: "Arowana",    order: 11 },
+    { name: "Other",      isOther: true, order: 99 },
+  ]);
+
+  // Turtle breeds
+  await upsertBreeds(typeIds.turtle, [
+    { name: "Red-eared Slider",    order: 1 },
+    { name: "Indian Roofed Turtle",order: 2 },
+    { name: "Box Turtle",          order: 3 },
+    { name: "Painted Turtle",      order: 4 },
+    { name: "Map Turtle",          order: 5 },
+    { name: "Other",               isOther: true, order: 99 },
+  ]);
+
+  // Reptile breeds (general reptile type — excludes Snake which has its own legacy type)
+  await upsertBreeds(typeIds.reptile, [
+    { name: "Leopard Gecko",   order: 1 },
+    { name: "Bearded Dragon",  order: 2 },
+    { name: "Iguana",          order: 3 },
+    { name: "Ball Python",     order: 4 },
+    { name: "Corn Snake",      order: 5 },
+    { name: "Blue-tongued Skink", order: 6 },
+    { name: "Chameleon",       order: 7 },
+    { name: "Monitor Lizard",  order: 8 },
+    { name: "Other",           isOther: true, order: 99 },
+  ]);
+
+  // Other
+  await upsertBreeds(typeIds.other, [
+    { name: "Mixed", isMixed: true, order: 1 },
+    { name: "Other", isOther: true, order: 2 },
+  ]);
+
+  // Legacy breed stubs for legacy animal types (ensures FK-safe base data)
+  const legacyParrotBreeds: BreedDef[] = [
+    { name: "Cockatiel" }, { name: "Budgerigar" }, { name: "African Grey" },
+    { name: "Macaw" }, { name: "Lovebird" }, { name: "Conure" },
+    { name: "Parakeet" }, { name: "Canary" }, { name: "Finch" },
+    { name: "Mixed", isMixed: true }, { name: "Other", isOther: true },
   ];
-  const catBreeds: { name: string; defaultSize?: string; isMixed?: boolean; isOther?: boolean }[] = [
-    { name: "Siamese", defaultSize: "medium" },
-    { name: "Persian", defaultSize: "medium" },
-    { name: "Maine Coon", defaultSize: "large" },
-    { name: "Ragdoll", defaultSize: "large" },
-    { name: "British Shorthair", defaultSize: "medium" },
-    { name: "Bengal", defaultSize: "medium" },
-    { name: "Abyssinian", defaultSize: "medium" },
-    { name: "Sphynx", defaultSize: "medium" },
-    { name: "Scottish Fold", defaultSize: "medium" },
-    { name: "Russian Blue", defaultSize: "medium" },
-    { name: "Birman", defaultSize: "medium" },
-    { name: "Oriental", defaultSize: "medium" },
-    { name: "Tonkinese", defaultSize: "medium" },
-    { name: "Burmese", defaultSize: "medium" },
-    { name: "Himalayan", defaultSize: "medium" },
-    { name: "Manx", defaultSize: "medium" },
-    { name: "American Shorthair", defaultSize: "medium" },
-    { name: "Exotic Shorthair", defaultSize: "medium" },
-    { name: "Devon Rex", defaultSize: "small" },
-    { name: "Cornish Rex", defaultSize: "small" },
-    { name: "Turkish Angora", defaultSize: "medium" },
-    { name: "Norwegian Forest Cat", defaultSize: "large" },
-    { name: "Savannah", defaultSize: "large" },
-    { name: "Egyptian Mau", defaultSize: "medium" },
-    { name: "Ocicat", defaultSize: "medium" },
-    { name: "Chartreux", defaultSize: "medium" },
-    { name: "Bombay", defaultSize: "medium" },
-    { name: "Somali", defaultSize: "medium" },
-    { name: "Mixed", isMixed: true, defaultSize: "medium" },
-    { name: "Other", isOther: true },
-  ];
-  const rabbitBreeds: { name: string }[] = [
-    "Dutch", "Lop", "Rex", "Mini Lop", "Lionhead", "Angora", "Flemish Giant", "Dwarf", "Himalayan", "New Zealand", "Mixed", "Other",
-  ].map((n) => ({ name: n }));
-  const parrotBreeds: { name: string }[] = [
-    "Cockatiel", "Budgerigar", "African Grey", "Macaw", "Lovebird", "Conure", "Cockatoo", "Parakeet", "Canary", "Finch", "Mixed", "Other",
-  ].map((n) => ({ name: n }));
-  const pigeonBreeds: { name: string }[] = ["Racing", "Fantail", "Mixed", "Other"].map((n) => ({ name: n }));
-  const budgerigarBreeds: { name: string }[] = ["English", "American", "Mixed", "Other"].map((n) => ({ name: n }));
-  const otherTypeBreeds = [{ name: "Mixed" }, { name: "Other" }];
+  await upsertBreeds(typeIds.parrot, legacyParrotBreeds);
 
-  const dogId = typeIds.dog;
-  const catId = typeIds.cat;
-  const rabbitId = typeIds.rabbit;
-  const parrotId = typeIds.parrot;
-  const pigeonId = typeIds.pigeon;
-  const budgerigarId = typeIds.budgerigar;
-  const otherId = typeIds.other;
+  await upsertBreeds(typeIds.pigeon, [
+    { name: "Racing" }, { name: "Fantail" }, { name: "Mixed", isMixed: true }, { name: "Other", isOther: true },
+  ]);
 
-  for (const b of dogBreeds) {
-    await db.breed.upsert({
-      where: { name_animalTypeId: { name: b.name, animalTypeId: dogId } },
-      update: {
-        aliasNames: b.aliasNames ? (b.aliasNames as Prisma.InputJsonValue) : undefined,
-        defaultSizeId: b.defaultSize ? sizeIds[b.defaultSize] : null,
-        isMixed: b.isMixed ?? false,
-        isOther: b.isOther ?? false,
-        displayOrder: 0,
-        isActive: true,
-      },
-      create: {
-        name: b.name,
-        animalTypeId: dogId,
-        aliasNames: b.aliasNames ? (b.aliasNames as Prisma.InputJsonValue) : null,
-        defaultSizeId: b.defaultSize ? sizeIds[b.defaultSize] : null,
-        isMixed: b.isMixed ?? false,
-        isOther: b.isOther ?? false,
-        displayOrder: 0,
-        isActive: true,
-      },
-    });
-  }
-  for (const b of catBreeds) {
-    await db.breed.upsert({
-      where: { name_animalTypeId: { name: b.name, animalTypeId: catId } },
-      update: {
-        defaultSizeId: b.defaultSize ? sizeIds[b.defaultSize] : null,
-        isMixed: b.isMixed ?? false,
-        isOther: b.isOther ?? false,
-        displayOrder: 0,
-        isActive: true,
-      },
-      create: {
-        name: b.name,
-        animalTypeId: catId,
-        defaultSizeId: b.defaultSize ? sizeIds[b.defaultSize] : null,
-        isMixed: b.isMixed ?? false,
-        isOther: b.isOther ?? false,
-        displayOrder: 0,
-        isActive: true,
-      },
-    });
-  }
-  for (const b of rabbitBreeds) {
-    await db.breed.upsert({
-      where: { name_animalTypeId: { name: b.name, animalTypeId: rabbitId } },
-      update: {},
-      create: { name: b.name, animalTypeId: rabbitId },
-    });
-  }
-  for (const b of parrotBreeds) {
-    await db.breed.upsert({
-      where: { name_animalTypeId: { name: b.name, animalTypeId: parrotId } },
-      update: {},
-      create: { name: b.name, animalTypeId: parrotId },
-    });
-  }
-  for (const b of pigeonBreeds) {
-    await db.breed.upsert({
-      where: { name_animalTypeId: { name: b.name, animalTypeId: pigeonId } },
-      update: {},
-      create: { name: b.name, animalTypeId: pigeonId },
-    });
-  }
-  for (const b of budgerigarBreeds) {
-    await db.breed.upsert({
-      where: { name_animalTypeId: { name: b.name, animalTypeId: budgerigarId } },
-      update: {},
-      create: { name: b.name, animalTypeId: budgerigarId },
-    });
-  }
-  for (const b of otherTypeBreeds) {
-    await db.breed.upsert({
-      where: { name_animalTypeId: { name: b.name, animalTypeId: otherId } },
-      update: {},
-      create: { name: b.name, animalTypeId: otherId },
-    });
-  }
+  await upsertBreeds(typeIds.budgerigar, [
+    { name: "English" }, { name: "American" }, { name: "Mixed", isMixed: true }, { name: "Other", isOther: true },
+  ]);
 
-  // 6.1) Ensure "Local / Indigenous" breed exists for every animal type (mandatory)
+  await upsertBreeds(typeIds.snake, [
+    { name: "Ball Python" }, { name: "Corn Snake" }, { name: "King Snake" },
+    { name: "Boa Constrictor" }, { name: "Other", isOther: true },
+  ]);
+
+  // ── 7) Ensure "Local / Indigenous" breed exists for every active animal type ──
   const allTypes = await db.animalType.findMany({ select: { id: true, name: true } });
   const aliasJson = LOCAL_INDIGENOUS_ALIAS_NAMES as Prisma.InputJsonValue;
   for (const at of allTypes) {
@@ -362,70 +402,58 @@ export default async function seedAnimalTaxonomy(prisma: PrismaClient) {
     }
     await db.breed.create({
       data: {
-        name: LOCAL_INDIGENOUS_BREED_NAME,
+        name:         LOCAL_INDIGENOUS_BREED_NAME,
         animalTypeId: at.id,
-        aliasNames: aliasJson,
+        aliasNames:   aliasJson,
         displayOrder: 0,
-        isActive: true,
+        isActive:     true,
       },
     });
   }
 
-  // 7) Sub-breeds (for breeds that have varieties)
-  const gsBreed = await db.breed.findUnique({ where: { name_animalTypeId: { name: "German Shepherd", animalTypeId: dogId } } });
-  const persianBreed = await db.breed.findUnique({ where: { name_animalTypeId: { name: "Persian", animalTypeId: catId } } });
-  const lopBreed = await db.breed.findUnique({ where: { name_animalTypeId: { name: "Lop", animalTypeId: rabbitId } } });
-
+  // ── 8) Sub-breeds (minimal — only for legacy compatibility, no new ones added) ──
+  const gsBreed = await db.breed.findUnique({
+    where: { name_animalTypeId: { name: "German Shepherd", animalTypeId: typeIds.dog } },
+  });
   if (gsBreed) {
-    for (const sub of [{ code: "working_line", name: "Working Line" }, { code: "show_line", name: "Show Line" }]) {
+    for (const sub of [
+      { code: "working_line", name: "Working Line" },
+      { code: "show_line",    name: "Show Line"    },
+    ]) {
       await db.subBreed.upsert({
-        where: { breedId_code: { breedId: gsBreed.id, code: sub.code } },
+        where:  { breedId_code: { breedId: gsBreed.id, code: sub.code } },
         update: { name: sub.name },
         create: { breedId: gsBreed.id, code: sub.code, name: sub.name },
       });
     }
   }
+
+  const persianBreed = await db.breed.findUnique({
+    where: { name_animalTypeId: { name: "Persian", animalTypeId: typeIds.cat } },
+  });
   if (persianBreed) {
-    for (const sub of [{ code: "doll_face", name: "Doll Face" }, { code: "peke_face", name: "Peke Face" }]) {
+    for (const sub of [
+      { code: "doll_face", name: "Doll Face" },
+      { code: "peke_face", name: "Peke Face" },
+    ]) {
       await db.subBreed.upsert({
-        where: { breedId_code: { breedId: persianBreed.id, code: sub.code } },
+        where:  { breedId_code: { breedId: persianBreed.id, code: sub.code } },
         update: { name: sub.name },
         create: { breedId: persianBreed.id, code: sub.code, name: sub.name },
       });
     }
   }
-  // Budgerigar (breed under Parrot type) has sub-breeds English / American
-  const budgieBreedUnderParrot = await db.breed.findFirst({ where: { name: "Budgerigar", animalTypeId: parrotId } });
-  if (budgieBreedUnderParrot) {
-    for (const sub of [{ code: "english", name: "English" }, { code: "american", name: "American" }]) {
-      await db.subBreed.upsert({
-        where: { breedId_code: { breedId: budgieBreedUnderParrot.id, code: sub.code } },
-        update: { name: sub.name },
-        create: { breedId: budgieBreedUnderParrot.id, code: sub.code, name: sub.name },
-      });
-    }
-  }
-  if (lopBreed) {
-    for (const sub of [{ code: "mini_lop", name: "Mini Lop" }, { code: "standard", name: "Standard" }]) {
-      await db.subBreed.upsert({
-        where: { breedId_code: { breedId: lopBreed.id, code: sub.code } },
-        update: { name: sub.name },
-        create: { breedId: lopBreed.id, code: sub.code, name: sub.name },
-      });
-    }
-  }
 
-  console.log("Enterprise animal taxonomy seeded.");
+  console.log("✅ Enterprise animal taxonomy seeded.");
 }
 
 /**
  * Ensures the mandatory "Local / Indigenous" breed exists for the given animal type.
- * Call this when creating a new animal type (e.g. admin create-animal-type flow) so the type
- * always has this default breed option.
+ * Call this when creating a new animal type so it always has this default breed option.
  */
 export async function ensureLocalIndigenousBreedForType(
   prisma: PrismaClient,
-  animalTypeId: number
+  animalTypeId: number,
 ): Promise<void> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const db = prisma as any;
@@ -453,11 +481,11 @@ export async function ensureLocalIndigenousBreedForType(
   }
   await db.breed.create({
     data: {
-      name: LOCAL_INDIGENOUS_BREED_NAME,
+      name:         LOCAL_INDIGENOUS_BREED_NAME,
       animalTypeId,
-      aliasNames: aliasJson,
+      aliasNames:   aliasJson,
       displayOrder: 0,
-      isActive: true,
+      isActive:     true,
     },
   });
 }

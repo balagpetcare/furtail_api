@@ -9,11 +9,13 @@ export default async function seedInboundReceiveQaFixtures(prisma: PrismaClient)
     return;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const db = prisma as any;
   const [orgCount, transitTransfers, transitDispatches, packedDispatches] = await Promise.all([
     prisma.organization.count(),
-    prisma.stockTransfer.count({ where: { status: { in: ["SENT", "IN_TRANSIT"] } } }),
-    prisma.stockDispatch.count({ where: { status: "IN_TRANSIT" } }),
-    prisma.stockDispatch.count({ where: { status: "PACKED" } }),
+    db.stockTransfer.count({ where: { status: { in: ["SENT", "IN_TRANSIT"] } } }),
+    db.stockDispatch.count({ where: { status: "IN_TRANSIT" } }),
+    db.stockDispatch.count({ where: { status: "PACKED" } }),
   ]);
 
   console.log(

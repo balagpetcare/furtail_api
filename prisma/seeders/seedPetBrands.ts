@@ -5,6 +5,9 @@ import { PrismaClient } from "@prisma/client";
  * This includes popular pet food, toy, and care product brands
  */
 export default async function seedPetBrands(prisma: PrismaClient) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const db = prisma as any;
+  if (!db.brand) { console.warn("⚠️  seedPetBrands: Brand model not found — skipping."); return; }
   console.log("🌱 Seeding Pet Brands...");
 
   // Pet food brands
@@ -130,12 +133,12 @@ export default async function seedPetBrands(prisma: PrismaClient) {
       .replace(/^-+|-+$/g, "");
 
     try {
-      const existing = await prisma.brand.findUnique({
+      const existing = await db.brand.findUnique({
         where: { slug },
       });
 
       if (!existing) {
-        await prisma.brand.create({
+        await db.brand.create({
           data: {
             name: brandName,
             slug,

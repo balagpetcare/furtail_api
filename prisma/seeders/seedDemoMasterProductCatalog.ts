@@ -5,10 +5,16 @@ import { PrismaClient } from "@prisma/client";
  * Uses existing brands and categories. Run after seedPetBrands, seedPetCategories, seedMasterProductCatalog.
  */
 export default async function seedDemoMasterProductCatalog(prisma: PrismaClient) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const db = prisma as any;
+  if (!db.brand || !db.category) {
+    console.warn("⚠️  seedDemoMasterProductCatalog: product catalog models not found — skipping.");
+    return;
+  }
   console.log("🌱 Seeding Demo Master Product Catalog (~200 products)...");
 
-  const brands = await prisma.brand.findMany();
-  const categories = await prisma.category.findMany();
+  const brands = await db.brand.findMany();
+  const categories = await db.category.findMany();
 
   const brandMap: Record<string, number> = {};
   brands.forEach((b) => {
@@ -153,7 +159,7 @@ export default async function seedDemoMasterProductCatalog(prisma: PrismaClient)
       continue;
     }
 
-    const existing = await prisma.masterProductCatalog.findUnique({
+    const existing = await db.masterProductCatalog.findUnique({
       where: { slug },
     });
     if (existing) {
@@ -176,7 +182,7 @@ export default async function seedDemoMasterProductCatalog(prisma: PrismaClient)
     }));
 
     try {
-      await prisma.masterProductCatalog.create({
+      await db.masterProductCatalog.create({
         data: {
           name,
           slug,

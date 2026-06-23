@@ -6,6 +6,9 @@ import { PrismaClient } from "@prisma/client";
  * This seeder works with categories that already exist in the database
  */
 export default async function seedProductSubcategories(prisma: PrismaClient) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const db = prisma as any;
+  if (!db.category) { console.warn("⚠️  seedProductSubcategories: Category model not found — skipping."); return; }
   console.log("🌱 Seeding Product Subcategories...");
 
   // Subcategory mapping: parent category slug -> array of subcategories
@@ -176,7 +179,7 @@ export default async function seedProductSubcategories(prisma: PrismaClient) {
   // Process each parent category
   for (const [parentSlug, subcategories] of Object.entries(subcategoryMap)) {
     // Find the parent category
-    const parentCategory = await prisma.category.findFirst({
+    const parentCategory = await db.category.findFirst({
       where: {
         slug: parentSlug,
         parentId: null, // Only top-level categories
@@ -193,7 +196,7 @@ export default async function seedProductSubcategories(prisma: PrismaClient) {
 
     // Create subcategories for this parent
     for (const subcat of subcategories) {
-      const existing = await prisma.category.findFirst({
+      const existing = await db.category.findFirst({
         where: {
           slug: subcat.slug,
           parentId: parentCategory.id,
@@ -201,7 +204,7 @@ export default async function seedProductSubcategories(prisma: PrismaClient) {
       });
 
       if (!existing) {
-        await prisma.category.create({
+        await db.category.create({
           data: {
             name: subcat.name,
             slug: subcat.slug,

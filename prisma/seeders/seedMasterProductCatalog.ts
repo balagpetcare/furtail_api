@@ -5,13 +5,19 @@ import { PrismaClient } from "@prisma/client";
  * Populates global catalog with popular pet food products from worldwide brands
  */
 export default async function seedMasterProductCatalog(prisma: PrismaClient) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const db = prisma as any;
+  if (!db.brand || !db.category || !db.masterProductCatalog) {
+    console.warn("⚠️  seedMasterProductCatalog: product catalog models not found — skipping.");
+    return;
+  }
   console.log("🌱 Seeding Master Product Catalog...");
 
   // Get existing brands, categories, units, and flavors
-  const brands = await prisma.brand.findMany();
-  const categories = await prisma.category.findMany();
-  const units = await prisma.unit.findMany();
-  const flavors = await prisma.flavor.findMany();
+  const brands = await db.brand.findMany();
+  const categories = await db.category.findMany();
+  const units = await db.unit.findMany();
+  const flavors = await db.flavor.findMany();
 
   // Create lookup maps
   const brandMap: Record<string, number> = {};
@@ -424,7 +430,7 @@ export default async function seedMasterProductCatalog(prisma: PrismaClient) {
       const slug = slugify(productData.name);
 
       // Check if product already exists
-      const existing = await prisma.masterProductCatalog.findUnique({
+      const existing = await db.masterProductCatalog.findUnique({
         where: { slug },
       });
 
@@ -449,7 +455,7 @@ export default async function seedMasterProductCatalog(prisma: PrismaClient) {
       });
 
       // Create master product
-      await prisma.masterProductCatalog.create({
+      await db.masterProductCatalog.create({
         data: {
           name: productData.name,
           slug: slug,
