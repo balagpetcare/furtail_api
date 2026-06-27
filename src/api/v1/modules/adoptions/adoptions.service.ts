@@ -1077,6 +1077,208 @@ export async function adminUpdateCountryRule(params: { id: number; body: any; re
   return row;
 }
 
+export async function getApplicationsForListing(params: {
+  id: number;
+  userId: number;
+  isAdmin: boolean;
+  query: any;
+}) {
+  const page = Math.max(Number(params.query.page) || 1, 1);
+  const limit = Math.min(Math.max(Number(params.query.limit) || 20, 1), 100);
+
+  const listing = await prisma.adoptionPet.findUnique({
+    where: { id: params.id },
+    select: { ownerId: true },
+  });
+
+  if (!listing) {
+    throw createHttpError(404, "Adoption listing not found");
+  }
+
+  if (listing.ownerId !== params.userId && !params.isAdmin) {
+    throw createHttpError(403, "Forbidden");
+  }
+
+  const where: any = {
+    petId: params.id,
+    deletedAt: null,
+  };
+  if (params.query.status) {
+    where.status = params.query.status;
+  }
+
+  const [items, total] = await Promise.all([
+    prisma.adoptionApplication.findMany({
+      where,
+      include: {
+        applicant: {
+          select: {
+            id: true,
+            profile: {
+              select: {
+                displayName: true,
+                username: true,
+                avatarMedia: {
+                  select: {
+                    id: true,
+                    url: true,
+                    thumbnailUrl: true,
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * limit,
+      take: limit,
+    }),
+    prisma.adoptionApplication.count({ where }),
+  ]);
+
+  return {
+    items,
+    meta: toPagination(page, limit, total),
+  };
+}
+
+export async function getApplicationDetail(params: {
+  applicationId: number;
+  userId: number;
+  isAdmin: boolean;
+}) {
+  const application = await prisma.adoptionApplication.findUnique({
+    where: { id: params.applicationId },
+    include: {
+      applicant: {
+        select: {
+          id: true,
+          profile: {
+            select: {
+              displayName: true,
+              username: true,
+              avatarMedia: {
+                select: {
+                  id: true,
+                  url: true,
+                  thumbnailUrl: true,
+                }
+              }
+            }
+          }
+        }
+      },
+      pet: {
+        include: {
+          media: {
+            orderBy: { order: "asc" },
+            take: 1,
+            include: {
+              media: {
+                select: {
+                  id: true,
+                  url: true,
+                  thumbnailUrl: true,
+                  type: true,
+                }
+              }
+            }
+          }
+        }
+      },
+      answers: true,
+    }
+  });
+
+  if (!application || application.deletedAt) {
+    throw createHttpError(404, "Adoption application not found");
+  }
+
+  const isApplicant = application.applicantId === params.userId;
+  const isOwner = application.pet.ownerId === params.userId;
+
+  if (!isApplicant && !isOwner && !params.isAdmin) {
+    throw createHttpError(403, "Forbidden");
+  }
+
+  return application;
+}
+
+export async function updateApplicationStatus(params: {
+  applicationId: number;
+  userId: number;
+  isAdmin: boolean;
+  status: string;
+  note?: string;
+  req?: any;
+}) {
+  const application = await prisma.adoptionApplication.findUnique({
+    where: { id: params.applicationId },
+    include: {
+      pet: {
+        select: {
+          ownerId: true,
+          name: true,
+        }
+      }
+    }
+  });
+
+  if (!application || application.deletedAt) {
+    throw createHttpError(404, "Adoption application not found");
+  }
+
+  const isOwner = application.pet.ownerId === params.userId;
+  if (!isOwner && !params.isAdmin) {
+    throw createHttpError(403, "Forbidden");
+  }
+
+  if (application.applicantId === params.userId) {
+    throw createHttpError(400, "You cannot review your own application");
+  }
+
+  const updated = await prisma.adoptionApplication.update({
+    where: { id: params.applicationId },
+    data: {
+      status: params.status,
+    }
+  });
+
+  try {
+    await writeAudit({
+      prisma,
+      req: params.req,
+      action: "ADOPTION_APPLICATION_STATUS_UPDATE",
+      entityType: "ADOPTION_APPLICATION",
+      entityId: application.id,
+      before: { status: application.status },
+      after: { status: updated.status },
+    });
+  } catch (e) {
+    console.error("Audit log failed (ignored):", e);
+  }
+
+  try {
+    await createNotification({
+      userId: application.applicantId,
+      type: "SYSTEM",
+      title: "Adoption Application Update",
+      message: `Your application to adopt ${application.pet.name} has been updated to ${params.status}.`,
+      meta: {
+        applicationId: application.id,
+        status: params.status,
+        note: params.note || null,
+      }
+    });
+  } catch (e) {
+    console.error("Notification failed (ignored):", e);
+  }
+
+
+  return updated;
+}
+
 module.exports = {
   listPublicAdoptions,
   getAdoptionById,
@@ -1098,4 +1300,8 @@ module.exports = {
   adminListCountryRules,
   adminCreateCountryRule,
   adminUpdateCountryRule,
+  getApplicationsForListing,
+  getApplicationDetail,
+  updateApplicationStatus,
 };
+

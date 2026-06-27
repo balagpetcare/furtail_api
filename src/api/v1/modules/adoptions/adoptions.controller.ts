@@ -5,7 +5,9 @@ const {
   createAdoptionSchema,
   updateAdoptionSchema,
   applyAdoptionSchema,
+  applicationStatusUpdateSchema,
 } = require("./adoptions.dto");
+const { z } = require("zod");
 
 function validationError(res: any, result: any) {
   const first = result?.error?.errors?.[0];
@@ -178,6 +180,85 @@ exports.listMyApplications = async (req: any, res: any) => {
   }
 };
 
+exports.listApplications = async (req: any, res: any) => {
+  try {
+    const userId = Number(req.user?.id || 0);
+    if (!userId) return res.status(401).json({ success: false, message: "Unauthorized" });
+
+    const paramsParsed = adoptionIdParamSchema.safeParse(req.params || {});
+    if (!paramsParsed.success) return validationError(res, paramsParsed);
+
+    const queryParsed = adoptionListQuerySchema.safeParse(req.query || {});
+    if (!queryParsed.success) return validationError(res, queryParsed);
+
+    const isAdmin = Boolean(req.user?.role === "ADMIN" || req.user?.perms?.includes("adoption.read"));
+
+    const data = await service.getApplicationsForListing({
+      id: paramsParsed.data.id,
+      userId,
+      isAdmin,
+      query: queryParsed.data,
+    });
+
+    return res.status(200).json({ success: true, data: data.items, meta: data.meta });
+  } catch (e: any) {
+    const status = e?.statusCode || 500;
+    return res.status(status).json({ success: false, message: e?.message || "Failed to load applications" });
+  }
+};
+
+exports.getApplicationDetail = async (req: any, res: any) => {
+  try {
+    const userId = Number(req.user?.id || 0);
+    if (!userId) return res.status(401).json({ success: false, message: "Unauthorized" });
+
+    const paramsParsed = z.object({ applicationId: z.coerce.number().int().positive() }).safeParse(req.params || {});
+    if (!paramsParsed.success) return validationError(res, paramsParsed);
+
+    const isAdmin = Boolean(req.user?.role === "ADMIN" || req.user?.perms?.includes("adoption.read"));
+
+    const data = await service.getApplicationDetail({
+      applicationId: paramsParsed.data.applicationId,
+      userId,
+      isAdmin,
+    });
+
+    return res.status(200).json({ success: true, data });
+  } catch (e: any) {
+    const status = e?.statusCode || 500;
+    return res.status(status).json({ success: false, message: e?.message || "Failed to load application detail" });
+  }
+};
+
+exports.updateApplicationStatus = async (req: any, res: any) => {
+  try {
+    const userId = Number(req.user?.id || 0);
+    if (!userId) return res.status(401).json({ success: false, message: "Unauthorized" });
+
+    const paramsParsed = z.object({ applicationId: z.coerce.number().int().positive() }).safeParse(req.params || {});
+    if (!paramsParsed.success) return validationError(res, paramsParsed);
+
+    const bodyParsed = applicationStatusUpdateSchema.safeParse(req.body || {});
+    if (!bodyParsed.success) return validationError(res, bodyParsed);
+
+    const isAdmin = Boolean(req.user?.role === "ADMIN" || req.user?.perms?.includes("adoption.review"));
+
+    const data = await service.updateApplicationStatus({
+      applicationId: paramsParsed.data.applicationId,
+      userId,
+      isAdmin,
+      status: bodyParsed.data.status,
+      note: bodyParsed.data.note,
+      req,
+    });
+
+    return res.status(200).json({ success: true, data });
+  } catch (e: any) {
+    const status = e?.statusCode || 500;
+    return res.status(status).json({ success: false, message: e?.message || "Failed to update application status" });
+  }
+};
+
 module.exports = {
   listPublic: exports.listPublic,
   getById: exports.getById,
@@ -187,4 +268,8 @@ module.exports = {
   apply: exports.apply,
   listMine: exports.listMine,
   listMyApplications: exports.listMyApplications,
+  listApplications: exports.listApplications,
+  getApplicationDetail: exports.getApplicationDetail,
+  updateApplicationStatus: exports.updateApplicationStatus,
 };
+
