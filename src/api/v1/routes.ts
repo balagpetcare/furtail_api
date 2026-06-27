@@ -62,7 +62,13 @@ mountWith503("/payments/eps", "./modules/payment/eps/eps.routes");
 // Campaign linking — authenticated user bookings, certificates, vaccinations
 router.use("/campaign-link", require("./modules/campaign/campaignLink.routes").default);
 
+
 // ── Social feed & Fundraising ─────────────────────────────────────────────────
+const adoptionRoutes = require("./modules/adoptions/adoptions.routes");
+const adminAdoptionRoutes = require("./modules/adoptions/adoptions.admin.routes");
+router.use("/adoptions", adoptionRoutes);
+router.use("/me", adoptionRoutes.meRouter);
+router.use("/admin", adminAdoptionRoutes);
 router.use("/posts", require("./modules/posts/posts.routes"));
 router.use("/fundraising", countryScopeGuard, require("./modules/fundraising/fundraising.routes"));
 
@@ -77,6 +83,8 @@ router.use('/webhooks', require('./modules/webhooks/payout_webhooks.routes'));
 router.use("/reports", require("./modules/reports/reports.routes"));
 // [REVIEW] Keep: achievements data is embedded in visitor profile responses.
 router.use("/achievements", require("./modules/achievements/achievements.routes"));
+
+
 
 module.exports = router;
 

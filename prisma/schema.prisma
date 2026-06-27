@@ -126,7 +126,7 @@ model UserAuth {
   lockedUntil       DateTime?
   createdAt         DateTime     @default(now())
   updatedAt         DateTime     @updatedAt
-  /// OIDC subject (e.g. Google "sub") Ã¢â‚¬â€ set for OAuth-linked accounts
+  /// OIDC subject (e.g. Google "sub") ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â set for OAuth-linked accounts
   oauthSubject      String?
   user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -310,74 +310,89 @@ model UserGalleryItem {
 }
 
 model User {
-  id                                      Int                                  @id @default(autoincrement())
-  status                                  UserStatus                           @default(ACTIVE)
-  createdAt                               DateTime                             @default(now())
-  updatedAt                               DateTime                             @updatedAt
-  currentPlaceId                          Int?
-  tokenVersion                            Int                                  @default(0)
-  appointmentsAsPatient                   Appointment[]                        @relation("AppointmentPatient")
-  branchMembersInvited                    BranchMember[]                       @relation("BranchMemberInvitedBy")
-  branchMemberships                       BranchMember[]
-  branchProfilesReviewed                  BranchProfileDetails[]               @relation("BranchKycReviewedBy")
-  donations                               Donation[]
-  fundraisingAccountStatusLogsAsAdmin     FundraisingAccountStatusLog[]        @relation("FundraisingAccountStatusLogAdminUser")
-  fundraisingAccount                      FundraisingAccount?
-  fundraisingWithdrawRequestsAsAdmin      FundraisingWithdrawRequest[]         @relation("FundraisingWithdrawAdminUser")
-  uploadedMedia                           Media[]                              @relation("UserUploadedMedia")
-  notificationReads                       NotificationRead[]
-  notificationsSent                       Notification[]                       @relation("NotificationSender")
-  notifications                           Notification[]
-  ordersCreated                           Order[]                              @relation("OrderCreatedBy")
-  ordersAsCustomer                        Order[]                              @relation("OrderCustomer")
-  orgLegalProfilesReviewed                OrganizationLegalProfile[]           @relation("OrgKycReviewedBy")
-  ownedOrganizations                      Organization[]
-  ownerKycReviewed                        OwnerKyc[]                           @relation("OwnerKycReviewedBy")
-  ownerKyc                                OwnerKyc?
-  ownerOnboardingState                    OwnerOnboardingState?
-  ownerProfile                            OwnerProfile?
-  pets                                    Pet[]
-  postCommentLikes                        PostCommentLike[]
-  postComments                            PostComment[]
-  postLikes                               PostLike[]
-  posts                                   Post[]
-  reports                                 Report[]                             @relation("UserReports")
-  rewardHistories                         RewardHistory[]
-  servicesCreated                         Service[]                            @relation("ServiceCreatedBy")
-  achievements                            UserAchievement[]
-  appSettings                             UserAppSettings?
-  auth                                    UserAuth?
-  followsFollowing                        UserFollow[]                         @relation("UserFollowing")
-  followsFollowers                        UserFollow[]                         @relation("UserFollowers")
-  friendRequestsSent                      UserFriendRequest[]                  @relation("FriendRequestFrom")
-  friendRequestsReceived                  UserFriendRequest[]                  @relation("FriendRequestTo")
-  friendsA                                UserFriend[]                         @relation("UserFriendA")
-  friendsB                                UserFriend[]                         @relation("UserFriendB")
-  galleryItems                            UserGalleryItem[]
-  locationEvents                          UserLocationEvent[]
-  locationProfile                         UserLocationProfile?
-  notificationPrefs                       UserNotificationPrefs?
-  profileLikesGiven                       UserProfileLike[]                    @relation("UserProfileLiker")
-  profileLikesReceived                    UserProfileLike[]                    @relation("UserProfileLiked")
-  profile                                 UserProfile?
-  sessions                                UserSession[]
-  stats                                   UserStatsCache?
-  wallet                                  UserWallet?
-  currentPlace                            Place?                               @relation(fields: [currentPlaceId], references: [id])
-  verificationCaseEventsAdmin             VerificationCaseEvent[]              @relation("VerificationCaseEventAdmin")
-  verificationCasesReviewed               VerificationCase[]                   @relation("VerificationCaseReviewedBy")
-  verificationDocsChecked                 VerificationDocument[]               @relation("VerificationDocCheckedBy")
-  verificationLockedAttempts              VerificationLockedUpdateAttempt[]
-  verificationLogsAsAdmin                 VerificationLog[]                    @relation("VerificationLogAdmin")
-  visitsAsPatient                         Visit[]                              @relation("VisitPatient")
-  walletWithdrawRequestsAsAdmin           WalletWithdrawRequest[]              @relation("WalletWithdrawAdminUser")
-  walletWithdrawRequests                  WalletWithdrawRequest[]
-  managedWarehouses                       Warehouse[]                          @relation("WarehouseManager")
+  id                                  Int                               @id @default(autoincrement())
+  status                              UserStatus                        @default(ACTIVE)
+  createdAt                           DateTime                          @default(now())
+  updatedAt                           DateTime                          @updatedAt
+  currentPlaceId                      Int?
+  tokenVersion                        Int                               @default(0)
+  appointmentsAsPatient               Appointment[]                     @relation("AppointmentPatient")
+  branchMembersInvited                BranchMember[]                    @relation("BranchMemberInvitedBy")
+  branchMemberships                   BranchMember[]
+  branchProfilesReviewed              BranchProfileDetails[]            @relation("BranchKycReviewedBy")
+  donations                           Donation[]
+  fundraisingAccountStatusLogsAsAdmin FundraisingAccountStatusLog[]     @relation("FundraisingAccountStatusLogAdminUser")
+  fundraisingAccount                  FundraisingAccount?
+  fundraisingWithdrawRequestsAsAdmin  FundraisingWithdrawRequest[]      @relation("FundraisingWithdrawAdminUser")
+  uploadedMedia                       Media[]                           @relation("UserUploadedMedia")
+  notificationReads                   NotificationRead[]
+  notificationsSent                   Notification[]                    @relation("NotificationSender")
+  notifications                       Notification[]
+  deviceTokens                        UserDeviceToken[]
+  ordersCreated                       Order[]                           @relation("OrderCreatedBy")
+  ordersAsCustomer                    Order[]                           @relation("OrderCustomer")
+  orgLegalProfilesReviewed            OrganizationLegalProfile[]        @relation("OrgKycReviewedBy")
+  ownedOrganizations                  Organization[]
+  ownerKycReviewed                    OwnerKyc[]                        @relation("OwnerKycReviewedBy")
+  ownerKyc                            OwnerKyc?
+  ownerOnboardingState                OwnerOnboardingState?
+  ownerProfile                        OwnerProfile?
+  pets                                Pet[]
+  postCommentLikes                    PostCommentLike[]
+  postComments                        PostComment[]
+  postLikes                           PostLike[]
+  postBookmarks                       PostBookmark[]
+  posts                               Post[]
+  reports                             Report[]                          @relation("UserReports")
+  rewardHistories                     RewardHistory[]
+  servicesCreated                     Service[]                         @relation("ServiceCreatedBy")
+  achievements                        UserAchievement[]
+  appSettings                         UserAppSettings?
+  auth                                UserAuth?
+  followsFollowing                    UserFollow[]                      @relation("UserFollowing")
+  followsFollowers                    UserFollow[]                      @relation("UserFollowers")
+  friendRequestsSent                  UserFriendRequest[]               @relation("FriendRequestFrom")
+  friendRequestsReceived              UserFriendRequest[]               @relation("FriendRequestTo")
+  friendsA                            UserFriend[]                      @relation("UserFriendA")
+  friendsB                            UserFriend[]                      @relation("UserFriendB")
+  galleryItems                        UserGalleryItem[]
+  locationEvents                      UserLocationEvent[]
+  locationProfile                     UserLocationProfile?
+  notificationPrefs                   UserNotificationPrefs?
+  profileLikesGiven                   UserProfileLike[]                 @relation("UserProfileLiker")
+  profileLikesReceived                UserProfileLike[]                 @relation("UserProfileLiked")
+  profile                             UserProfile?
+  sessions                            UserSession[]
+  stats                               UserStatsCache?
+  wallet                              UserWallet?
+  currentPlace                        Place?                            @relation(fields: [currentPlaceId], references: [id])
+  verificationCaseEventsAdmin         VerificationCaseEvent[]           @relation("VerificationCaseEventAdmin")
+  verificationCasesReviewed           VerificationCase[]                @relation("VerificationCaseReviewedBy")
+  verificationDocsChecked             VerificationDocument[]            @relation("VerificationDocCheckedBy")
+  verificationLockedAttempts          VerificationLockedUpdateAttempt[]
+  verificationLogsAsAdmin             VerificationLog[]                 @relation("VerificationLogAdmin")
+  visitsAsPatient                     Visit[]                           @relation("VisitPatient")
+  walletWithdrawRequestsAsAdmin       WalletWithdrawRequest[]           @relation("WalletWithdrawAdminUser")
+  walletWithdrawRequests              WalletWithdrawRequest[]
+  managedWarehouses                   Warehouse[]                       @relation("WarehouseManager")
   // Campaign 2026 relations
-  campaignBookingsAsOwner                 CampaignBooking[]                    @relation("CampaignBookingOwner")
-  campaignBookingsCheckedIn               CampaignBooking[]                    @relation("CampaignBookingCheckedInBy")
-  campaignStaffAssignments                CampaignStaff[]                      @relation("CampaignStaffUser")
-  campaignAuditLogs                       CampaignAuditLog[]                   @relation("CampaignAuditLogActor")
+  campaignBookingsAsOwner             CampaignBooking[]                 @relation("CampaignBookingOwner")
+  campaignBookingsCheckedIn           CampaignBooking[]                 @relation("CampaignBookingCheckedInBy")
+  campaignStaffAssignments            CampaignStaff[]                   @relation("CampaignStaffUser")
+  campaignAuditLogs                   CampaignAuditLog[]                @relation("CampaignAuditLogActor")
+  // Pet social relations
+  petFollows                          PetFollow[]                       @relation("PetFollowUser")
+  petLikes                            PetLike[]                         @relation("PetLikeUser")
+  adoptionPets                        AdoptionPet[]                    @relation("AdoptionPetOwner")
+  adoptionApplications                AdoptionApplication[]            @relation("AdoptionApplicant")
+  adoptionListingsReceived            AdoptionApplication[]            @relation("AdoptionListingOwner")
+  adoptionFavorites                   AdoptionFavorite[]
+  adoptionStatusHistoryActions        AdoptionStatusHistory[]          @relation("AdoptionStatusActor")
+  adoptionReports                     AdoptionReport[]                 @relation("AdoptionReporter")
+  shelterProfiles                     ShelterProfile[]                 @relation("ShelterProfileOwner")
+  // Stories
+  stories                             Story[]
+  storyViews                          StoryView[]                       @relation("StoryViewViewer")
 
   @@map("users")
 }
@@ -561,10 +576,10 @@ model OwnerKycDocument {
 }
 
 model OrganizationLegalProfile {
-  id                     Int                    @id @default(autoincrement())
-  orgId                  Int                    @unique
+  id                     Int                @id @default(autoincrement())
+  orgId                  Int                @unique
   organizationName       String
-  registrationType       RegistrationType       @default(PROPRIETORSHIP)
+  registrationType       RegistrationType   @default(PROPRIETORSHIP)
   tradeLicenseNumber     String?
   tradeLicenseIssueDate  DateTime?
   tradeLicenseExpiryDate DateTime?
@@ -583,16 +598,16 @@ model OrganizationLegalProfile {
   payoutBkash            String?
   payoutNagad            String?
   payoutRocket           String?
-  verificationStatus     VerificationStatus     @default(UNSUBMITTED)
+  verificationStatus     VerificationStatus @default(UNSUBMITTED)
   submittedAt            DateTime?
   reviewedAt             DateTime?
   reviewedByAdminId      Int?
   reviewNote             String?
   rejectionReason        String?
-  createdAt              DateTime               @default(now())
-  updatedAt              DateTime               @updatedAt
-  organization           Organization           @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  reviewedByAdmin        User?                  @relation("OrgKycReviewedBy", fields: [reviewedByAdminId], references: [id])
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
+  organization           Organization       @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  reviewedByAdmin        User?              @relation("OrgKycReviewedBy", fields: [reviewedByAdminId], references: [id])
 
   @@index([verificationStatus])
   @@index([reviewedByAdminId])
@@ -804,6 +819,22 @@ model UserNotificationPrefs {
 
   @@map("user_notification_prefs")
 }
+model UserDeviceToken {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  token      String   @unique
+  platform   String   @db.VarChar(32)
+  deviceId   String?  @db.VarChar(255)
+  isActive   Boolean  @default(true)
+  lastSeenAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isActive])
+  @@index([platform])
+  @@map("user_device_tokens")
+}
 
 model UserAppSettings {
   id                 Int      @id @default(autoincrement())
@@ -845,9 +876,15 @@ model VerificationLockedUpdateAttempt {
 model Post {
   id                  Int                  @id @default(autoincrement())
   authorId            Int
+  petId               Int?
   type                PostType             @default(TEXT)
+  postType            ComposerPostType     @default(GENERAL)
   category            PostCategory         @default(GENERAL)
   caption             String?
+  backgroundStyle     String?
+  lostPetName         String?
+  lostPetLocation     String?
+  lostPetContactVisible Boolean             @default(false)
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
   deletedAt           DateTime?
@@ -855,10 +892,23 @@ model Post {
   fundraisingUpdate   FundraisingUpdate?
   comments            PostComment[]
   likes               PostLike[]
+  bookmarks           PostBookmark[]
   media               PostMedia[]
+  taggedPets          PostTaggedPet[]
   author              User                 @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  pet                 Pet?                 @relation(fields: [petId], references: [id], onDelete: SetNull)
+  privacy             PostPrivacy          @default(PUBLIC)
+  songTitle           String?
+  songArtist          String?
+  songStartMs         Int?
+  songDurationMs      Int?
+  feelingActivityId   Int?
+  feelingActivityType String?
+  feelingActivityLabel String?
+  feelingActivityEmoji String?
 
   @@index([authorId, createdAt])
+  @@index([petId, createdAt])
   @@map("posts")
 }
 
@@ -875,6 +925,39 @@ model PostMedia {
   @@map("post_media")
 }
 
+model FeelingActivity {
+  id            Int      @id @default(autoincrement())
+  type          String
+  category      String
+  labelEn       String
+  labelBn       String?
+  emoji         String
+  iconName      String?
+  sortOrder     Int      @default(0)
+  isActive      Boolean  @default(true)
+  isPetSpecific Boolean  @default(false)
+  usageCount    Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([type, isActive])
+  @@index([category, isActive])
+  @@map("feeling_activities")
+}
+
+model PostTaggedPet {
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  petId     Int
+  createdAt DateTime @default(now())
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  pet       Pet      @relation(fields: [petId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, petId])
+  @@index([petId])
+  @@map("post_tagged_pets")
+}
+
 model PostLike {
   id        Int      @id @default(autoincrement())
   postId    Int
@@ -886,6 +969,19 @@ model PostLike {
   @@unique([postId, userId], name: "postId_userId")
   @@index([userId])
   @@map("post_likes")
+}
+
+model PostBookmark {
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  userId    Int
+  createdAt DateTime @default(now())
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId], name: "postId_userId")
+  @@index([userId])
+  @@map("post_bookmarks")
 }
 
 model PostComment {
@@ -926,6 +1022,8 @@ model Media {
   id                               Int                               @id @default(autoincrement())
   url                              String
   key                              String?
+  hlsUrl                           String?
+  hlsKey                           String?
   type                             String
   createdAt                        DateTime                          @default(now())
   ownerUserId                      Int
@@ -934,15 +1032,29 @@ model Media {
   hash                             String?                           @unique
   mimeType                         String?
   sizeBytes                        Int?
+  status                           MediaStatus                       @default(READY)
+  processingError                  String?
+  thumbnailUrl                     String?
+  thumbnailKey                     String?
+  originalKey                      String?
+  trimStartMs                      Int?
+  trimEndMs                        Int?
+  mute                             Boolean?
+  volume                           Float?
+  coverTimestampMs                 Int?
+  aspectRatio                      String?
+  quality                          String?
   achievementIcons                 Achievement[]                     @relation("AchievementIcon")
   ads                              Ad[]
   fundraisingPayoutProofLogs       FundraisingPayoutTransferLog[]
   fundraisingVerificationDocuments FundraisingVerificationDocument[]
   owner                            User                              @relation("UserUploadedMedia", fields: [ownerUserId], references: [id], onDelete: Cascade)
   ownerKycDocuments                OwnerKycDocument[]
+  petCoverMedia                    Pet[]                             @relation("PetCoverMedia")
   petFamilyAvatars                 PetFamilyMember[]                 @relation("PetFamilyAvatar")
   petProfilePic                    Pet?                              @relation("PetProfilePic")
   postMedia                        PostMedia[]
+  adoptionPetMedia                 AdoptionPetMedia[]
   galleryItems                     UserGalleryItem[]                 @relation("UserGalleryMedia")
   userAvatars                      UserProfile[]                     @relation("UserAvatar")
   userCovers                       UserProfile[]                     @relation("UserCover")
@@ -990,16 +1102,30 @@ model Pet {
   customColorText          String?               @db.VarChar(128)
   /// Staff clinic: pet was registered at this branch (visibility before first appointment/visit).
   clinicRegisteredBranchId Int?
+  // â”€â”€ Social Profile / Page fields â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  slug                     String?               @unique @db.VarChar(100)
+  bio                      String?               @db.VarChar(500)
+  coverMediaId             Int?
+  isPublicProfileEnabled   Boolean               @default(false)
+  visibility               PetProfileVisibility  @default(PRIVATE)
+  followersCount           Int                   @default(0)
+  likesCount               Int                   @default(0)
+  // â”€â”€ Relations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   appointments             Appointment[]
   dewormingRecords         DewormingRecord[]
   medicalHistories         MedicalHistory[]
   familyMembers            PetFamilyMember[]
   weights                  PetWeight[]
+  petFollows               PetFollow[]
+  petLikes                 PetLike[]
+  posts                    Post[]
+  taggedPosts              PostTaggedPet[]
   animalType               AnimalType            @relation(fields: [animalTypeId], references: [id])
   breed                    Breed?                @relation(fields: [breedId], references: [id])
   clinicRegisteredBranch   Branch?               @relation("PetClinicRegistrationBranch", fields: [clinicRegisteredBranchId], references: [id])
   coatPattern              CoatPattern?          @relation(fields: [coatPatternId], references: [id])
   color                    AnimalColor?          @relation(fields: [colorId], references: [id])
+  coverMedia               Media?                @relation("PetCoverMedia", fields: [coverMediaId], references: [id])
   profilePic               Media?                @relation("PetProfilePic", fields: [profilePicId], references: [id])
   size                     AnimalSize?           @relation(fields: [sizeId], references: [id])
   subBreed                 SubBreed?             @relation(fields: [subBreedId], references: [id])
@@ -1011,7 +1137,37 @@ model Pet {
   campaignPetLinks         CampaignPet[]         @relation("CampaignPetPermanent")
 
   @@index([clinicRegisteredBranchId])
+  @@index([userId])
+  @@index([slug])
   @@map("pets")
+}
+
+model PetFollow {
+  id        Int      @id @default(autoincrement())
+  petId     Int
+  userId    Int
+  createdAt DateTime @default(now())
+  pet       Pet      @relation(fields: [petId], references: [id], onDelete: Cascade)
+  user      User     @relation("PetFollowUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([petId, userId])
+  @@index([petId])
+  @@index([userId])
+  @@map("pet_follows")
+}
+
+model PetLike {
+  id        Int      @id @default(autoincrement())
+  petId     Int
+  userId    Int
+  createdAt DateTime @default(now())
+  pet       Pet      @relation(fields: [petId], references: [id], onDelete: Cascade)
+  user      User     @relation("PetLikeUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([petId, userId])
+  @@index([petId])
+  @@index([userId])
+  @@map("pet_likes")
 }
 
 model PetFamilyMember {
@@ -1041,13 +1197,13 @@ model PetWeight {
 }
 
 model VaccineType {
-  id                   Int                       @id @default(autoincrement())
-  name                 String                    @unique
+  id                   Int                   @id @default(autoincrement())
+  name                 String                @unique
   targetAnimalTypeId   Int?
-  defaultIntervalDays  Int                       @default(365)
+  defaultIntervalDays  Int                   @default(365)
   description          String?
   vaccinations         Vaccination[]
-  targetAnimalType     AnimalType?               @relation(fields: [targetAnimalTypeId], references: [id])
+  targetAnimalType     AnimalType?           @relation(fields: [targetAnimalTypeId], references: [id])
   // Campaign 2026 relations
   campaignVaccineTypes CampaignVaccineType[]
 
@@ -1524,6 +1680,314 @@ model Report {
   @@map("reports")
 }
 
+model AdoptionPet {
+  id                           Int                     @id @default(autoincrement())
+  ownerId                      Int
+  shelterProfileId             Int?
+  legacyPostId                 Int?                    @unique
+  countryId                    Int
+  stateId                      Int?
+  cityId                       Int?
+  subDistrictId                Int?
+  bdDivisionId                 Int?
+  bdDistrictId                 Int?
+  bdUpazilaId                  Int?
+  bdAreaId                     Int?
+  ownerType                    AdoptionOwnerType
+  species                      AdoptionSpecies
+  status                       AdoptionPetStatus       @default(DRAFT)
+  name                         String
+  breed                        String?                 @db.VarChar(128)
+  ageText                      String?                 @db.VarChar(64)
+  gender                       Gender                  @default(UNKNOWN)
+  sizeText                     String?                 @db.VarChar(64)
+  colorText                    String?                 @db.VarChar(64)
+  title                        String?                 @db.VarChar(180)
+  description                  String?
+  story                        String?
+  healthInfo                   String?
+  personalityTagsJson          Json?                   @default("[]")
+  compatibilityTagsJson        Json?                   @default("[]")
+  adopterConditionsJson        Json?                   @default("[]")
+  serviceAreaType              ServiceAreaType         @default(SAME_CITY)
+  serviceAreaNotes             String?
+  customServiceAreasJson       Json?                   @default("[]")
+  serviceRadiusKm              Int?
+  allowInternationalAdoption   Boolean                 @default(false)
+  vaccinated                   Boolean?
+  dewormed                     Boolean?
+  neutered                     Boolean?
+  microchipped                 Boolean?
+  specialNeeds                 Boolean                 @default(false)
+  adoptionFeeText              String?                 @db.VarChar(128)
+  contactPhoneVisible          Boolean                 @default(false)
+  publishedAt                  DateTime?
+  submittedForReviewAt         DateTime?
+  reviewedAt                   DateTime?
+  adminReviewNote              String?
+  expiresAt                    DateTime?
+  createdAt                    DateTime                @default(now())
+  updatedAt                    DateTime                @updatedAt
+  deletedAt                    DateTime?
+  applications                 AdoptionApplication[]
+  country                      Country                 @relation(fields: [countryId], references: [id], onDelete: Restrict)
+  criteria                     AdoptionCriteria?
+  favorites                    AdoptionFavorite[]
+  media                        AdoptionPetMedia[]
+  owner                        User                    @relation("AdoptionPetOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  reports                      AdoptionReport[]
+  shelterProfile               ShelterProfile?         @relation(fields: [shelterProfileId], references: [id], onDelete: SetNull)
+  statusHistory                AdoptionStatusHistory[]
+  agreements                   AdoptionAgreement[]
+  followUps                    AdoptionFollowUp[]
+
+  @@index([status, createdAt])
+  @@index([ownerId, status])
+  @@index([countryId, status])
+  @@index([species, status])
+  @@index([stateId])
+  @@index([cityId])
+  @@index([subDistrictId])
+  @@index([bdDivisionId])
+  @@index([bdDistrictId])
+  @@index([bdUpazilaId])
+  @@index([bdAreaId])
+  @@index([publishedAt])
+  @@map("adoption_pets")
+}
+
+model AdoptionPetMedia {
+  id         Int         @id @default(autoincrement())
+  petId       Int
+  mediaId     Int
+  order       Int         @default(0)
+  kind        String?     @db.VarChar(32)
+  isCover     Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  media       Media       @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  pet         AdoptionPet @relation(fields: [petId], references: [id], onDelete: Cascade)
+
+  @@unique([petId, order])
+  @@unique([petId, mediaId])
+  @@index([mediaId])
+  @@map("adoption_pet_media")
+}
+
+model AdoptionCriteria {
+  id                             Int         @id @default(autoincrement())
+  petId                           Int         @unique
+  minimumAdopterAgeYears          Int?
+  allowedResidenceTypesJson       Json?      @default("[]")
+  adoptionExperienceRequired      Boolean    @default(false)
+  fencedYardRequired              Boolean    @default(false)
+  landlordApprovalRequired        Boolean    @default(false)
+  canHaveChildren                 Boolean?
+  canHaveOtherPets                Boolean?
+  homeCheckRequired               Boolean    @default(false)
+  vetReferenceRequired            Boolean    @default(false)
+  identityVerificationRequired    Boolean    @default(false)
+  minimumMonthlyIncomeRange       String?    @db.VarChar(64)
+  maximumMonthlyIncomeRange       String?    @db.VarChar(64)
+  notes                           String?
+  createdAt                       DateTime   @default(now())
+  updatedAt                       DateTime   @updatedAt
+  pet                             AdoptionPet @relation(fields: [petId], references: [id], onDelete: Cascade)
+
+  @@map("adoption_criteria")
+}
+
+model AdoptionApplication {
+  id                           Int                       @id @default(autoincrement())
+  petId                        Int
+  applicantId                  Int
+  ownerId                      Int
+  status                       AdoptionApplicationStatus @default(DRAFT)
+  messageToOwner               String?
+  applicantPhone               String?                   @db.VarChar(32)
+  applicantEmail               String?                   @db.VarChar(255)
+  applicantAddress             String?                   @db.VarChar(512)
+  applicantCountryId           Int?
+  applicantStateId             Int?
+  applicantCityId              Int?
+  applicantSubDistrictId       Int?
+  applicantBdDivisionId        Int?
+  applicantBdDistrictId        Int?
+  applicantBdUpazilaId         Int?
+  applicantBdAreaId            Int?
+  applicantOccupation          String?                   @db.VarChar(128)
+  applicantHouseholdSummary    String?
+  applicantExperienceSummary   String?
+  applicantOtherPetsSummary    String?
+  applicantIncomeRange         String?                   @db.VarChar(64)
+  consentToHomeCheck           Boolean                   @default(false)
+  consentToFollowUp            Boolean                   @default(false)
+  submittedAt                  DateTime?
+  reviewedAt                   DateTime?
+  createdAt                    DateTime                  @default(now())
+  updatedAt                    DateTime                  @updatedAt
+  deletedAt                    DateTime?
+  answers                      AdoptionApplicationAnswer[]
+  applicant                    User                      @relation("AdoptionApplicant", fields: [applicantId], references: [id], onDelete: Cascade)
+  owner                        User                      @relation("AdoptionListingOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  pet                          AdoptionPet               @relation(fields: [petId], references: [id], onDelete: Cascade)
+  agreements                   AdoptionAgreement[]
+  followUps                    AdoptionFollowUp[]
+
+  @@unique([petId, applicantId])
+  @@index([petId, status])
+  @@index([applicantId, status])
+  @@index([ownerId, status])
+  @@index([createdAt])
+  @@map("adoption_applications")
+}
+
+model AdoptionApplicationAnswer {
+  id             Int                 @id @default(autoincrement())
+  applicationId  Int
+  questionKey    String              @db.VarChar(128)
+  questionLabel   String?             @db.VarChar(255)
+  answerText     String?
+  answerJson     Json?
+  createdAt      DateTime            @default(now())
+  application    AdoptionApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId])
+  @@map("adoption_application_answers")
+}
+
+model AdoptionFavorite {
+  id        Int         @id @default(autoincrement())
+  petId      Int
+  userId     Int
+  createdAt  DateTime    @default(now())
+  pet        AdoptionPet @relation(fields: [petId], references: [id], onDelete: Cascade)
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([petId, userId])
+  @@index([userId, createdAt])
+  @@map("adoption_favorites")
+}
+
+model AdoptionReport {
+  id          Int          @id @default(autoincrement())
+  petId        Int
+  reporterId   Int
+  reasonCode   String      @db.VarChar(64)
+  details      String?
+  status       ReportStatus @default(PENDING)
+  createdAt    DateTime    @default(now())
+  reviewedAt   DateTime?
+  pet          AdoptionPet @relation(fields: [petId], references: [id], onDelete: Cascade)
+  reporter     User        @relation("AdoptionReporter", fields: [reporterId], references: [id], onDelete: Cascade)
+
+  @@index([petId, status])
+  @@index([reporterId])
+  @@map("adoption_reports")
+}
+
+model AdoptionStatusHistory {
+  id           Int               @id @default(autoincrement())
+  petId         Int
+  fromStatus    AdoptionPetStatus?
+  toStatus      AdoptionPetStatus
+  actorUserId   Int?
+  note          String?
+  createdAt     DateTime          @default(now())
+  actor         User?             @relation("AdoptionStatusActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+  pet           AdoptionPet       @relation(fields: [petId], references: [id], onDelete: Cascade)
+
+  @@index([petId, createdAt])
+  @@index([actorUserId])
+  @@map("adoption_status_history")
+}
+
+model AdoptionAgreement {
+  id             Int                  @id @default(autoincrement())
+  petId           Int
+  applicationId   Int?
+  ownerId         Int
+  adopterUserId   Int?
+  status          AdoptionAgreementStatus @default(DRAFT)
+  title           String?              @db.VarChar(255)
+  contentJson     Json?
+  signedAt        DateTime?
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  pet             AdoptionPet          @relation(fields: [petId], references: [id], onDelete: Cascade)
+  application     AdoptionApplication? @relation(fields: [applicationId], references: [id], onDelete: SetNull)
+
+  @@index([petId, status])
+  @@index([applicationId])
+  @@map("adoption_agreements")
+}
+
+model AdoptionFollowUp {
+  id              Int                  @id @default(autoincrement())
+  petId            Int
+  applicationId    Int?
+  ownerId          Int
+  adopterUserId    Int?
+  status           AdoptionFollowUpStatus @default(PENDING)
+  scheduledFor     DateTime?
+  completedAt      DateTime?
+  notes            String?
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  pet              AdoptionPet          @relation(fields: [petId], references: [id], onDelete: Cascade)
+  application      AdoptionApplication? @relation(fields: [applicationId], references: [id], onDelete: SetNull)
+
+  @@index([petId, status])
+  @@index([applicationId])
+  @@map("adoption_follow_ups")
+}
+
+model CountryAdoptionRule {
+  id                         Int        @id @default(autoincrement())
+  countryId                   Int
+  title                       String
+  summary                     String?
+  policyUrl                   String?    @db.VarChar(1024)
+  minAdopterAgeYears          Int?
+  allowInternationalAdoption  Boolean    @default(false)
+  metadataJson                Json?
+  isActive                    Boolean    @default(true)
+  createdAt                   DateTime   @default(now())
+  updatedAt                   DateTime   @updatedAt
+  country                     Country    @relation(fields: [countryId], references: [id], onDelete: Cascade)
+
+  @@index([countryId, isActive])
+  @@map("country_adoption_rules")
+}
+
+model ShelterProfile {
+  id                  Int                 @id @default(autoincrement())
+  ownerUserId         Int
+  organizationId      Int?
+  countryId           Int?
+  verificationStatus  VerificationStatus  @default(UNSUBMITTED)
+  displayName         String
+  legalName           String?
+  description         String?
+  websiteUrl          String?             @db.VarChar(1024)
+  supportEmail        String?             @db.VarChar(255)
+  supportPhone        String?             @db.VarChar(32)
+  addressText         String?             @db.VarChar(512)
+  serviceAreasJson    Json?               @default("[]")
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  deletedAt           DateTime?
+  country             Country?            @relation(fields: [countryId], references: [id], onDelete: SetNull)
+  organization        Organization?       @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  owner               User                @relation("ShelterProfileOwner", fields: [ownerUserId], references: [id], onDelete: Cascade)
+  adoptionPets        AdoptionPet[]
+
+  @@index([ownerUserId])
+  @@index([organizationId])
+  @@index([countryId])
+  @@index([verificationStatus])
+  @@map("shelter_profiles")
+}
+
 model BdDivision {
   id                  Int                  @id @default(autoincrement())
   code                String               @unique
@@ -1578,16 +2042,16 @@ model BdUpazila {
 }
 
 model BdUnion {
-  id         Int       @id @default(autoincrement())
-  code       String    @unique
-  nameEn     String
-  nameBn     String?
-  upazilaId  Int
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  latitude   Decimal?  @db.Decimal(10, 8)
-  longitude  Decimal?  @db.Decimal(11, 8)
-  upazila    BdUpazila @relation(fields: [upazilaId], references: [id], onDelete: Cascade)
+  id                Int                @id @default(autoincrement())
+  code              String             @unique
+  nameEn            String
+  nameBn            String?
+  upazilaId         Int
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  latitude          Decimal?           @db.Decimal(10, 8)
+  longitude         Decimal?           @db.Decimal(11, 8)
+  upazila           BdUpazila          @relation(fields: [upazilaId], references: [id], onDelete: Cascade)
   areas             BdArea[]
   coverageZoneAreas CoverageZoneArea[]
 
@@ -1685,16 +2149,16 @@ model LocationCoverageAssignment {
 }
 
 model CoverageZone {
-  id          Int                  @id @default(autoincrement())
-  name        String
-  slug        String               @unique
-  description String?
-  city        String?
-  zoneType    CoverageZoneType
-  sortOrder   Int                  @default(0)
-  isActive    Boolean              @default(true)
-  createdAt   DateTime             @default(now())
-  updatedAt   DateTime             @updatedAt
+  id               Int                   @id @default(autoincrement())
+  name             String
+  slug             String                @unique
+  description      String?
+  city             String?
+  zoneType         CoverageZoneType
+  sortOrder        Int                   @default(0)
+  isActive         Boolean               @default(true)
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
   areas            CoverageZoneArea[]
   metadata         CoverageZoneMetadata?
   campaignBookings CampaignBooking[]
@@ -1727,15 +2191,15 @@ model CoverageZoneArea {
 }
 
 model CoverageZoneMetadata {
-  id                     Int          @id @default(autoincrement())
-  coverageZoneId         Int          @unique
-  estimatedPetPopulation Int?
-  estimatedClinicCount   Int?
-  estimatedPetShopCount  Int?
+  id                      Int          @id @default(autoincrement())
+  coverageZoneId          Int          @unique
+  estimatedPetPopulation  Int?
+  estimatedClinicCount    Int?
+  estimatedPetShopCount   Int?
   estimatedVolunteerCount Int?
-  createdAt              DateTime     @default(now())
-  updatedAt              DateTime     @updatedAt
-  coverageZone           CoverageZone @relation(fields: [coverageZoneId], references: [id], onDelete: Cascade)
+  createdAt               DateTime     @default(now())
+  updatedAt               DateTime     @updatedAt
+  coverageZone            CoverageZone @relation(fields: [coverageZoneId], references: [id], onDelete: Cascade)
 
   @@map("coverage_zone_metadata")
 }
@@ -1760,41 +2224,42 @@ model AuditLog {
 }
 
 model Organization {
-  id                             Int                             @id @default(autoincrement())
-  ownerUserId                    Int
-  status                         PartnerStatus                   @default(PENDING_REVIEW)
-  name                           String
-  supportPhone                   String?
-  addressJson                    Json?
-  divisionId                     Int?
-  districtId                     Int?
-  upazilaId                      Int?
-  unionId                        Int?
-  areaId                         Int?
-  createdAt                      DateTime                        @default(now())
-  updatedAt                      DateTime                        @updatedAt
-  countryId                      Int?
-  deletedAt                      DateTime?
-  deletionScheduledAt            DateTime?
+  id                   Int                       @id @default(autoincrement())
+  ownerUserId          Int
+  status               PartnerStatus             @default(PENDING_REVIEW)
+  name                 String
+  supportPhone         String?
+  addressJson          Json?
+  divisionId           Int?
+  districtId           Int?
+  upazilaId            Int?
+  unionId              Int?
+  areaId               Int?
+  createdAt            DateTime                  @default(now())
+  updatedAt            DateTime                  @updatedAt
+  countryId            Int?
+  deletedAt            DateTime?
+  deletionScheduledAt  DateTime?
   /// Standardized location: { lat, lng, address, city, state, country, postalCode }
-  location                       Json                            @default("{}")
-  payoutStatus                   OrganizationPayoutStatus        @default(NOT_CONFIGURED)
-  orgType                        OrgType?                        @default(PARTNER)
-  appointments                   Appointment[]
-  branchMembers                  BranchMember[]
-  branchPolicies                 BranchPolicy[]
-  branchRooms                    BranchRoom[]
-  branches                       Branch[]
-  vaccinationReminders           VaccinationReminder[]
-  controllerForCountry           Country?                        @relation("CountryController")
-  legalProfile                   OrganizationLegalProfile?
-  country                        Country?                        @relation(fields: [countryId], references: [id], onDelete: Restrict)
-  owner                          User                            @relation(fields: [ownerUserId], references: [id])
-  services                       Service[]
-  visits                         Visit[]
-  warehouses                     Warehouse[]
+  location             Json                      @default("{}")
+  payoutStatus         OrganizationPayoutStatus  @default(NOT_CONFIGURED)
+  orgType              OrgType?                  @default(PARTNER)
+  appointments         Appointment[]
+  branchMembers        BranchMember[]
+  branchPolicies       BranchPolicy[]
+  branchRooms          BranchRoom[]
+  branches             Branch[]
+  vaccinationReminders VaccinationReminder[]
+  controllerForCountry Country?                  @relation("CountryController")
+  legalProfile         OrganizationLegalProfile?
+  country              Country?                  @relation(fields: [countryId], references: [id], onDelete: Restrict)
+  owner                User                      @relation(fields: [ownerUserId], references: [id])
+  services             Service[]
+  shelterProfiles      ShelterProfile[]
+  visits               Visit[]
+  warehouses           Warehouse[]
   // Campaign 2026 relations
-  campaignsOrganized             Campaign[]                      @relation("CampaignOrganizer")
+  campaignsOrganized   Campaign[]                @relation("CampaignOrganizer")
 
   @@index([ownerUserId])
   @@index([countryId])
@@ -1809,39 +2274,39 @@ model Organization {
 }
 
 model Branch {
-  id                                 Int                               @id @default(autoincrement())
-  orgId                              Int
-  name                               String
-  status                             BranchStatus                      @default(DRAFT)
-  capabilitiesJson                   Json                              @default("{}")
-  featuresJson                       Json                              @default("{}")
-  verificationStatus                 VerificationStatus                @default(UNSUBMITTED)
-  addressJson                        Json?
-  divisionId                         Int?
-  districtId                         Int?
-  upazilaId                          Int?
-  unionId                            Int?
-  areaId                             Int?
-  createdAt                          DateTime                          @default(now())
-  updatedAt                          DateTime                          @updatedAt
+  id                        Int                   @id @default(autoincrement())
+  orgId                     Int
+  name                      String
+  status                    BranchStatus          @default(DRAFT)
+  capabilitiesJson          Json                  @default("{}")
+  featuresJson              Json                  @default("{}")
+  verificationStatus        VerificationStatus    @default(UNSUBMITTED)
+  addressJson               Json?
+  divisionId                Int?
+  districtId                Int?
+  upazilaId                 Int?
+  unionId                   Int?
+  areaId                    Int?
+  createdAt                 DateTime              @default(now())
+  updatedAt                 DateTime              @updatedAt
   /// Standardized location: { lat, lng, address, city, state, country, postalCode }
-  location                           Json                              @default("{}")
-  clinicSettingsJson                 Json                              @default("{}")
-  code                               String?
-  appointments                       Appointment[]
-  members                            BranchMember[]
-  branchPolicy                       BranchPolicy?
-  profileDetails                     BranchProfileDetails?
-  rooms                              BranchRoom[]
-  org                                Organization                      @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  inventoryLocations                 InventoryLocation[]
-  orders                             Order[]
-  petsRegisteredAtClinic             Pet[]                             @relation("PetClinicRegistrationBranch")
-  services                           Service[]
-  userAppSettingsLastActive          UserAppSettings[]
-  vaccinationReminders               VaccinationReminder[]
-  visits                             Visit[]
-  warehouses                         Warehouse[]
+  location                  Json                  @default("{}")
+  clinicSettingsJson        Json                  @default("{}")
+  code                      String?
+  appointments              Appointment[]
+  members                   BranchMember[]
+  branchPolicy              BranchPolicy?
+  profileDetails            BranchProfileDetails?
+  rooms                     BranchRoom[]
+  org                       Organization          @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  inventoryLocations        InventoryLocation[]
+  orders                    Order[]
+  petsRegisteredAtClinic    Pet[]                 @relation("PetClinicRegistrationBranch")
+  services                  Service[]
+  userAppSettingsLastActive UserAppSettings[]
+  vaccinationReminders      VaccinationReminder[]
+  visits                    Visit[]
+  warehouses                Warehouse[]
 
   @@unique([orgId, code])
   @@index([orgId])
@@ -1854,31 +2319,31 @@ model Branch {
 }
 
 model BranchRoom {
-  id                       Int                    @id @default(autoincrement())
+  id                       Int           @id @default(autoincrement())
   orgId                    Int
   branchId                 Int
-  name                     String                 @db.VarChar(128)
-  roomType                 String                 @db.VarChar(32)
+  name                     String        @db.VarChar(128)
+  roomType                 String        @db.VarChar(32)
   capacity                 Int?
-  status                   String                 @db.VarChar(16)
+  status                   String        @db.VarChar(16)
   notes                    String?
-  createdAt                DateTime               @default(now())
-  updatedAt                DateTime               @updatedAt
-  code                     String?                @db.VarChar(32)
-  floor                    String?                @db.VarChar(32)
-  zone                     String?                @db.VarChar(64)
-  operationalStatus        String                 @default("AVAILABLE") @db.VarChar(24)
-  bookable                 Boolean                @default(true)
+  createdAt                DateTime      @default(now())
+  updatedAt                DateTime      @updatedAt
+  code                     String?       @db.VarChar(32)
+  floor                    String?       @db.VarChar(32)
+  zone                     String?       @db.VarChar(64)
+  operationalStatus        String        @default("AVAILABLE") @db.VarChar(24)
+  bookable                 Boolean       @default(true)
   cleaningBufferMinutes    Int?
   maintenanceBufferMinutes Int?
-  supportsWalkIns          Boolean                @default(true)
-  emergencyOverrideAllowed Boolean                @default(false)
-  preferredDoctorIds       Json?                  @default("[]")
-  allowedServiceIds        Json?                  @default("[]")
-  allowedPackageIds        Json?                  @default("[]")
+  supportsWalkIns          Boolean       @default(true)
+  emergencyOverrideAllowed Boolean       @default(false)
+  preferredDoctorIds       Json?         @default("[]")
+  allowedServiceIds        Json?         @default("[]")
+  allowedPackageIds        Json?         @default("[]")
   appointments             Appointment[]
-  branch                   Branch                 @relation(fields: [branchId], references: [id], onDelete: Cascade)
-  org                      Organization           @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  branch                   Branch        @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  org                      Organization  @relation(fields: [orgId], references: [id], onDelete: Cascade)
 
   @@unique([branchId, name])
   @@unique([branchId, code])
@@ -1912,21 +2377,21 @@ model BranchPolicy {
 }
 
 model BranchMember {
-  id                           Int                       @id @default(autoincrement())
-  orgId                        Int
-  branchId                     Int
-  userId                       Int
-  role                         MemberRole
-  status                       MemberStatus              @default(ACTIVE)
-  invitedByUserId              Int?
-  createdAt                    DateTime                  @default(now())
-  updatedAt                    DateTime                  @updatedAt
-  appointmentsAsDoctor         Appointment[]             @relation("AppointmentDoctor")
-  branch                       Branch                    @relation(fields: [branchId], references: [id], onDelete: Cascade)
-  invitedBy                    User?                     @relation("BranchMemberInvitedBy", fields: [invitedByUserId], references: [id])
-  org                          Organization              @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  user                         User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  visitsAsDoctor               Visit[]                   @relation("VisitDoctor")
+  id                   Int           @id @default(autoincrement())
+  orgId                Int
+  branchId             Int
+  userId               Int
+  role                 MemberRole
+  status               MemberStatus  @default(ACTIVE)
+  invitedByUserId      Int?
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+  appointmentsAsDoctor Appointment[] @relation("AppointmentDoctor")
+  branch               Branch        @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  invitedBy            User?         @relation("BranchMemberInvitedBy", fields: [invitedByUserId], references: [id])
+  org                  Organization  @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  user                 User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  visitsAsDoctor       Visit[]       @relation("VisitDoctor")
 
   @@unique([branchId, userId])
   @@index([orgId, branchId, role])
@@ -1934,10 +2399,8 @@ model BranchMember {
   @@map("branch_members")
 }
 
-
-
 model Appointment {
-  id                          Int                      @id @default(autoincrement())
+  id                          Int                 @id @default(autoincrement())
   orgId                       Int
   branchId                    Int
   patientId                   Int?
@@ -1946,37 +2409,37 @@ model Appointment {
   serviceId                   Int
   scheduledStartAt            DateTime
   scheduledEndAt              DateTime
-  status                      AppointmentStatus        @default(BOOKED)
-  source                      AppointmentSource        @default(STAFF)
-  priority                    AppointmentPriority      @default(NORMAL)
+  status                      AppointmentStatus   @default(BOOKED)
+  source                      AppointmentSource   @default(STAFF)
+  priority                    AppointmentPriority @default(NORMAL)
   notes                       String?
   channelMeta                 Json?
-  cancellationReason          String?                  @db.VarChar(256)
+  cancellationReason          String?             @db.VarChar(256)
   cancelledByUserId           Int?
   cancelledAt                 DateTime?
-  rescheduleFromAppointmentId Int?                     @unique
+  rescheduleFromAppointmentId Int?                @unique
   noShowMarkedByUserId        Int?
   noShowAt                    DateTime?
   createdByUserId             Int?
-  createdAt                   DateTime                 @default(now())
-  updatedAt                   DateTime                 @updatedAt
-  intakeStatus                String                   @default("NOT_STARTED") @db.VarChar(16)
-  visitType                   String                   @default("WALK_IN") @db.VarChar(20)
-  isInstant                   Boolean                  @default(false)
-  isAnyDoctor                 Boolean                  @default(false)
-  paymentStatus               String                   @default("UNPAID") @db.VarChar(16)
-  paymentMethod               String?                  @db.VarChar(32)
-  paidAmount                  Decimal?                 @db.Decimal(12, 2)
+  createdAt                   DateTime            @default(now())
+  updatedAt                   DateTime            @updatedAt
+  intakeStatus                String              @default("NOT_STARTED") @db.VarChar(16)
+  visitType                   String              @default("WALK_IN") @db.VarChar(20)
+  isInstant                   Boolean             @default(false)
+  isAnyDoctor                 Boolean             @default(false)
+  paymentStatus               String              @default("UNPAID") @db.VarChar(16)
+  paymentMethod               String?             @db.VarChar(32)
+  paidAmount                  Decimal?            @db.Decimal(12, 2)
   paidAt                      DateTime?
   paidByUserId                Int?
-  channel                     String                   @default("COUNTER") @db.VarChar(20)
-  tokenNo                     String?                  @db.VarChar(20)
-  ownerNameSnapshot           String?                  @db.VarChar(128)
-  mobileSnapshot              String?                  @db.VarChar(20)
-  petNameSnapshot             String?                  @db.VarChar(128)
-  petTypeSnapshot             String?                  @db.VarChar(64)
-  appointmentMode             String                   @default("STANDARD") @db.VarChar(20)
-  appointmentType             String                   @default("CONSULTATION") @db.VarChar(20)
+  channel                     String              @default("COUNTER") @db.VarChar(20)
+  tokenNo                     String?             @db.VarChar(20)
+  ownerNameSnapshot           String?             @db.VarChar(128)
+  mobileSnapshot              String?             @db.VarChar(20)
+  petNameSnapshot             String?             @db.VarChar(128)
+  petTypeSnapshot             String?             @db.VarChar(64)
+  appointmentMode             String              @default("STANDARD") @db.VarChar(20)
+  appointmentType             String              @default("CONSULTATION") @db.VarChar(20)
   surgeryPackageId            Int?
   durationMinutes             Int?
   followUpFromId              Int?
@@ -1986,17 +2449,17 @@ model Appointment {
   doctorSnapshot              Json?
   discountSnapshot            Json?
   roomId                      Int?
-  branch                      Branch                   @relation(fields: [branchId], references: [id], onDelete: Cascade)
-  doctor                      BranchMember?            @relation("AppointmentDoctor", fields: [doctorId], references: [id])
-  followUpFrom                Appointment?             @relation("FollowUpChain", fields: [followUpFromId], references: [id])
-  followUps                   Appointment[]            @relation("FollowUpChain")
-  org                         Organization             @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  patient                     User?                    @relation("AppointmentPatient", fields: [patientId], references: [id], onDelete: Restrict)
-  pet                         Pet?                     @relation(fields: [petId], references: [id])
-  rescheduleFrom              Appointment?             @relation("AppointmentReschedule", fields: [rescheduleFromAppointmentId], references: [id])
-  rescheduledTo               Appointment?             @relation("AppointmentReschedule")
-  room                        BranchRoom?              @relation(fields: [roomId], references: [id])
-  service                     Service                  @relation(fields: [serviceId], references: [id])
+  branch                      Branch              @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  doctor                      BranchMember?       @relation("AppointmentDoctor", fields: [doctorId], references: [id])
+  followUpFrom                Appointment?        @relation("FollowUpChain", fields: [followUpFromId], references: [id])
+  followUps                   Appointment[]       @relation("FollowUpChain")
+  org                         Organization        @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  patient                     User?               @relation("AppointmentPatient", fields: [patientId], references: [id], onDelete: Restrict)
+  pet                         Pet?                @relation(fields: [petId], references: [id])
+  rescheduleFrom              Appointment?        @relation("AppointmentReschedule", fields: [rescheduleFromAppointmentId], references: [id])
+  rescheduledTo               Appointment?        @relation("AppointmentReschedule")
+  room                        BranchRoom?         @relation(fields: [roomId], references: [id])
+  service                     Service             @relation(fields: [serviceId], references: [id])
   visit                       Visit?
 
   @@index([orgId, branchId])
@@ -2010,30 +2473,29 @@ model Appointment {
   @@map("appointments")
 }
 
-
 model Visit {
-  id                         Int                         @id @default(autoincrement())
-  orgId                      Int
-  branchId                   Int
-  petId                      Int
-  patientId                  Int
-  doctorId                   Int?
-  appointmentId              Int?                        @unique
-  status                     VisitStatus                 @default(CHECKED_IN)
-  startedAt                  DateTime?
-  completedAt                DateTime?
-  followUpDate               DateTime?
-  followUpNotes              String?
-  createdAt                  DateTime                    @default(now())
-  updatedAt                  DateTime                    @updatedAt
-  treatmentCode              String?                     @db.VarChar(32)
-  orders                     Order[]
-  appointment                Appointment?                @relation(fields: [appointmentId], references: [id])
-  branch                     Branch                      @relation(fields: [branchId], references: [id], onDelete: Cascade)
-  doctor                     BranchMember?               @relation("VisitDoctor", fields: [doctorId], references: [id], onDelete: Restrict)
-  org                        Organization                @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  patient                    User                        @relation("VisitPatient", fields: [patientId], references: [id])
-  pet                        Pet                         @relation(fields: [petId], references: [id])
+  id            Int           @id @default(autoincrement())
+  orgId         Int
+  branchId      Int
+  petId         Int
+  patientId     Int
+  doctorId      Int?
+  appointmentId Int?          @unique
+  status        VisitStatus   @default(CHECKED_IN)
+  startedAt     DateTime?
+  completedAt   DateTime?
+  followUpDate  DateTime?
+  followUpNotes String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  treatmentCode String?       @db.VarChar(32)
+  orders        Order[]
+  appointment   Appointment?  @relation(fields: [appointmentId], references: [id])
+  branch        Branch        @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  doctor        BranchMember? @relation("VisitDoctor", fields: [doctorId], references: [id], onDelete: Restrict)
+  org           Organization  @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  patient       User          @relation("VisitPatient", fields: [patientId], references: [id])
+  pet           Pet           @relation(fields: [petId], references: [id])
 
   @@index([orgId, branchId])
   @@index([branchId, status])
@@ -2045,51 +2507,51 @@ model Visit {
 }
 
 model Role {
-  id                     Int                   @id @default(autoincrement())
-  key                    String                @unique
-  label                  String
-  scope                  RoleScope
-  isSystem               Boolean               @default(true)
-  createdAt              DateTime              @default(now())
-  updatedAt              DateTime              @updatedAt
+  id        Int       @id @default(autoincrement())
+  key       String    @unique
+  label     String
+  scope     RoleScope
+  isSystem  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@index([scope])
   @@map("roles")
 }
 
 model Order {
-  id                                Int                             @id @default(autoincrement())
-  orderNumber                       String                          @unique
-  branchId                          Int
-  customerId                        Int?
-  status                            OrderStatus                     @default(PENDING)
-  totalAmount                       Decimal                         @default(0)
-  paymentMethod                     PaymentMethod?
-  paymentStatus                     PaymentStatus                   @default(PENDING)
-  notes                             String?
-  createdByUserId                   Int?
-  createdAt                         DateTime                        @default(now())
-  updatedAt                         DateTime                        @updatedAt
-  fulfilmentInventoryLocationId     Int?
-  orderSource                       OrderSource?
-  subtotalAmount                    Decimal?                        @db.Decimal(12, 2)
-  discountPercent                   Decimal?                        @db.Decimal(5, 2)
-  discountAmount                    Decimal?                        @db.Decimal(12, 2)
-  taxPercent                        Decimal?                        @db.Decimal(5, 2)
-  taxAmount                         Decimal?                        @db.Decimal(12, 2)
-  invoiceNumber                     String?                         @unique(where: raw("(\"invoiceNumber\" IS NOT NULL)"))
-  posShiftId                        Int?
-  visitId                           Int?
-  branch                            Branch                          @relation(fields: [branchId], references: [id], onDelete: Cascade)
-  createdBy                         User?                           @relation("OrderCreatedBy", fields: [createdByUserId], references: [id])
-  customer                          User?                           @relation("OrderCustomer", fields: [customerId], references: [id])
-  fulfilmentInventoryLocation       InventoryLocation?              @relation("OrderFulfilmentLocation", fields: [fulfilmentInventoryLocationId], references: [id])
-  visit                             Visit?                          @relation(fields: [visitId], references: [id])
+  id                            Int                       @id @default(autoincrement())
+  orderNumber                   String                    @unique
+  branchId                      Int
+  customerId                    Int?
+  status                        OrderStatus               @default(PENDING)
+  totalAmount                   Decimal                   @default(0)
+  paymentMethod                 PaymentMethod?
+  paymentStatus                 PaymentStatus             @default(PENDING)
+  notes                         String?
+  createdByUserId               Int?
+  createdAt                     DateTime                  @default(now())
+  updatedAt                     DateTime                  @updatedAt
+  fulfilmentInventoryLocationId Int?
+  orderSource                   OrderSource?
+  subtotalAmount                Decimal?                  @db.Decimal(12, 2)
+  discountPercent               Decimal?                  @db.Decimal(5, 2)
+  discountAmount                Decimal?                  @db.Decimal(12, 2)
+  taxPercent                    Decimal?                  @db.Decimal(5, 2)
+  taxAmount                     Decimal?                  @db.Decimal(12, 2)
+  invoiceNumber                 String?                   @unique(where: raw("(\"invoiceNumber\" IS NOT NULL)"))
+  posShiftId                    Int?
+  visitId                       Int?
+  branch                        Branch                    @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  createdBy                     User?                     @relation("OrderCreatedBy", fields: [createdByUserId], references: [id])
+  customer                      User?                     @relation("OrderCustomer", fields: [customerId], references: [id])
+  fulfilmentInventoryLocation   InventoryLocation?        @relation("OrderFulfilmentLocation", fields: [fulfilmentInventoryLocationId], references: [id])
+  visit                         Visit?                    @relation(fields: [visitId], references: [id])
   // Campaign 2026 relations
-  campaignBookings                  CampaignBooking[]               @relation("CampaignBookingPaymentOrder")
-  campaignCheckoutSessions          CampaignCheckoutSession[]       @relation("CampaignCheckoutOrder")
-  paymentTransactionLogs            PaymentTransactionLog[]
-  orderPayments                     OrderPayment[]
+  campaignBookings              CampaignBooking[]         @relation("CampaignBookingPaymentOrder")
+  campaignCheckoutSessions      CampaignCheckoutSession[] @relation("CampaignCheckoutOrder")
+  paymentTransactionLogs        PaymentTransactionLog[]
+  orderPayments                 OrderPayment[]
 
   @@index([branchId])
   @@index([posShiftId])
@@ -2119,7 +2581,6 @@ model OrderPayment {
   @@map("order_payments")
 }
 
-
 model PaymentTransactionLog {
   id             Int      @id @default(autoincrement())
   orderId        Int?
@@ -2146,16 +2607,16 @@ model PaymentTransactionLog {
 }
 
 model PaymentTransaction {
-  id            Int                          @id @default(autoincrement())
+  id            Int                      @id @default(autoincrement())
   bookingId     Int?
-  transactionId String                       @db.VarChar(128)
-  gateway       String                       @db.VarChar(32)
-  amount        Decimal                      @db.Decimal(10, 2)
-  status        PaymentTransactionStatus     @default(PENDING)
+  transactionId String                   @db.VarChar(128)
+  gateway       String                   @db.VarChar(32)
+  amount        Decimal                  @db.Decimal(10, 2)
+  status        PaymentTransactionStatus @default(PENDING)
   rawResponse   Json?
-  createdAt     DateTime                     @default(now())
-  updatedAt     DateTime                     @updatedAt
-  booking       CampaignBooking?             @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime                 @updatedAt
+  booking       CampaignBooking?         @relation(fields: [bookingId], references: [id], onDelete: SetNull)
 
   @@unique([gateway, transactionId])
   @@index([bookingId])
@@ -2164,51 +2625,51 @@ model PaymentTransaction {
 }
 
 model Service {
-  id                       Int                       @id @default(autoincrement())
-  orgId                    Int
-  branchId                 Int
-  name                     String
-  description              String?
-  category                 ServiceCategory
-  status                   ServiceStatus             @default(ACTIVE)
-  price                    Decimal
-  duration                 Int?
-  isRecurring              Boolean                   @default(false)
-  createdByUserId          Int
-  createdAt                DateTime                  @default(now())
-  updatedAt                DateTime                  @updatedAt
-  department               ServiceDepartment         @default(DOCTOR_DESK)
-  paymentGateRule          PaymentGateRule           @default(PAY_BEFORE_SERVICE)
-  serviceCode              String?                   @unique @db.VarChar(32)
-  prerequisiteRule         Json?
-  allowDiscount            Boolean                   @default(true)
-  maxDiscountPct           Decimal?                  @db.Decimal(5, 2)
-  discountNeedsApproval    Boolean                   @default(false)
-  taxRuleJson              Json?
-  applicableSpecies        Json?
-  isCustom                 Boolean                   @default(false)
-  proposedByUserId         Int?
-  approvalStatus           ServiceApprovalStatus?
-  otRequired               Boolean                   @default(false)
-  inventoryLinked          Boolean                   @default(false)
-  packageAllowed           Boolean                   @default(false)
-  specialtyTag             String?                   @db.VarChar(64)
-  doctorRequired           Boolean                   @default(true)
-  estimatedCostJson        Json?
-  allowedRoomTypes         Json?                     @default("[]")
-  ownerDiscountEligible    Boolean                   @default(false)
-  baseCost                 Decimal?                  @db.Decimal(12, 2)
-  minSafePrice             Decimal?                  @db.Decimal(12, 2)
-  staffInstructions        String?
-  pricingExplanation       String?
-  visibleToPublic          Boolean                   @default(true)
-  preparationNotes         String?
-  aftercareNotes           String?
-  faqJson                  Json?
-  appointments             Appointment[]
-  branch                   Branch                    @relation(fields: [branchId], references: [id], onDelete: Cascade)
-  createdBy                User                      @relation("ServiceCreatedBy", fields: [createdByUserId], references: [id])
-  org                      Organization              @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  id                    Int                    @id @default(autoincrement())
+  orgId                 Int
+  branchId              Int
+  name                  String
+  description           String?
+  category              ServiceCategory
+  status                ServiceStatus          @default(ACTIVE)
+  price                 Decimal
+  duration              Int?
+  isRecurring           Boolean                @default(false)
+  createdByUserId       Int
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  department            ServiceDepartment      @default(DOCTOR_DESK)
+  paymentGateRule       PaymentGateRule        @default(PAY_BEFORE_SERVICE)
+  serviceCode           String?                @unique @db.VarChar(32)
+  prerequisiteRule      Json?
+  allowDiscount         Boolean                @default(true)
+  maxDiscountPct        Decimal?               @db.Decimal(5, 2)
+  discountNeedsApproval Boolean                @default(false)
+  taxRuleJson           Json?
+  applicableSpecies     Json?
+  isCustom              Boolean                @default(false)
+  proposedByUserId      Int?
+  approvalStatus        ServiceApprovalStatus?
+  otRequired            Boolean                @default(false)
+  inventoryLinked       Boolean                @default(false)
+  packageAllowed        Boolean                @default(false)
+  specialtyTag          String?                @db.VarChar(64)
+  doctorRequired        Boolean                @default(true)
+  estimatedCostJson     Json?
+  allowedRoomTypes      Json?                  @default("[]")
+  ownerDiscountEligible Boolean                @default(false)
+  baseCost              Decimal?               @db.Decimal(12, 2)
+  minSafePrice          Decimal?               @db.Decimal(12, 2)
+  staffInstructions     String?
+  pricingExplanation    String?
+  visibleToPublic       Boolean                @default(true)
+  preparationNotes      String?
+  aftercareNotes        String?
+  faqJson               Json?
+  appointments          Appointment[]
+  branch                Branch                 @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  createdBy             User                   @relation("ServiceCreatedBy", fields: [createdByUserId], references: [id])
+  org                   Organization           @relation(fields: [orgId], references: [id], onDelete: Cascade)
 
   @@index([orgId, branchId])
   @@index([branchId, status])
@@ -2217,41 +2678,54 @@ model Service {
 }
 
 model Country {
-  id                    Int                    @id @default(autoincrement())
-  code                  String                 @unique
-  name                  String
-  currencyCode          String?                @default("USD")
-  timezoneDefault       String?                @default("UTC")
-  isActive              Boolean                @default(true)
-  createdAt             DateTime               @default(now())
-  updatedAt             DateTime               @updatedAt
-  latitude              Decimal?               @db.Decimal(10, 8)
-  longitude             Decimal?               @db.Decimal(11, 8)
-  phoneCode             String?
-  controllerOrgId       Int?                   @unique
-  ads                   Ad[]
-  controllerOrg         Organization?          @relation("CountryController", fields: [controllerOrgId], references: [id])
-  policies              CountryPolicy[]
-  organizations         Organization[]
-  states                State[]
+  id              Int             @id @default(autoincrement())
+  code            String          @unique
+  name            String
+  iso3            String?
+  currencyCode    String?         @default("USD")
+  currencySymbol  String?
+  phoneCode       String?
+  flagEmoji       String?
+  flagAssetUrl    String?
+  isActive        Boolean         @default(true)
+  isSupported     Boolean         @default(false)
+  isDefault       Boolean         @default(false)
+  sortOrder       Int             @default(0)
+  paymentEnabled  Boolean         @default(false)
+  contentEnabled  Boolean         @default(true)
+  supportEnabled  Boolean         @default(true)
+  timezoneDefault String?         @default("UTC")
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  latitude        Decimal?        @db.Decimal(10, 8)
+  longitude       Decimal?        @db.Decimal(11, 8)
+  controllerOrgId Int?            @unique
+  ads             Ad[]
+  adoptionPets    AdoptionPet[]
+  adoptionRules   CountryAdoptionRule[]
+  controllerOrg   Organization?   @relation("CountryController", fields: [controllerOrgId], references: [id])
+  policies        CountryPolicy[]
+  organizations   Organization[]
+  shelterProfiles ShelterProfile[]
+  states          State[]
 
   @@index([controllerOrgId])
   @@map("countries")
 }
 
 model State {
-  id             Int             @id @default(autoincrement())
+  id             Int            @id @default(autoincrement())
   countryId      Int
   code           String
   name           String
-  isActive       Boolean         @default(true)
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  latitude       Decimal?        @db.Decimal(10, 8)
-  longitude      Decimal?        @db.Decimal(11, 8)
+  isActive       Boolean        @default(true)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  latitude       Decimal?       @db.Decimal(10, 8)
+  longitude      Decimal?       @db.Decimal(11, 8)
   locationCities LocationCity[]
   policies       StatePolicy[]
-  country        Country         @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  country        Country        @relation(fields: [countryId], references: [id], onDelete: Cascade)
 
   @@unique([countryId, code])
   @@index([countryId])
@@ -2453,21 +2927,21 @@ model Ad {
 }
 
 model InventoryLocation {
-  id                         Int                             @id @default(autoincrement())
-  branchId                   Int
-  type                       InventoryLocationType
-  name                       String
-  code                       String?
-  isActive                   Boolean                         @default(true)
-  createdAt                  DateTime                        @default(now())
-  updatedAt                  DateTime                        @updatedAt
-  warehouseId                Int?
-  zoneId                     Int?
+  id              Int                   @id @default(autoincrement())
+  branchId        Int
+  type            InventoryLocationType
+  name            String
+  code            String?
+  isActive        Boolean               @default(true)
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  warehouseId     Int?
+  zoneId          Int?
   /// Optional pick-face bin (rack/bin hierarchy under WarehouseZone).
-  binId                      Int?
-  branch                     Branch                          @relation(fields: [branchId], references: [id], onDelete: Cascade)
-  warehouse                  Warehouse?                      @relation(fields: [warehouseId], references: [id])
-  ordersFulfilled            Order[]                         @relation("OrderFulfilmentLocation")
+  binId           Int?
+  branch          Branch                @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  warehouse       Warehouse?            @relation(fields: [warehouseId], references: [id])
+  ordersFulfilled Order[]               @relation("OrderFulfilmentLocation")
 
   @@index([type])
   @@index([branchId])
@@ -2479,16 +2953,6 @@ model InventoryLocation {
   @@index([isActive])
   @@map("inventory_locations")
 }
-
-
-
-
-
-
-
-
-
-
 
 model OwnerOnboardingState {
   id                Int              @id @default(autoincrement())
@@ -2512,30 +2976,30 @@ model OwnerOnboardingState {
 }
 
 model Warehouse {
-  id                             Int                        @id @default(autoincrement())
+  id                             Int                 @id @default(autoincrement())
   orgId                          Int
-  name                           String                     @db.VarChar(200)
-  code                           String?                    @db.VarChar(50)
-  type                           WarehouseType              @default(CENTRAL)
+  name                           String              @db.VarChar(200)
+  code                           String?             @db.VarChar(50)
+  type                           WarehouseType       @default(CENTRAL)
   addressJson                    Json?
-  location                       Json                       @default("{}")
+  location                       Json                @default("{}")
   managerId                      Int?
-  isActive                       Boolean                    @default(true)
-  createdAt                      DateTime                   @default(now())
-  updatedAt                      DateTime                   @updatedAt
+  isActive                       Boolean             @default(true)
+  createdAt                      DateTime            @default(now())
+  updatedAt                      DateTime            @updatedAt
   /// When true, vendor GRN receive creates pending QC rows; stock is not allocatable until inspection completes.
-  qcInboundEnabled               Boolean                    @default(false)
+  qcInboundEnabled               Boolean             @default(false)
   /// When set (>0) and failedQty meets threshold, inspection is flagged for escalation review.
   qcEscalationFailedQtyThreshold Int?
   /// Optional: when receiving against a PO whose grandTotal >= this, write an escalation audit row.
-  poReceiveEscalationMinTotal    Decimal?                   @db.Decimal(14, 2)
+  poReceiveEscalationMinTotal    Decimal?            @db.Decimal(14, 2)
   branchId                       Int?
   /// Max over-receipt vs ordered line qty: null = unlimited (legacy); 0 = no over; 5 = 5% over allowed.
-  poOverReceiptTolerancePercent  Decimal?                   @db.Decimal(5, 2)
+  poOverReceiptTolerancePercent  Decimal?            @db.Decimal(5, 2)
   locations                      InventoryLocation[]
-  branch                         Branch?                    @relation(fields: [branchId], references: [id])
-  manager                        User?                      @relation("WarehouseManager", fields: [managerId], references: [id])
-  org                            Organization               @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  branch                         Branch?             @relation(fields: [branchId], references: [id])
+  manager                        User?               @relation("WarehouseManager", fields: [managerId], references: [id])
+  org                            Organization        @relation(fields: [orgId], references: [id], onDelete: Cascade)
 
   @@index([orgId])
   @@index([orgId, isActive])
@@ -2545,9 +3009,6 @@ model Warehouse {
   @@map("warehouses")
 }
 
-
-
-
 model Campaign {
   id          Int     @id @default(autoincrement())
   name        String
@@ -2555,23 +3016,23 @@ model Campaign {
   description String?
 
   // Campaign Period
-  startDate DateTime
-  endDate   DateTime
+  startDate      DateTime
+  endDate        DateTime
   bookingStartAt DateTime?
   bookingEndAt   DateTime?
 
   // Configuration
-  status     CampaignStatus     @default(DRAFT)
-  visibility CampaignVisibility @default(PUBLIC)
-  countdownEnabled Boolean @default(false)
+  status           CampaignStatus     @default(DRAFT)
+  visibility       CampaignVisibility @default(PUBLIC)
+  countdownEnabled Boolean            @default(false)
 
   // Pricing
-  pricingType CampaignPricingType @default(FREE)
-  priceAmount Decimal?            @db.Decimal(10, 2)
-  vaccineCost   Decimal?          @db.Decimal(10, 2)
-  serviceCharge Decimal?          @db.Decimal(10, 2)
-  packageFeatures Json            @default("[]")
-  currency    String              @default("BDT")
+  pricingType     CampaignPricingType @default(FREE)
+  priceAmount     Decimal?            @db.Decimal(10, 2)
+  vaccineCost     Decimal?            @db.Decimal(10, 2)
+  serviceCharge   Decimal?            @db.Decimal(10, 2)
+  packageFeatures Json                @default("[]")
+  currency        String              @default("BDT")
 
   // Settings
   maxPetsPerBooking  Int     @default(5)
@@ -2594,18 +3055,18 @@ model Campaign {
   publishedAt DateTime?
 
   // Relations
-  locations         CampaignLocation[]
-  vaccineTypes      CampaignVaccineType[]
-  includedVaccines  CampaignIncludedVaccine[]
-  bookings     CampaignBooking[]
-  staff        CampaignStaff[]
-  smsTemplates CampaignSmsTemplate[]
-  auditLogs    CampaignAuditLog[]
-  rolloutPhases      CampaignRolloutPhase[]
-  rolloutRegions     CampaignRolloutRegion[]
-  preRegistrations   CampaignPreRegistration[]
-  checkoutSessions   CampaignCheckoutSession[]
-  config             CampaignConfig?
+  locations        CampaignLocation[]
+  vaccineTypes     CampaignVaccineType[]
+  includedVaccines CampaignIncludedVaccine[]
+  bookings         CampaignBooking[]
+  staff            CampaignStaff[]
+  smsTemplates     CampaignSmsTemplate[]
+  auditLogs        CampaignAuditLog[]
+  rolloutPhases    CampaignRolloutPhase[]
+  rolloutRegions   CampaignRolloutRegion[]
+  preRegistrations CampaignPreRegistration[]
+  checkoutSessions CampaignCheckoutSession[]
+  config           CampaignConfig?
 
   @@index([status])
   @@index([startDate, endDate])
@@ -2631,8 +3092,8 @@ model CampaignConfig {
   lateBookingAllowed Boolean @default(false)
 
   // Payment
-  onlinePaymentEnabled Boolean @default(false)
-  payAtVenueEnabled    Boolean @default(false)
+  onlinePaymentEnabled Boolean                    @default(false)
+  payAtVenueEnabled    Boolean                    @default(false)
   paymentChannelMode   CampaignPaymentChannelMode @default(SMS_ONLY) @map("payment_channel_mode")
 
   // Advanced (JSON)
@@ -2685,11 +3146,11 @@ model CampaignLocation {
   updatedAt DateTime @updatedAt
 
   // Relations
-  campaign Campaign          @relation(fields: [campaignId], references: [id], onDelete: Cascade)
-  slots    CampaignSlot[]
-  bookings         CampaignBooking[]
-  staff            CampaignStaff[]
-  rolloutRegions   CampaignRolloutRegion[]
+  campaign       Campaign                @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  slots          CampaignSlot[]
+  bookings       CampaignBooking[]
+  staff          CampaignStaff[]
+  rolloutRegions CampaignRolloutRegion[]
 
   @@index([campaignId])
   @@index([isActive])
@@ -2705,10 +3166,10 @@ model CampaignSlot {
   startTime String   @db.VarChar(5) // "09:00"
   endTime   String   @db.VarChar(5) // "12:00"
 
-  // Session (optional Ã¢â‚¬â€ legacy rows use API inference)
-  sessionName        String? @db.VarChar(120)
-  checkInStartTime   String? @db.VarChar(5)
-  bookingCutoffTime  String? @db.VarChar(5)
+  // Session (optional ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â legacy rows use API inference)
+  sessionName       String? @db.VarChar(120)
+  checkInStartTime  String? @db.VarChar(5)
+  bookingCutoffTime String? @db.VarChar(5)
 
   // Capacity
   capacity    Int @default(50)
@@ -2780,9 +3241,9 @@ model CampaignBooking {
   qrToken    String @unique @db.VarChar(32)
 
   // Campaign Link
-  campaignId Int
-  locationId Int?
-  slotId     Int?
+  campaignId  Int
+  locationId  Int?
+  slotId      Int?
   bookingMode CampaignBookingMode @default(VENUE)
 
   // Owner (may or may not have Furtail account)
@@ -2845,16 +3306,16 @@ model CampaignBooking {
   updatedAt DateTime @updatedAt
 
   // Relations
-  campaign        Campaign                 @relation(fields: [campaignId], references: [id])
-  location        CampaignLocation?        @relation(fields: [locationId], references: [id])
-  slot            CampaignSlot?            @relation(fields: [slotId], references: [id])
-  rolloutRegion   CampaignRolloutRegion?   @relation(fields: [rolloutRegionId], references: [id], onDelete: SetNull)
-  coverageZone    CoverageZone?            @relation(fields: [coverageZoneId], references: [id], onDelete: SetNull)
-  bdArea          BdArea?                  @relation(fields: [bdAreaId], references: [id], onDelete: SetNull)
-  checkoutSession CampaignCheckoutSession? @relation(fields: [checkoutSessionId], references: [id], onDelete: SetNull)
-  owner           User?                    @relation("CampaignBookingOwner", fields: [ownerUserId], references: [id])
-  checkedInBy     User?                    @relation("CampaignBookingCheckedInBy", fields: [checkedInByUserId], references: [id])
-  paymentOrder    Order?                   @relation("CampaignBookingPaymentOrder", fields: [paymentOrderId], references: [id])
+  campaign            Campaign                 @relation(fields: [campaignId], references: [id])
+  location            CampaignLocation?        @relation(fields: [locationId], references: [id])
+  slot                CampaignSlot?            @relation(fields: [slotId], references: [id])
+  rolloutRegion       CampaignRolloutRegion?   @relation(fields: [rolloutRegionId], references: [id], onDelete: SetNull)
+  coverageZone        CoverageZone?            @relation(fields: [coverageZoneId], references: [id], onDelete: SetNull)
+  bdArea              BdArea?                  @relation(fields: [bdAreaId], references: [id], onDelete: SetNull)
+  checkoutSession     CampaignCheckoutSession? @relation(fields: [checkoutSessionId], references: [id], onDelete: SetNull)
+  owner               User?                    @relation("CampaignBookingOwner", fields: [ownerUserId], references: [id])
+  checkedInBy         User?                    @relation("CampaignBookingCheckedInBy", fields: [checkedInByUserId], references: [id])
+  paymentOrder        Order?                   @relation("CampaignBookingPaymentOrder", fields: [paymentOrderId], references: [id])
   pets                CampaignPet[]
   smsLogs             CampaignSmsLog[]
   vaccinations        Vaccination[]            @relation("CampaignVaccinations")
@@ -2972,12 +3433,12 @@ model CampaignSmsLog {
   message      String
 
   // Status
-  status       CampaignSmsStatus @default(QUEUED)
-  externalId   String?           @db.VarChar(64) // Gateway message ID
-  provider     String?           @db.VarChar(32)
-  segmentCount Int?
-  estimatedCostBdt Decimal?      @db.Decimal(10, 4)
-  errorMessage String?
+  status           CampaignSmsStatus @default(QUEUED)
+  externalId       String?           @db.VarChar(64) // Gateway message ID
+  provider         String?           @db.VarChar(32)
+  segmentCount     Int?
+  estimatedCostBdt Decimal?          @db.Decimal(10, 4)
+  errorMessage     String?
 
   // Timestamps
   queuedAt    DateTime  @default(now())
@@ -3060,7 +3521,7 @@ model CampaignRolloutPhase {
   createdAt          DateTime                   @default(now())
   updatedAt          DateTime                   @updatedAt
 
-  campaign Campaign               @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  campaign Campaign                @relation(fields: [campaignId], references: [id], onDelete: Cascade)
   regions  CampaignRolloutRegion[]
 
   @@unique([campaignId, phaseCode])
@@ -3069,7 +3530,7 @@ model CampaignRolloutPhase {
 }
 
 model CampaignRolloutRegion {
-  id             Int      @id @default(autoincrement())
+  id             Int       @id @default(autoincrement())
   phaseId        Int
   campaignId     Int
   divisionId     Int?
@@ -3081,11 +3542,11 @@ model CampaignRolloutRegion {
   locationId     Int?
   startDate      DateTime?
   endDate        DateTime?
-  targetCapacity Int      @default(0)
-  bookedCount    Int      @default(0)
-  isActive       Boolean  @default(false)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  targetCapacity Int       @default(0)
+  bookedCount    Int       @default(0)
+  isActive       Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   phase            CampaignRolloutPhase      @relation(fields: [phaseId], references: [id], onDelete: Cascade)
   campaign         Campaign                  @relation(fields: [campaignId], references: [id], onDelete: Cascade)
@@ -3115,7 +3576,7 @@ model CampaignPreRegistration {
   updatedAt  DateTime                      @updatedAt
 
   campaign Campaign               @relation(fields: [campaignId], references: [id], onDelete: Cascade)
-  region   CampaignRolloutRegion?   @relation(fields: [regionId], references: [id], onDelete: SetNull)
+  region   CampaignRolloutRegion? @relation(fields: [regionId], references: [id], onDelete: SetNull)
 
   @@index([campaignId, status])
   @@index([phone])
@@ -3165,6 +3626,12 @@ enum PetStatus {
   ADOPTED
 }
 
+enum PetProfileVisibility {
+  PUBLIC
+  FOLLOWERS_ONLY
+  PRIVATE
+}
+
 enum FamilyRelation {
   OWNER
   DAD
@@ -3208,6 +3675,21 @@ enum PostType {
   REEL
 }
 
+enum ComposerPostType {
+  GENERAL
+  HEALTH_UPDATE
+  VACCINATION
+  LOST_PET
+  ADOPTION
+  SERVICE_REVIEW
+}
+
+enum PostPrivacy {
+  PUBLIC
+  FOLLOWERS
+  PRIVATE
+}
+
 enum PostCategory {
   GENERAL
   FUNDRAISING
@@ -3247,6 +3729,14 @@ enum NotificationType {
   TICKET_STATUS_CHANGED
   TICKET_ASSIGNED
   TICKET_SLA_BREACH
+  POST_LIKE
+  POST_COMMENT
+  USER_FOLLOW
+  PET_LIKED
+  PET_FOLLOWED
+  USER_FOLLOWED
+  FRIEND_REQUEST_ACCEPTED
+  FRIEND_REQUEST_RECEIVED
 }
 
 enum NotificationPriority {
@@ -3272,6 +3762,7 @@ enum NotificationDeliveryChannel {
   IN_APP
   EMAIL
   SMS
+  PUSH
 }
 
 enum NotificationDeliveryStatus {
@@ -3351,12 +3842,83 @@ enum ReportTargetType {
   FUNDRAISING
   USER
   PET
+  COMMENT
 }
 
 enum ReportStatus {
   PENDING
   REVIEWED
   DISMISSED
+}
+
+enum AdoptionPetStatus {
+  DRAFT
+  PENDING_REVIEW
+  NEEDS_CHANGES
+  APPROVED
+  PUBLISHED
+  PAUSED
+  APPLICATION_CLOSED
+  ADOPTED
+  REJECTED
+  REPORTED
+  REMOVED
+  EXPIRED
+}
+
+enum AdoptionApplicationStatus {
+  DRAFT
+  SUBMITTED
+  VIEWED
+  OWNER_REVIEW
+  SHORTLISTED
+  MESSAGE_STARTED
+  INTERVIEW_SCHEDULED
+  HOME_CHECK_REQUESTED
+  APPROVED
+  REJECTED
+  CANCELLED
+  ADOPTION_COMPLETED
+}
+
+enum AdoptionSpecies {
+  CAT
+  DOG
+  BIRD
+  RABBIT
+  OTHER
+}
+
+enum AdoptionOwnerType {
+  INDIVIDUAL
+  SHELTER
+  RESCUE
+  FOSTER
+  ADMIN
+}
+
+enum ServiceAreaType {
+  SAME_AREA
+  SAME_CITY
+  SAME_DISTRICT
+  SAME_DIVISION
+  ANYWHERE_COUNTRY
+  CUSTOM_AREAS
+  RADIUS_BASED
+  INTERNATIONAL
+}
+
+enum AdoptionAgreementStatus {
+  DRAFT
+  SENT
+  SIGNED
+  CANCELLED
+}
+
+enum AdoptionFollowUpStatus {
+  PENDING
+  COMPLETED
+  SKIPPED
 }
 
 enum FundraisingAccountStatus {
@@ -3408,12 +3970,6 @@ enum AuditActorRole {
   USER
 }
 
-
-
-
-
-
-
 enum PartnerStatus {
   NOT_APPLIED
   PENDING_REVIEW
@@ -3436,7 +3992,6 @@ enum BranchStatus {
   INACTIVE
   BLOCKED
 }
-
 
 enum VerificationStatus {
   UNSUBMITTED
@@ -3522,16 +4077,10 @@ enum RegistrationType {
   NGO
 }
 
-
 enum OrgType {
   PARTNER
   COUNTRY_CHAPTER
 }
-
-
-
-
-
 
 enum MemberRole {
   OWNER
@@ -3559,11 +4108,6 @@ enum MemberStatus {
   ACTIVE
   SUSPENDED
 }
-
-
-
-
-
 
 enum AppointmentStatus {
   BOOKED
@@ -3596,21 +4140,12 @@ enum AppointmentPriority {
   VIP
 }
 
-
-
-
-
-
-
 enum VisitStatus {
   CHECKED_IN
   IN_PROGRESS
   COMPLETED
   CANCELLED
 }
-
-
-
 
 enum InventoryLocationType {
   CLINIC
@@ -3625,37 +4160,6 @@ enum InventoryLocationType {
   QUARANTINE
   STAGING
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 enum ProductImportSourceType {
   CSV
@@ -3683,10 +4187,6 @@ enum IntegrationMappingType {
   BRAND
   UNIT
 }
-
-
-
-
 
 enum RoleScope {
   ORG
@@ -3787,92 +4287,11 @@ enum ServiceCategory {
   PHARMACY
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 enum OrderPaymentStatus {
   PENDING
   PAID
   FAILED
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 enum LocationPrecisionLevel {
   COARSE
@@ -3923,32 +4342,6 @@ enum CoverageZoneType {
   BUSINESS_READINESS
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 enum OnboardingStatus {
   NOT_STARTED
   PATH_SELECTED
@@ -3964,39 +4357,11 @@ enum OnboardingPath {
   JOIN_EXISTING
 }
 
-
-
-
-
-
 enum WarehouseType {
   CENTRAL
   REGIONAL
   TRANSIT
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 enum CampaignStatus {
   DRAFT
@@ -4127,5 +4492,47 @@ enum CampaignCheckoutStatus {
   PAID
   FULFILLED
   EXPIRED
+  FAILED
+}
+
+// â”€â”€ Stories (My Day feature) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+model Story {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  mediaUrl  String
+  mediaType String   @default("image")
+  caption   String?
+  expiresAt DateTime
+  viewCount Int      @default(0)
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User        @relation(fields: [userId], references: [id])
+  views StoryView[]
+
+  @@index([userId])
+  @@index([expiresAt, isDeleted])
+  @@map("stories")
+}
+
+model StoryView {
+  id       Int      @id @default(autoincrement())
+  storyId  Int
+  viewerId Int
+  viewedAt DateTime @default(now())
+
+  story  Story @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  viewer User  @relation("StoryViewViewer", fields: [viewerId], references: [id])
+
+  @@unique([storyId, viewerId])
+  @@map("story_views")
+}
+
+enum MediaStatus {
+  PENDING
+  PROCESSING
+  READY
   FAILED
 }

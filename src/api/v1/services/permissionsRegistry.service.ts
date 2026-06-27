@@ -42,6 +42,11 @@ const REGISTRY: PermissionEntry[] = [
   { key: "admin.kyc.manage", label: "Manage KYC", group: "Governance", description: "Review and decide on producer KYC verification.", scope: "admin" },
   { key: "admin.audit.read", label: "View audit logs", group: "Governance", description: "Read audit timeline and governance events.", scope: "admin" },
   { key: "admin.permissions.read", label: "View permissions registry", group: "Governance", description: "View human-readable permissions registry (grouped).", scope: "admin" },
+  { key: "adoption.read", label: "View adoption moderation", group: "Governance", description: "View adoption listings and moderation details.", scope: "admin" },
+  { key: "adoption.review", label: "Review adoption listings", group: "Governance", description: "Approve, reject, or request changes on adoption listings.", scope: "admin" },
+  { key: "adoption.moderate", label: "Moderate adoption listings", group: "Governance", description: "Pause or remove adoption listings.", scope: "admin" },
+  { key: "adoption.report.manage", label: "Manage adoption reports", group: "Governance", description: "View and manage reports against adoption listings.", scope: "admin" },
+  { key: "adoption.country_rules.manage", label: "Manage adoption country rules", group: "Governance", description: "Create and update adoption rules for countries.", scope: "admin" },
   // ----- Support (ticketing) -----
   { key: "admin.support.tickets.manage", label: "Manage support tickets", group: "Support", description: "List, view, update, assign, and add internal notes on tickets.", scope: "admin" },
   { key: "admin.support.tickets.respond", label: "Respond to tickets", group: "Support", description: "Post public replies to producer tickets.", scope: "admin" },

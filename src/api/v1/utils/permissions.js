@@ -7,6 +7,7 @@ const ADMIN_PERMISSIONS = [
   "branch.read", "branch.write", "staff.read", "staff.write",
   "wallet.read", "wallet.withdraw_request.read", "wallet.withdraw.approve",
   "fundraising.read", "fundraising.verify", "users.read", "settings.write",
+  "adoption.read", "adoption.review", "adoption.moderate", "adoption.report.manage", "adoption.country_rules.manage",
   "TEAM_MANAGE",
 ];
 
