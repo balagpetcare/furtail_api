@@ -1,5 +1,5 @@
 const prisma = require("../../../../infrastructure/db/prismaClient");
-const { createNotification } = require("../../services/notification.service");
+const { createAdoptionNotification } = require("../../services/adoptionNotification.service");
 const { writeAudit } = require("../../../../middlewares/auditWriter");
 
 type AdoptionPetStatus = string;
@@ -145,6 +145,7 @@ function listingInclude(viewerId?: number | null) {
       select: {
         applications: true,
         favorites: true,
+        comments: true,
       },
     },
     country: {
@@ -173,9 +174,62 @@ function redactApplications(listing: any) {
   return clone;
 }
 
+function normalizeListingForViewer(listing: any, viewerId?: number | null) {
+  if (!listing) return listing;
+  const clone = redactApplications(listing);
+  const favorites = Array.isArray(clone.favorites) ? clone.favorites : [];
+  const favoriteCount = clone._count?.favorites ?? favorites.length ?? 0;
+  const commentCount = clone._count?.comments ?? 0;
+  const isFavoritedByMe =
+    viewerId != null && favorites.some((favorite: any) => Number(favorite?.userId) === Number(viewerId));
+
+  return {
+    ...clone,
+    viewerIsOwner: viewerId != null && Number(clone.ownerId) === Number(viewerId),
+    favoriteCount,
+    commentCount,
+    isFavoritedByMe,
+  };
+}
+
 function canViewNonPublicListing(user: any, listing: { ownerId: number }) {
   if (!user?.id) return false;
   return Number(user.id) === Number(listing.ownerId) || isAdminLike(user);
+}
+
+function canManageAdoptionComment(user: any, comment: { userId: number }) {
+  if (!user?.id) return false;
+  return Number(user.id) === Number(comment.userId) || isAdminLike(user);
+}
+
+function normalizeAdoptionComment(comment: any, user?: any) {
+  if (!comment) return comment;
+  return {
+    ...comment,
+    canDelete: canManageAdoptionComment(user, comment),
+  };
+}
+
+async function ensureViewableAdoptionListing(id: number, user?: any) {
+  const listing = await prisma.adoptionPet.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      ownerId: true,
+      deletedAt: true,
+      status: true,
+    },
+  });
+
+  if (!listing || listing.deletedAt) {
+    throw createHttpError(404, "Adoption listing not found");
+  }
+
+  if (listing.status !== "PUBLISHED" && !canViewNonPublicListing(user, listing as any)) {
+    throw createHttpError(404, "Adoption listing not found");
+  }
+
+  return listing;
 }
 
 async function ensureMediaOwnership(userId: number, mediaIds: number[]) {
@@ -263,7 +317,17 @@ function buildPetData(body: any, partial = false) {
   if (!partial || hasOwn(body, "contactPhoneVisible")) {
     data.contactPhoneVisible = hasOwn(body, "contactPhoneVisible") ? Boolean(body.contactPhoneVisible) : false;
   }
+  if (!partial || hasOwn(body, "ownerContactPhone")) data.ownerContactPhone = body.ownerContactPhone ?? undefined;
+  if (!partial || hasOwn(body, "ownerWhatsappPhone")) data.ownerWhatsappPhone = body.ownerWhatsappPhone ?? undefined;
+  if (!partial || hasOwn(body, "ownerCityAreaText")) data.ownerCityAreaText = body.ownerCityAreaText ?? undefined;
+  if (!partial || hasOwn(body, "pickupLocationNotes")) data.pickupLocationNotes = body.pickupLocationNotes ?? undefined;
   if (!partial || hasOwn(body, "expiresAt")) data.expiresAt = body.expiresAt ? new Date(body.expiresAt) : undefined;
+  if (hasOwn(body, "latitude") && body.latitude !== undefined && body.latitude !== null) {
+    data.latitude = body.latitude;
+  }
+  if (hasOwn(body, "longitude") && body.longitude !== undefined && body.longitude !== null) {
+    data.longitude = body.longitude;
+  }
 
   return data;
 }
@@ -272,6 +336,8 @@ export async function listPublicAdoptions(params: any) {
   const page = Math.max(Number(params.page) || 1, 1);
   const limit = Math.min(Math.max(Number(params.limit) || 20, 1), 100);
   const where = buildListWhere(params, "public");
+  // TODO(radius-search): params.nearLat, params.nearLng, params.radiusKm are stored on AdoptionPet.latitude/longitude.
+  // Accurate Haversine radius filtering requires a raw SQL query or PostGIS. Deferred until geospatial support is added.
   const [items, total] = await Promise.all([
     prisma.adoptionPet.findMany({
       where,
@@ -284,7 +350,7 @@ export async function listPublicAdoptions(params: any) {
   ]);
 
   return {
-    items,
+    items: items.map((item) => normalizeListingForViewer(item, params.viewerId ?? null)),
     meta: toPagination(page, limit, total),
   };
 }
@@ -319,7 +385,7 @@ export async function getAdoptionById(params: { id: number; user?: any }) {
     throw createHttpError(404, "Adoption listing not found");
   }
 
-  return listing;
+  return normalizeListingForViewer(listing, params.user?.id ?? null);
 }
 
 export async function createAdoptionListing(params: { userId: number; body: any }) {
@@ -398,8 +464,8 @@ export async function updateAdoptionListing(params: { id: number; user: any; bod
     throw createHttpError(403, "You cannot edit this adoption listing");
   }
 
-  if (!admin && !["DRAFT", "NEEDS_CHANGES"].includes(String(listing.status))) {
-    throw createHttpError(409, "Only draft or needs changes listings can be edited");
+  if (!admin && !["DRAFT", "NEEDS_CHANGES", "APPROVED", "PUBLISHED", "PENDING_REVIEW", "PAUSED"].includes(String(listing.status))) {
+    throw createHttpError(409, "Only active, draft, paused, or review-pending listings can be edited");
   }
 
   const mediaIds = Array.isArray(params.body.mediaIds)
@@ -535,6 +601,10 @@ export async function applyToAdoption(params: { id: number; userId: number; body
     },
   });
 
+  if (listing && listing.status === "ADOPTED") {
+    throw createHttpError(400, "This pet has already been adopted");
+  }
+
   if (!listing || listing.status !== "PUBLISHED") {
     throw createHttpError(404, "Adoption listing not found");
   }
@@ -563,9 +633,12 @@ export async function applyToAdoption(params: { id: number; userId: number; body
       ownerId: listing.ownerId,
       status: "SUBMITTED",
       messageToOwner: params.body.messageToOwner ?? undefined,
+      applicantName: params.body.applicantName ?? undefined,
       applicantPhone: params.body.applicantPhone ?? undefined,
+      applicantWhatsappPhone: params.body.applicantWhatsappPhone ?? undefined,
       applicantEmail: params.body.applicantEmail ?? undefined,
       applicantAddress: params.body.applicantAddress ?? undefined,
+      applicantCityAreaText: params.body.applicantCityAreaText ?? undefined,
       applicantCountryId: toInt(params.body.applicantCountryId) ?? undefined,
       applicantStateId: toInt(params.body.applicantStateId) ?? undefined,
       applicantCityId: toInt(params.body.applicantCityId) ?? undefined,
@@ -606,13 +679,17 @@ export async function applyToAdoption(params: { id: number; userId: number; body
   });
 
   try {
-    await createNotification({
-      userId: Number(listing.ownerId),
-      type: "SYSTEM",
+    await createAdoptionNotification({
+      recipientUserId: Number(listing.ownerId),
+      actorUserId: params.userId,
+      type: "ADOPTION_APPLICATION_SUBMITTED",
       title: "New adoption application",
-      message: `${listing.name} received a new adoption application.`,
-      source: "adoptions",
-      meta: {
+      body: `${listing.name} received a new adoption application.`,
+      route: `/adoption-application/${created.id}`,
+      targetId: created.id,
+      targetType: "ADOPTION_APPLICATION",
+      dedupeKey: `adoption:application:${created.id}:submitted`,
+      metadata: {
         adoptionPetId: params.id,
         adoptionApplicationId: created.id,
       },
@@ -622,6 +699,215 @@ export async function applyToAdoption(params: { id: number; userId: number; body
   }
 
   return created;
+}
+
+export async function favoriteAdoption(params: { id: number; userId: number; user: any }) {
+  const listing = await prisma.adoptionPet.findUnique({
+    where: { id: params.id },
+    select: { id: true, ownerId: true, deletedAt: true, status: true },
+  });
+
+  if (!listing || listing.deletedAt) {
+    throw createHttpError(404, "Adoption listing not found");
+  }
+
+  if (listing.status !== "PUBLISHED" && !canViewNonPublicListing(params.user, listing as any)) {
+    throw createHttpError(404, "Adoption listing not found");
+  }
+
+  await prisma.adoptionFavorite.upsert({
+    where: {
+      petId_userId: {
+        petId: params.id,
+        userId: params.userId,
+      },
+    },
+    update: {},
+    create: {
+      petId: params.id,
+      userId: params.userId,
+    },
+  });
+
+  try {
+    await createAdoptionNotification({
+      recipientUserId: Number(listing.ownerId),
+      actorUserId: params.userId,
+      type: "ADOPTION_LIKE",
+      title: "New adoption like",
+      body: "Someone liked your adoption listing.",
+      route: `/adoption/${params.id}`,
+      targetId: params.id,
+      targetType: "ADOPTION",
+      dedupeKey: `adoption:like:${params.id}:${params.userId}`,
+      metadata: { adoptionPetId: params.id },
+    });
+  } catch (_) {}
+
+  return getAdoptionById({
+    id: params.id,
+    user: params.user,
+  });
+}
+
+export async function unfavoriteAdoption(params: { id: number; userId: number; user: any }) {
+  const listing = await prisma.adoptionPet.findUnique({
+    where: { id: params.id },
+    select: { id: true, ownerId: true, deletedAt: true, status: true },
+  });
+
+  if (!listing || listing.deletedAt) {
+    throw createHttpError(404, "Adoption listing not found");
+  }
+
+  if (listing.status !== "PUBLISHED" && !canViewNonPublicListing(params.user, listing as any)) {
+    throw createHttpError(404, "Adoption listing not found");
+  }
+
+  await prisma.adoptionFavorite.deleteMany({
+    where: {
+      petId: params.id,
+      userId: params.userId,
+    },
+  });
+
+  return getAdoptionById({
+    id: params.id,
+    user: params.user,
+  });
+}
+
+export async function listComments(params: { id: number; user?: any; limit?: number }) {
+  await ensureViewableAdoptionListing(params.id, params.user);
+
+  const limit = Math.min(Math.max(Number(params.limit) || 50, 1), 100);
+
+  const [items, commentCount] = await Promise.all([
+    prisma.adoptionComment.findMany({
+      where: { petId: params.id },
+      orderBy: { createdAt: "desc" },
+      take: limit,
+      include: {
+        user: {
+          select: {
+            id: true,
+            profile: {
+              select: {
+                displayName: true,
+                username: true,
+                avatarMedia: { select: { url: true, key: true } },
+              },
+            },
+          },
+        },
+      },
+    }),
+    prisma.adoptionComment.count({ where: { petId: params.id } }),
+  ]);
+
+  return {
+    items: items.map((comment) => normalizeAdoptionComment(comment, params.user)),
+    meta: {
+      commentCount,
+      limit,
+    },
+  };
+}
+
+export async function addComment(params: { id: number; userId: number; user: any; body: any }) {
+  await ensureViewableAdoptionListing(params.id, params.user);
+
+  const text = String(params.body?.text || "").trim();
+  if (!text) {
+    throw createHttpError(400, "Comment text is required");
+  }
+
+  const created = await prisma.adoptionComment.create({
+    data: {
+      petId: params.id,
+      userId: params.userId,
+      text,
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          profile: {
+            select: {
+              displayName: true,
+              username: true,
+              avatarMedia: { select: { url: true, key: true } },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const commentCount = await prisma.adoptionComment.count({ where: { petId: params.id } });
+
+  try {
+    const listing = await prisma.adoptionPet.findUnique({
+      where: { id: params.id },
+      select: { ownerId: true, name: true },
+    });
+    if (listing) {
+      await createAdoptionNotification({
+        recipientUserId: Number(listing.ownerId),
+        actorUserId: params.userId,
+        type: "ADOPTION_COMMENT",
+        title: "New adoption comment",
+        body: `Someone commented on ${listing.name}.`,
+        route: `/adoption-comments/${params.id}`,
+        targetId: params.id,
+        targetType: "ADOPTION_COMMENTS",
+        dedupeKey: `adoption:comment:${created.id}`,
+        metadata: {
+          adoptionPetId: params.id,
+          adoptionCommentId: created.id,
+        },
+      });
+    }
+  } catch (_) {}
+
+  return {
+    comment: normalizeAdoptionComment(created, params.user),
+    commentCount,
+  };
+}
+
+export async function deleteComment(params: { id: number; commentId: number; userId: number; user: any }) {
+  await ensureViewableAdoptionListing(params.id, params.user);
+
+  const comment = await prisma.adoptionComment.findFirst({
+    where: {
+      id: params.commentId,
+      petId: params.id,
+    },
+    select: {
+      id: true,
+      userId: true,
+    },
+  });
+
+  if (!comment) {
+    throw createHttpError(404, "Comment not found");
+  }
+
+  if (!canManageAdoptionComment(params.user, comment)) {
+    throw createHttpError(403, "You cannot delete this comment");
+  }
+
+  await prisma.adoptionComment.delete({
+    where: { id: params.commentId },
+  });
+
+  const commentCount = await prisma.adoptionComment.count({ where: { petId: params.id } });
+
+  return {
+    deleted: true,
+    commentCount,
+  };
 }
 
 export async function listMyAdoptions(params: { userId: number; query: any }) {
@@ -718,6 +1004,8 @@ async function changeListingStatus(params: {
     where: { id: params.id },
     select: {
       id: true,
+      ownerId: true,
+      name: true,
       status: true,
       deletedAt: true,
     },
@@ -772,6 +1060,27 @@ async function changeListingStatus(params: {
     before: { status: listing.status },
     after: { status: params.toStatus, note: params.note ?? null },
   });
+
+  try {
+    await createAdoptionNotification({
+      recipientUserId: Number(listing.ownerId),
+      actorUserId: Number(params.user?.id || 0),
+      type: "ADOPTION_LISTING_STATUS_CHANGED",
+      title: "Adoption listing status updated",
+      body: `${listing.name} is now ${String(params.toStatus).toLowerCase().replace(/_/g, " ")}.`,
+      route: `/adoption/${params.id}`,
+      targetId: params.id,
+      targetType: "ADOPTION",
+      dedupeKey: `adoption:status:${params.id}:${params.toStatus}`,
+      metadata: {
+        adoptionPetId: params.id,
+        fromStatus: listing.status,
+        toStatus: params.toStatus,
+        note: params.note ?? null,
+      },
+      priority: "P1",
+    });
+  } catch (_) {}
 
   return updated;
 }
@@ -1238,11 +1547,24 @@ export async function updateApplicationStatus(params: {
     throw createHttpError(400, "You cannot review your own application");
   }
 
-  const updated = await prisma.adoptionApplication.update({
-    where: { id: params.applicationId },
-    data: {
-      status: params.status,
+  const updated = await prisma.$transaction(async (tx: any) => {
+    const app = await tx.adoptionApplication.update({
+      where: { id: params.applicationId },
+      data: {
+        status: params.status,
+      }
+    });
+
+    if (params.status === "APPROVED") {
+      await tx.adoptionPet.update({
+        where: { id: application.petId },
+        data: {
+          status: "ADOPTED",
+        }
+      });
     }
+
+    return app;
   });
 
   try {
@@ -1260,16 +1582,27 @@ export async function updateApplicationStatus(params: {
   }
 
   try {
-    await createNotification({
-      userId: application.applicantId,
-      type: "SYSTEM",
-      title: "Adoption Application Update",
-      message: `Your application to adopt ${application.pet.name} has been updated to ${params.status}.`,
-      meta: {
+    await createAdoptionNotification({
+      recipientUserId: application.applicantId,
+      actorUserId: params.userId,
+      type:
+        params.status === "APPROVED"
+          ? "ADOPTION_APPLICATION_APPROVED"
+          : "ADOPTION_APPLICATION_REJECTED",
+      title:
+        params.status === "APPROVED"
+          ? "Adoption application approved"
+          : "Adoption application updated",
+      body: `Your application for ${application.pet.name} is now ${params.status.toLowerCase().replace(/_/g, " ")}.`,
+      route: `/adoption-application/${application.id}`,
+      targetId: application.id,
+      targetType: "ADOPTION_APPLICATION",
+      dedupeKey: `adoption:application:${application.id}:status:${params.status}`,
+      metadata: {
         applicationId: application.id,
         status: params.status,
         note: params.note || null,
-      }
+      },
     });
   } catch (e) {
     console.error("Notification failed (ignored):", e);
@@ -1279,6 +1612,40 @@ export async function updateApplicationStatus(params: {
   return updated;
 }
 
+export async function reportAdoption(params: {
+  id: number;
+  userId: number;
+  reasonCode: string;
+  details?: string;
+}) {
+  const { id, userId, reasonCode, details } = params;
+
+  const pet = await prisma.adoptionPet.findUnique({
+    where: { id },
+    select: { id: true, status: true },
+  });
+  if (!pet) throw createHttpError(404, "Adoption listing not found");
+
+  const existing = await prisma.adoptionReport.findFirst({
+    where: { petId: id, reporterId: userId },
+    select: { id: true },
+  });
+  if (existing) throw createHttpError(409, "You have already reported this listing");
+
+  const report = await prisma.adoptionReport.create({
+    data: {
+      petId: id,
+      reporterId: userId,
+      reasonCode,
+      details: details ?? null,
+      status: "PENDING",
+    },
+    select: { id: true, reasonCode: true, status: true, createdAt: true },
+  });
+
+  return report;
+}
+
 module.exports = {
   listPublicAdoptions,
   getAdoptionById,
@@ -1286,6 +1653,11 @@ module.exports = {
   updateAdoptionListing,
   submitAdoptionForReview,
   applyToAdoption,
+  favoriteAdoption,
+  unfavoriteAdoption,
+  listComments,
+  addComment,
+  deleteComment,
   listMyAdoptions,
   listMyAdoptionApplications,
   adminListAdoptions,
@@ -1303,5 +1675,5 @@ module.exports = {
   getApplicationsForListing,
   getApplicationDetail,
   updateApplicationStatus,
+  reportAdoption,
 };
-
