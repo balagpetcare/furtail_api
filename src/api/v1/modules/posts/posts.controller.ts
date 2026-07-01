@@ -18,6 +18,39 @@ exports.getFeed = async (req, res) => {
   }
 };
 
+// GET /api/v1/posts/videos
+exports.getVideosFeed = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
+    const posts = await service.getVideosFeed({
+      userId,
+      limit: req.query.limit,
+      page: req.query.page,
+      cursor: req.query.cursor,
+      search: req.query.search,
+      category: req.query.category,
+      sort: req.query.sort,
+      duration: req.query.duration,
+      followingOnly: req.query.followingOnly,
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: posts.items,
+      meta: {
+        page: posts.page,
+        limit: posts.limit,
+        hasMore: posts.hasMore,
+      },
+    });
+  } catch (e) {
+    console.error('posts.getVideosFeed error:', e);
+    return res.status(500).json({ success: false, message: e.message || 'Failed' });
+  }
+};
+
 // GET /api/v1/posts/user/:userId
 exports.getUserFeed = async (req, res) => {
   try {
@@ -121,6 +154,17 @@ exports.create = async (req, res) => {
       type: req.body.type,
       category: req.body.category,
       mediaIds: req.body.mediaIds,
+      privacy: req.body.privacy,
+      postType: req.body.postType,
+      backgroundStyle: req.body.backgroundStyle ?? req.body.backgroundStyleId,
+      lostPetName: req.body.lostPetName,
+      lostPetLocation: req.body.lostPetLocation,
+      lostPetContactVisible: req.body.lostPetContactVisible,
+      taggedPetIds: req.body.taggedPetIds,
+      songTitle: req.body.songTitle,
+      songArtist: req.body.songArtist,
+      songStartMs: req.body.songStartMs != null ? Number(req.body.songStartMs) : undefined,
+      songDurationMs: req.body.songDurationMs != null ? Number(req.body.songDurationMs) : undefined,
     });
 
     return res.status(201).json({ success: true, data: created });
@@ -143,6 +187,17 @@ exports.update = async (req, res) => {
       type: req.body.type,
       category: req.body.category,
       mediaIds: req.body.mediaIds,
+      privacy: req.body.privacy,
+      postType: req.body.postType,
+      backgroundStyle: req.body.backgroundStyle ?? req.body.backgroundStyleId,
+      lostPetName: req.body.lostPetName,
+      lostPetLocation: req.body.lostPetLocation,
+      lostPetContactVisible: req.body.lostPetContactVisible,
+      taggedPetIds: req.body.taggedPetIds,
+      songTitle: req.body.songTitle,
+      songArtist: req.body.songArtist,
+      songStartMs: req.body.songStartMs != null ? Number(req.body.songStartMs) : undefined,
+      songDurationMs: req.body.songDurationMs != null ? Number(req.body.songDurationMs) : undefined,
     });
 
     return res.status(200).json({ success: true, data: updated });
@@ -281,4 +336,52 @@ exports.replyComment = async (req, res) => {
   }
 };
 
+exports.bookmark = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
+    await service.bookmark({ userId, postId: req.params.postId });
+    return res.status(200).json({ success: true, message: 'Post bookmarked' });
+  } catch (e) {
+    const status = e.statusCode || 500;
+    console.error('posts.bookmark error:', e);
+    return res.status(status).json({ success: false, message: e.message || 'Failed' });
+  }
+};
+
+exports.unbookmark = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
+    await service.unbookmark({ userId, postId: req.params.postId });
+    return res.status(200).json({ success: true, message: 'Post unbookmarked' });
+  } catch (e) {
+    const status = e.statusCode || 500;
+    console.error('posts.unbookmark error:', e);
+    return res.status(status).json({ success: false, message: e.message || 'Failed' });
+  }
+};
+
+exports.getBookmarked = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
+    const posts = await service.getBookmarkedPosts({
+      userId,
+      limit: req.query.limit,
+      cursor: req.query.cursor,
+    });
+    return res.status(200).json({ success: true, data: posts });
+  } catch (e) {
+    const status = e.statusCode || 500;
+    console.error('posts.getBookmarked error:', e);
+    return res.status(status).json({ success: false, message: e.message || 'Failed' });
+  }
+};
+
 export {};
+
+

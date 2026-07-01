@@ -11,6 +11,9 @@ router.get("/profile", auth, profile.getMyProfile);
 router.patch("/me", auth, profile.updateMyProfile);
 router.put("/me", auth, profile.updateMyProfile);
 
+// ✅ look up profile by username — MUST be before /:id so "by-username" isn't parsed as a numeric id
+router.get("/by-username/:username", auth, profile.getUserByUsername);
+
 // ✅ view another user's profile by id (kept auth-protected to match app behavior)
 router.get("/:id", auth, profile.getUserById);
 

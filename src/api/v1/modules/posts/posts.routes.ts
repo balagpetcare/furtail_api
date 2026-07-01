@@ -5,6 +5,10 @@ const posts = require('./posts.controller');
 
 // Feed (home page)
 router.get('/feed', auth, posts.getFeed);
+router.get('/videos', auth, posts.getVideosFeed);
+
+// Bookmarked posts (MUST be before /:postId)
+router.get('/bookmarked', auth, posts.getBookmarked);
 
 // User feed (profile page)
 router.get('/user/:userId', auth, posts.getUserFeed);
@@ -29,6 +33,10 @@ router.get('/:postId', auth, posts.getById);
 // Like/unlike
 router.post('/:postId/like', auth, posts.like);
 router.delete('/:postId/like', auth, posts.unlike);
+
+// Bookmark/unbookmark
+router.post('/:postId/bookmark', auth, posts.bookmark);
+router.delete('/:postId/bookmark', auth, posts.unbookmark);
 
 // Comments
 router.get('/:postId/comments', auth, posts.listComments);

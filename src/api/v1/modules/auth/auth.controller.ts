@@ -309,99 +309,30 @@ exports.login = async (req, res) => {
     });
 
     // Get user roles and memberships for role-based redirect
-    const [orgMembers, branchMembers, countryRoles] = await Promise.all([
-      prisma.orgMember.findMany({
-        where: { userId: authRow.user.id, status: "ACTIVE" },
-        include: {
-          org: { select: { id: true, name: true } },
-          roles: { include: { role: true } },
-        },
-      }),
-      prisma.branchMember.findMany({
-        where: { userId: authRow.user.id, status: "ACTIVE" },
-        include: {
-          branch: {
-            select: {
-              id: true,
-              name: true,
-              types: {
-                select: {
-                  type: {
-                    select: {
-                      code: true
-                    }
-                  }
-                }
-              }
-            }
+    const branchMembers = await prisma.branchMember.findMany({
+      where: { userId: authRow.user.id, status: "ACTIVE" },
+      include: {
+        branch: {
+          select: {
+            id: true,
+            name: true,
           },
-          roles: { include: { role: true } },
         },
-      }),
-      prisma.userCountryRole.findMany({
-        where: { userId: authRow.user.id },
-        select: {
-          country: { select: { id: true, code: true, name: true } },
-          role: { select: { id: true, key: true, label: true, scope: true } },
-        },
-      }),
-    ]);
-
-    // Check branch access permissions for staff members
-    // For each branch membership, check/create access permission
-    const { requestBranchAccess } = require("../../services/branchAccessPermission.service");
-    const { notifyManagerOfAccessRequest } = require("../../services/branchAccessNotification.service");
-
-    const branchAccessInfo = [];
-    for (const branchMember of branchMembers) {
-      try {
-        // Check if permission exists
-        let permission = await prisma.branchAccessPermission.findUnique({
-          where: {
-            branchId_userId: {
-              branchId: branchMember.branchId,
-              userId: authRow.user.id,
-            },
+        org: {
+          select: {
+            id: true,
+            name: true,
           },
-        });
+        },
+      },
+    });
 
-        // If no permission exists, create a pending request
-        if (!permission) {
-          permission = await requestBranchAccess(
-            authRow.user.id,
-            branchMember.branchId,
-            branchMember.role
-          );
-          // Notify manager (non-blocking)
-          notifyManagerOfAccessRequest(branchMember.branchId, authRow.user.id)
-            .catch((err) => {
-              console.error("Failed to notify manager of access request:", err);
-            });
-        } else if (permission.status === "APPROVED") {
-          // Check if expired
-          if (permission.expiresAt && new Date(permission.expiresAt) < new Date()) {
-            // Auto-expire
-            await prisma.branchAccessPermission.update({
-              where: { id: permission.id },
-              data: {
-                status: "EXPIRED",
-                updatedAt: new Date(),
-              },
-            });
-            permission.status = "EXPIRED";
-          }
-        }
+    const orgMembers = branchMembers.map((bm) => ({
+      org: bm.org,
+      role: bm.role,
+    }));
 
-        branchAccessInfo.push({
-          branchId: branchMember.branchId,
-          permissionStatus: permission.status,
-          expiresAt: permission.expiresAt,
-        });
-      } catch (error) {
-        console.error(`Error checking access for branch ${branchMember.branchId}:`, error);
-        // Continue with other branches
-      }
-    }
+    const countryRoles: any[] = [];
 
     // Canonical redirect (backend is source of truth)
     const contexts = await resolveAuthContexts(authRow.user.id);
@@ -448,14 +379,13 @@ exports.login = async (req, res) => {
           role: om.role,
         })),
         branches: branchMembers.map((bm) => {
-          const accessInfo = branchAccessInfo.find((ai) => ai.branchId === bm.branch.id);
           return {
             id: bm.branch.id,
             name: bm.branch.name,
-            type: bm.branch.types?.[0]?.type?.code || null,
+            type: null,
             role: bm.role,
-            accessStatus: accessInfo?.permissionStatus || "PENDING",
-            accessExpiresAt: accessInfo?.expiresAt || null,
+            accessStatus: "ACTIVE",
+            accessExpiresAt: null,
           };
         }),
         countryRoles: countryRoles.map((cr) => ({
@@ -584,20 +514,10 @@ exports.getProfile = async (req, res) => {
     });
 
     // Owner panel: scope-filtered permissions for delegates; full perms for actual owners.
-    const hasDelegations =
-      (await prisma.ownerDelegation.count({ where: { delegatedUserId: userId } })) > 0;
-    const hasTeamMember =
-      (await prisma.ownerTeamMember.count({ where: { userId } })) > 0;
+    const hasDelegations = false;
+    const hasTeamMember = false;
     if (role !== "ADMIN") {
-      if (ownerProfile || ownedOrgs.length > 0) {
-        permissions = await resolvePermissionsForUser(userId);
-      } else if (hasDelegations || hasTeamMember) {
-        const base = await resolvePermissionsForUser(userId);
-        const panelPerms = await getPermissionsForOwnerPanel(userId);
-        permissions = [...new Set([...base, ...panelPerms])];
-      } else {
-        permissions = await resolvePermissionsForUser(userId);
-      }
+      permissions = await resolvePermissionsForUser(userId);
     }
 
     const ownerKyc = await prisma.ownerKyc.findUnique({
@@ -605,14 +525,7 @@ exports.getProfile = async (req, res) => {
       select: { verificationStatus: true, submittedAt: true, reviewedAt: true },
     });
 
-    const countryRoles = await prisma.userCountryRole.findMany({
-      where: { userId: user.id },
-      select: {
-        country: { select: { id: true, code: true, name: true } },
-        role: { select: { id: true, key: true, label: true, scope: true } },
-        createdAt: true,
-      },
-    });
+    const countryRoles: any[] = [];
 
     const branchMemberCount = await prisma.branchMember.count({
       where: { userId: user.id, status: "ACTIVE" },
@@ -620,10 +533,11 @@ exports.getProfile = async (req, res) => {
     const hasStaffAccess =
       Boolean(ownerProfile || ownedOrgs.length > 0) || branchMemberCount > 0;
 
-    const doctorProfileCount = await prisma.clinicStaffProfile.count({
+    const doctorProfileCount = await prisma.branchMember.count({
       where: {
-        branchMember: { userId: user.id },
-        staffType: "DOCTOR",
+        userId: user.id,
+        role: "DOCTOR",
+        status: "ACTIVE",
       },
     });
     const doctorVerification =
@@ -1375,20 +1289,7 @@ exports.acceptInvite = async (req, res) => {
         uid = created.id;
       }
 
-      if (accessInvite.scopeType === "COUNTRY") {
-        await tx.userCountryRole.upsert({
-          where: { userId_countryId_roleId: { userId: uid, countryId: accessInvite.countryId, roleId: accessInvite.roleId } },
-          update: {},
-          create: { userId: uid, countryId: accessInvite.countryId, roleId: accessInvite.roleId },
-        });
-      }
-      if (accessInvite.scopeType === "STATE") {
-        await tx.userStateRole.upsert({
-          where: { userId_stateId_roleId: { userId: uid, stateId: accessInvite.stateId, roleId: accessInvite.roleId } },
-          update: {},
-          create: { userId: uid, stateId: accessInvite.stateId, roleId: accessInvite.roleId },
-        });
-      }
+      // COUNTRY and STATE scopes are deprecated
 
       await tx.accessInvite.update({
         where: { id: accessInvite.id },

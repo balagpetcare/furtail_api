@@ -77,11 +77,35 @@ async function streamFileByKey(req, res, next) {
     }
 
     const storage = getStorageProvider();
-    const s3Response = await storage.getObject(key);
 
-    const contentType = doc.media.mimeType || doc.media.type || s3Response.contentType || "application/octet-stream";
+    // ── Parse Range header ──────────────────────────────────────────
+    const rangeHeader = req.headers.range;
+    let range;
+    if (rangeHeader) {
+      const match = String(rangeHeader).match(/bytes=(\d+)-(\d*)/);
+      if (match) {
+        const start = parseInt(match[1], 10);
+        const end = match[2] ? parseInt(match[2], 10) : undefined;
+        // Request up to 10MB per range request to limit S3 transfer
+        range = {
+          start,
+          end: end ?? (start + 10 * 1024 * 1024 - 1),
+        };
+      }
+    }
+
+    const s3Response = await storage.getObject(key, range);
+
+    // ── Caching headers (media is immutable: key-based URLs) ────────
+    res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+    res.setHeader("Accept-Ranges", "bytes");
+
+    // Content-Type
+    const contentType =
+      doc.media.mimeType || doc.media.type || s3Response.contentType || "application/octet-stream";
     res.setHeader("Content-Type", contentType);
 
+    // Content-Disposition
     const download = String(req.query.download || "") === "1";
     const filename = key.split("/").pop() || "file";
     res.setHeader(
@@ -90,6 +114,21 @@ async function streamFileByKey(req, res, next) {
     );
 
     setFileResponseCorsHeaders(req, res, req.headers.origin);
+
+    // ── Range / Full response ───────────────────────────────────────
+    if (range) {
+      res.status(206);
+      if (s3Response.contentLength != null) {
+        res.setHeader("Content-Length", s3Response.contentLength);
+      }
+      if (s3Response.contentRange) {
+        res.setHeader("Content-Range", s3Response.contentRange);
+      }
+    } else {
+      if (s3Response.contentLength != null) {
+        res.setHeader("Content-Length", s3Response.contentLength);
+      }
+    }
 
     s3Response.body.pipe(res);
   } catch (err) {

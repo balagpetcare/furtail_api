@@ -26,6 +26,17 @@ function toNullableInt(v: any): number | undefined {
   return Number.isFinite(n) ? n : undefined;
 }
 
+function canViewPet(pet: any, userId: number | null): boolean {
+  if (pet.deleted) return false;
+  if (userId && pet.userId === userId) return true; // owner always
+  if (!pet.isPublicProfileEnabled) return false;
+  if (pet.visibility === "PUBLIC") return true;
+  if (pet.visibility === "FOLLOWERS_ONLY" && userId) {
+    return (pet.petFollows ?? []).some((f: any) => f.userId === userId);
+  }
+  return false;
+}
+
 function handleUnique(res: any, e: any) {
   if (e && e.code === "P2002") {
     const targets = e.meta?.target || [];
@@ -280,6 +291,113 @@ if (locationResolved.ok && locationResolved.data && !("skip" in locationResolved
   }
 };
 
+/* ---------------- GET /api/v1/user/by-username/:username ---------------- */
+
+exports.getUserByUsername = async (req: any, res: any) => {
+  try {
+    const raw: string = req.params.username ?? '';
+    const username = raw.trim().replace(/^@/, '');
+    if (!username) {
+      return res.status(400).json({ success: false, message: 'Username is required' });
+    }
+
+    // Single query: find user whose profile has the given username.
+    const user = await prisma.user.findFirst({
+      where: { profile: { username } },
+      include: {
+        profile: { include: { avatarMedia: true, coverMedia: true } },
+        wallet: true,
+        pets: {
+          where: { deleted: false },
+          include: { animalType: true, breed: true, subBreed: true, color: true, size: true, profilePic: true, petFollows: { select: { userId: true } } },
+          orderBy: { createdAt: 'desc' },
+        },
+        galleryItems: {
+          where: { deleted: false },
+          include: { media: true },
+          orderBy: { createdAt: 'desc' },
+          take: 60,
+        },
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const id = user.id;
+    const [followersCount, followingCount, followerPreview] = await Promise.all([
+      prisma.userFollow.count({ where: { followingId: id } }),
+      prisma.userFollow.count({ where: { followerId: id } }),
+      prisma.userFollow.findMany({
+        where: { followingId: id },
+        orderBy: { createdAt: 'desc' },
+        take: 5,
+        include: { follower: { include: { profile: { include: { avatarMedia: true } } } } },
+      }),
+    ]);
+
+    const followerPreviewUrls = (followerPreview || [])
+      .map((r: any) => r?.follower?.profile?.avatarMedia?.url)
+      .filter(Boolean);
+
+    const viewerId = req.user?.id ? Number(req.user.id) : null;
+    const isOwner = viewerId === id;
+    let isFollowing = false;
+    let isFriend = false;
+    if (viewerId && !isOwner) {
+      const follow = await prisma.userFollow.findFirst({
+        where: { followerId: viewerId, followingId: id },
+      });
+      isFollowing = !!follow;
+
+      const friend = await prisma.userFriend.findFirst({
+        where: {
+          OR: [
+            { userAId: viewerId, userBId: id },
+            { userAId: id, userBId: viewerId },
+          ],
+        },
+      });
+      isFriend = !!friend;
+    }
+
+    const visibility = user.profile?.visibility || 'PUBLIC';
+    const canViewFullProfile = isOwner ||
+      visibility === 'PUBLIC' ||
+      (visibility === 'FOLLOWERS_ONLY' && isFollowing);
+
+    const isProfileLocked = visibility !== 'PUBLIC';
+
+    if (user.pets) {
+      user.pets = user.pets.filter((pet: any) => canViewPet(pet, viewerId));
+    }
+
+    if (!canViewFullProfile) {
+      if (user.profile) {
+        user.profile.bio = null;
+      }
+      user.galleryItems = [];
+      user.wallet = null;
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        ...user,
+        followersCount,
+        followingCount,
+        followerPreviewUrls,
+        canViewFullProfile,
+        isProfileLocked,
+      },
+    });
+  } catch (e) {
+    console.error('getUserByUsername error:', e);
+    return res.status(500).json({ success: false, message: 'Failed to load user profile' });
+  }
+};
+
 /* ---------------- GET /api/v1/user/:id ---------------- */
 
 exports.getUserById = async (req: any, res: any) => {
@@ -296,7 +414,7 @@ exports.getUserById = async (req: any, res: any) => {
         wallet: true,
         pets: {
           where: { deleted: false },
-          include: { animalType: true, breed: true, subBreed: true, color: true, size: true, profilePic: true },
+          include: { animalType: true, breed: true, subBreed: true, color: true, size: true, profilePic: true, petFollows: { select: { userId: true } } },
           orderBy: { createdAt: "desc" },
         },
         galleryItems: {
@@ -333,6 +451,46 @@ exports.getUserById = async (req: any, res: any) => {
       .map((r) => r?.follower?.profile?.avatarMedia?.url)
       .filter(Boolean);
 
+    const viewerId = req.user?.id ? Number(req.user.id) : null;
+    const isOwner = viewerId === id;
+    let isFollowing = false;
+    let isFriend = false;
+    if (viewerId && !isOwner) {
+      const follow = await prisma.userFollow.findFirst({
+        where: { followerId: viewerId, followingId: id },
+      });
+      isFollowing = !!follow;
+
+      const friend = await prisma.userFriend.findFirst({
+        where: {
+          OR: [
+            { userAId: viewerId, userBId: id },
+            { userAId: id, userBId: viewerId },
+          ],
+        },
+      });
+      isFriend = !!friend;
+    }
+
+    const visibility = user.profile?.visibility || "PUBLIC";
+    const canViewFullProfile = isOwner ||
+      visibility === "PUBLIC" ||
+      (visibility === "FOLLOWERS_ONLY" && isFollowing);
+
+    const isProfileLocked = visibility !== "PUBLIC";
+
+    if (user.pets) {
+      user.pets = user.pets.filter((pet: any) => canViewPet(pet, viewerId));
+    }
+
+    if (!canViewFullProfile) {
+      if (user.profile) {
+        user.profile.bio = null;
+      }
+      user.galleryItems = [];
+      user.wallet = null;
+    }
+
     return res.status(200).json({
       success: true,
       data: {
@@ -340,6 +498,8 @@ exports.getUserById = async (req: any, res: any) => {
         followersCount,
         followingCount,
         followerPreviewUrls,
+        canViewFullProfile,
+        isProfileLocked,
       },
     });
   } catch (e) {

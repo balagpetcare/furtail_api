@@ -387,6 +387,7 @@ model User {
   adoptionApplications                AdoptionApplication[]            @relation("AdoptionApplicant")
   adoptionListingsReceived            AdoptionApplication[]            @relation("AdoptionListingOwner")
   adoptionFavorites                   AdoptionFavorite[]
+  adoptionComments                    AdoptionComment[]
   adoptionStatusHistoryActions        AdoptionStatusHistory[]          @relation("AdoptionStatusActor")
   adoptionReports                     AdoptionReport[]                 @relation("AdoptionReporter")
   shelterProfiles                     ShelterProfile[]                 @relation("ShelterProfileOwner")
@@ -1699,6 +1700,11 @@ model AdoptionPet {
   name                         String
   breed                        String?                 @db.VarChar(128)
   ageText                      String?                 @db.VarChar(64)
+  ageYears                     Int?
+  ageMonths                    Int?
+  ageDays                      Int?
+  totalAgeDays                 Int?
+  approximateDateOfBirth       DateTime?
   gender                       Gender                  @default(UNKNOWN)
   sizeText                     String?                 @db.VarChar(64)
   colorText                    String?                 @db.VarChar(64)
@@ -1721,15 +1727,22 @@ model AdoptionPet {
   specialNeeds                 Boolean                 @default(false)
   adoptionFeeText              String?                 @db.VarChar(128)
   contactPhoneVisible          Boolean                 @default(false)
+  ownerContactPhone            String?                 @db.VarChar(32)
+  ownerWhatsappPhone           String?                 @db.VarChar(32)
+  ownerCityAreaText            String?                 @db.VarChar(160)
+  pickupLocationNotes          String?
   publishedAt                  DateTime?
   submittedForReviewAt         DateTime?
   reviewedAt                   DateTime?
   adminReviewNote              String?
+  latitude                     Decimal?                @db.Decimal(10, 8)
+  longitude                    Decimal?                @db.Decimal(11, 8)
   expiresAt                    DateTime?
   createdAt                    DateTime                @default(now())
   updatedAt                    DateTime                @updatedAt
   deletedAt                    DateTime?
   applications                 AdoptionApplication[]
+  comments                     AdoptionComment[]
   country                      Country                 @relation(fields: [countryId], references: [id], onDelete: Restrict)
   criteria                     AdoptionCriteria?
   favorites                    AdoptionFavorite[]
@@ -1803,9 +1816,12 @@ model AdoptionApplication {
   ownerId                      Int
   status                       AdoptionApplicationStatus @default(DRAFT)
   messageToOwner               String?
+  applicantName                String?                   @db.VarChar(160)
   applicantPhone               String?                   @db.VarChar(32)
+  applicantWhatsappPhone       String?                   @db.VarChar(32)
   applicantEmail               String?                   @db.VarChar(255)
   applicantAddress             String?                   @db.VarChar(512)
+  applicantCityAreaText        String?                   @db.VarChar(160)
   applicantCountryId           Int?
   applicantStateId             Int?
   applicantCityId              Int?
@@ -1823,6 +1839,8 @@ model AdoptionApplication {
   consentToFollowUp            Boolean                   @default(false)
   submittedAt                  DateTime?
   reviewedAt                   DateTime?
+  rejectedReason               String?
+  ownerNotes                   String?
   createdAt                    DateTime                  @default(now())
   updatedAt                    DateTime                  @updatedAt
   deletedAt                    DateTime?
@@ -1866,6 +1884,21 @@ model AdoptionFavorite {
   @@unique([petId, userId])
   @@index([userId, createdAt])
   @@map("adoption_favorites")
+}
+
+model AdoptionComment {
+  id        Int         @id @default(autoincrement())
+  petId     Int
+  userId    Int
+  text      String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  pet       AdoptionPet @relation(fields: [petId], references: [id], onDelete: Cascade)
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([petId, createdAt])
+  @@index([userId, createdAt])
+  @@map("adoption_comments")
 }
 
 model AdoptionReport {
@@ -3731,6 +3764,12 @@ enum NotificationType {
   TICKET_SLA_BREACH
   POST_LIKE
   POST_COMMENT
+  ADOPTION_LIKE
+  ADOPTION_COMMENT
+  ADOPTION_APPLICATION_SUBMITTED
+  ADOPTION_APPLICATION_APPROVED
+  ADOPTION_APPLICATION_REJECTED
+  ADOPTION_LISTING_STATUS_CHANGED
   USER_FOLLOW
   PET_LIKED
   PET_FOLLOWED

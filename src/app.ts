@@ -84,8 +84,13 @@ app.use((req, res, next) => {
   next();
 });
 
-// Body parsing
-app.use(express.json({ limit: "20mb" }));
+// Body parsing — verify callback saves raw body for HMAC webhook verification (WPA Gateway)
+app.use(express.json({
+  limit: "20mb",
+  verify: (req: any, _res: any, buf: Buffer) => {
+    req.rawBody = buf;
+  },
+}));
 app.use(express.urlencoded({ extended: true }));
 
 /**

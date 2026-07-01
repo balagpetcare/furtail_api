@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "../../../../lib/prisma";
 import { Gender } from "@prisma/client";
+const { generateUniqueSlug } = require("./pets.social.controller");
 
 // ---------- helpers ----------
 function toNullableString(v) {
@@ -204,9 +205,11 @@ exports.createPet = async (req, res) => {
     });
 
     const uniquePetId = generateUniquePetId();
+    const slug = await generateUniqueSlug(String(name).trim());
     const pet = await prisma.pet.create({
       data: {
         name: String(name).trim(),
+        slug,
         sex: gender,
         dateOfBirth: parseNullableDate(dateOfBirth),
         microchipNumber: microchip ?? null,

@@ -390,12 +390,88 @@ async function getRevenueAnalytics(options: {
   };
 }
 
+async function createAbuseReport({ reporterId, type, targetId, reasonCode, details }) {
+  const allowedTypes = ['POST', 'FUNDRAISING', 'USER', 'PET', 'COMMENT'];
+  const normalizedType = String(type || '').toUpperCase();
+  if (!allowedTypes.includes(normalizedType)) {
+    const err = new Error(`Invalid report target type: ${type}`);
+    (err as any).statusCode = 400;
+    throw err;
+  }
+
+  const tId = Number(targetId);
+  if (!Number.isFinite(tId) || tId <= 0) {
+    const err = new Error('Invalid targetId');
+    (err as any).statusCode = 400;
+    throw err;
+  }
+
+  const code = String(reasonCode || '').trim();
+  if (!code) {
+    const err = new Error('reasonCode is required');
+    (err as any).statusCode = 400;
+    throw err;
+  }
+
+  // Verify target existence:
+  if (normalizedType === 'POST') {
+    const post = await prisma.post.findFirst({ where: { id: tId, deletedAt: null } });
+    if (!post) {
+      const err = new Error('Target post not found');
+      (err as any).statusCode = 404;
+      throw err;
+    }
+  } else if (normalizedType === 'COMMENT') {
+    const comment = await prisma.postComment.findFirst({ where: { id: tId, deletedAt: null } });
+    if (!comment) {
+      const err = new Error('Target comment not found');
+      (err as any).statusCode = 404;
+      throw err;
+    }
+  } else if (normalizedType === 'USER') {
+    const user = await prisma.user.findUnique({ where: { id: tId } });
+    if (!user) {
+      const err = new Error('Target user not found');
+      (err as any).statusCode = 404;
+      throw err;
+    }
+  } else if (normalizedType === 'PET') {
+    const pet = await prisma.pet.findUnique({ where: { id: tId } });
+    if (!pet) {
+      const err = new Error('Target pet not found');
+      (err as any).statusCode = 404;
+      throw err;
+    }
+  } else if (normalizedType === 'FUNDRAISING') {
+    const campaign = await prisma.fundraisingCampaign.findFirst({ where: { id: tId, deletedAt: null } });
+    if (!campaign) {
+      const err = new Error('Target campaign not found');
+      (err as any).statusCode = 404;
+      throw err;
+    }
+  }
+
+  const created = await prisma.report.create({
+    data: {
+      type: normalizedType,
+      targetId: tId,
+      reporterId: Number(reporterId),
+      reasonCode: code,
+      details: details ? String(details).trim() : null,
+      status: 'PENDING',
+    },
+  });
+
+  return created;
+}
+
 module.exports = {
   getSalesReport,
   getTopSellingProducts,
   getZeroSalesProducts,
   getStockReport,
   getRevenueAnalytics,
+  createAbuseReport,
 };
 
 export {};

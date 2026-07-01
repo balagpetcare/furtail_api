@@ -3,9 +3,9 @@
  * Active provider selected via PAYMENT_PROVIDER env (no code change to switch).
  */
 
-export type PaymentProviderCode = "sslcommerz" | "amarpay" | "bkash" | "nagad" | "eps";
+export type PaymentProviderCode = "sslcommerz" | "amarpay" | "bkash" | "nagad" | "eps" | "wpa";
 
-const VALID_PROVIDERS: PaymentProviderCode[] = ["sslcommerz", "amarpay", "bkash", "nagad", "eps"];
+const VALID_PROVIDERS: PaymentProviderCode[] = ["sslcommerz", "amarpay", "bkash", "nagad", "eps", "wpa"];
 
 /** EPS sandbox REST API (verified; not sandbox-pgapi.* which does not resolve). */
 const EPS_SANDBOX_DEFAULT_BASE = "https://sandboxpgapi.eps.com.bd";
@@ -17,6 +17,7 @@ const PROVIDER_DISPLAY_NAMES: Record<PaymentProviderCode, string> = {
   bkash: "bKash payment gateway",
   nagad: "Nagad payment gateway",
   eps: "EPS payment gateway",
+  wpa: "WPA payment gateway",
 };
 
 /** Placeholder pattern from .env templates, e.g. `<sandbox_username>`. */
@@ -161,6 +162,29 @@ export function isSslCommerzConfigured(): boolean {
   );
 }
 
+export function isWpaConfigured(): boolean {
+  return (
+    isRealEnvValue(process.env.WPA_GATEWAY_BASE_URL) &&
+    isRealEnvValue(process.env.WPA_GATEWAY_CLIENT_ID) &&
+    isRealEnvValue(process.env.WPA_GATEWAY_CLIENT_SECRET)
+  );
+}
+
+export function getRequiredWpaEnvKeys(): string[] {
+  return ["WPA_GATEWAY_BASE_URL", "WPA_GATEWAY_CLIENT_ID", "WPA_GATEWAY_CLIENT_SECRET"];
+}
+
+export function getWpaConfig() {
+  return {
+    baseUrl: (process.env.WPA_GATEWAY_BASE_URL || "").replace(/\/+$/, ""),
+    clientId: process.env.WPA_GATEWAY_CLIENT_ID || "",
+    clientSecret: process.env.WPA_GATEWAY_CLIENT_SECRET || "",
+    webhookUrl: process.env.WPA_GATEWAY_WEBHOOK_URL || "",
+    callbackUrl: process.env.WPA_GATEWAY_CALLBACK_URL || "",
+    environment: process.env.WPA_GATEWAY_ENVIRONMENT || "sandbox",
+  };
+}
+
 export function isAmarPayConfigured(): boolean {
   return (
     isRealEnvValue(process.env.AMARPAY_STORE_ID) &&
@@ -184,6 +208,8 @@ export function isProviderConfigured(code: PaymentProviderCode): boolean {
       return isAmarPayConfigured();
     case "eps":
       return isEpsConfigured();
+    case "wpa":
+      return isWpaConfigured();
     default:
       return false;
   }
@@ -334,6 +360,8 @@ export function getRequiredEnvKeys(code: PaymentProviderCode): string[] {
         "EPS_STORE_ID",
         "EPS_MERCHANT_ID",
       ];
+    case "wpa":
+      return getRequiredWpaEnvKeys();
     default:
       return [];
   }
@@ -371,6 +399,8 @@ export function mapProviderToPaymentMethod(provider: PaymentProviderCode): strin
     case "amarpay":
       return "ONLINE";
     case "eps":
+      return "ONLINE";
+    case "wpa":
       return "ONLINE";
     default:
       return "ONLINE";

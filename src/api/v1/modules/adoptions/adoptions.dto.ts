@@ -55,6 +55,69 @@ export const adoptionListQuerySchema = z.object({
   search: z.string().trim().max(120).optional(),
   species: adoptionSpecies.optional(),
   status: z.string().trim().max(120).optional(),
+  // structured filters
+  breed: z.string().trim().max(128).optional(),
+  gender: gender.optional(),
+  size: z.string().trim().max(64).optional(),
+  minAgeDays: z.coerce.number().int().min(0).optional(),
+  maxAgeDays: z.coerce.number().int().min(0).optional(),
+  // health
+  vaccinated: z
+    .union([z.boolean(), z.string().trim()])
+    .optional()
+    .transform((v) => {
+      if (v === undefined || v === null) return undefined;
+      if (typeof v === "boolean") return v;
+      const s = String(v).toLowerCase();
+      return s === "true" || s === "1" ? true : s === "false" || s === "0" ? false : undefined;
+    }),
+  dewormed: z
+    .union([z.boolean(), z.string().trim()])
+    .optional()
+    .transform((v) => {
+      if (v === undefined || v === null) return undefined;
+      if (typeof v === "boolean") return v;
+      const s = String(v).toLowerCase();
+      return s === "true" || s === "1" ? true : s === "false" || s === "0" ? false : undefined;
+    }),
+  neutered: z
+    .union([z.boolean(), z.string().trim()])
+    .optional()
+    .transform((v) => {
+      if (v === undefined || v === null) return undefined;
+      if (typeof v === "boolean") return v;
+      const s = String(v).toLowerCase();
+      return s === "true" || s === "1" ? true : s === "false" || s === "0" ? false : undefined;
+    }),
+  // compatibility (stored in criteria json via canHaveChildren / canHaveOtherPets)
+  goodWithKids: z
+    .union([z.boolean(), z.string().trim()])
+    .optional()
+    .transform((v) => {
+      if (v === undefined || v === null) return undefined;
+      if (typeof v === "boolean") return v;
+      const s = String(v).toLowerCase();
+      return s === "true" || s === "1" ? true : s === "false" || s === "0" ? false : undefined;
+    }),
+  goodWithDogs: z
+    .union([z.boolean(), z.string().trim()])
+    .optional()
+    .transform((v) => {
+      if (v === undefined || v === null) return undefined;
+      if (typeof v === "boolean") return v;
+      const s = String(v).toLowerCase();
+      return s === "true" || s === "1" ? true : s === "false" || s === "0" ? false : undefined;
+    }),
+  goodWithCats: z
+    .union([z.boolean(), z.string().trim()])
+    .optional()
+    .transform((v) => {
+      if (v === undefined || v === null) return undefined;
+      if (typeof v === "boolean") return v;
+      const s = String(v).toLowerCase();
+      return s === "true" || s === "1" ? true : s === "false" || s === "0" ? false : undefined;
+    }),
+  // location
   countryId: optionalIdSchema,
   stateId: optionalIdSchema,
   cityId: optionalIdSchema,
@@ -63,10 +126,18 @@ export const adoptionListQuerySchema = z.object({
   districtId: optionalIdSchema,
   upazilaId: optionalIdSchema,
   areaId: optionalIdSchema,
+  nearLat: z.coerce.number().min(-90).max(90).optional(),
+  nearLng: z.coerce.number().min(-180).max(180).optional(),
+  radiusKm: z.coerce.number().min(1).max(500).optional(),
 });
 
 export const adoptionIdParamSchema = z.object({
   id: idSchema,
+});
+
+export const adoptionCommentIdParamSchema = z.object({
+  id: idSchema,
+  commentId: idSchema,
 });
 
 export const createAdoptionSchema = z.object({
@@ -85,6 +156,11 @@ export const createAdoptionSchema = z.object({
   name: z.string().trim().min(1).max(120),
   breed: z.string().trim().max(128).optional(),
   ageText: z.string().trim().max(64).optional(),
+  ageYears: z.number().int().min(0).max(100).optional(),
+  ageMonths: z.number().int().min(0).max(11).optional(),
+  ageDays: z.number().int().min(0).max(31).optional(),
+  totalAgeDays: z.number().int().min(0).optional(),
+  approximateDateOfBirth: z.preprocess((val) => val === null ? undefined : (typeof val === 'string' ? new Date(val) : val), z.date()).optional(),
   gender: gender.optional(),
   sizeText: z.string().trim().max(64).optional(),
   colorText: z.string().trim().max(64).optional(),
@@ -107,18 +183,27 @@ export const createAdoptionSchema = z.object({
   specialNeeds: z.boolean().optional(),
   adoptionFeeText: z.string().trim().max(128).optional(),
   contactPhoneVisible: z.boolean().optional(),
+  ownerContactPhone: z.string().trim().min(7).max(32),
+  ownerWhatsappPhone: z.string().trim().max(32).optional(),
+  ownerCityAreaText: z.string().trim().min(2).max(160),
+  pickupLocationNotes: z.string().trim().min(4).max(2000),
   expiresAt: z.string().datetime().optional(),
   mediaIds: z.array(idSchema).max(20).optional(),
   criteria: criteriaSchema.optional(),
+  latitude: z.coerce.number().min(-90).max(90).optional(),
+  longitude: z.coerce.number().min(-180).max(180).optional(),
 });
 
 export const updateAdoptionSchema = createAdoptionSchema.partial();
 
 export const applyAdoptionSchema = z.object({
   messageToOwner: z.string().trim().max(4000).optional(),
+  applicantName: z.string().trim().min(2).max(160),
   applicantPhone: z.string().trim().max(32).optional(),
+  applicantWhatsappPhone: z.string().trim().max(32).optional(),
   applicantEmail: z.string().trim().email().max(255).optional(),
   applicantAddress: z.string().trim().max(512).optional(),
+  applicantCityAreaText: z.string().trim().min(2).max(160),
   applicantCountryId: optionalIdSchema,
   applicantStateId: optionalIdSchema,
   applicantCityId: optionalIdSchema,
@@ -145,6 +230,14 @@ export const applyAdoptionSchema = z.object({
     )
     .max(50)
     .optional(),
+});
+
+export const adoptionCommentListQuerySchema = z.object({
+  limit: z.coerce.number().int().min(1).max(100).default(50),
+});
+
+export const createAdoptionCommentSchema = z.object({
+  text: z.string().trim().min(1).max(4000),
 });
 
 export const ownerStatusFilterSchema = z.array(adoptionPetStatus).min(1);
@@ -185,15 +278,48 @@ export const adminCountryRuleCreateSchema = z.object({
 
 export const adminCountryRuleUpdateSchema = adminCountryRuleCreateSchema.partial();
 
+export const applicationStatusUpdateSchema = z.object({
+  status: z.enum([
+    "VIEWED",
+    "OWNER_REVIEW",
+    "SHORTLISTED",
+    "INTERVIEW_SCHEDULED",
+    "APPROVED",
+    "REJECTED",
+    "CANCELLED",
+  ]),
+  note: z.string().trim().max(2000).optional(),
+});
+
+export const reportAdoptionSchema = z.object({
+  reasonCode: z.enum([
+    "FAKE_LISTING",
+    "PET_SELLING",
+    "SCAM",
+    "WRONG_INFO",
+    "DUPLICATE",
+    "SICK_PET_HIDDEN",
+    "ABUSE_CONCERN",
+    "SUSPICIOUS_PAYMENT",
+    "OTHER",
+  ]),
+  details: z.string().trim().max(2000).optional(),
+});
+
 module.exports = {
   adoptionListQuerySchema,
   adoptionIdParamSchema,
+  adoptionCommentIdParamSchema,
+  adoptionCommentListQuerySchema,
   createAdoptionSchema,
   updateAdoptionSchema,
   applyAdoptionSchema,
+  createAdoptionCommentSchema,
   ownerStatusFilterSchema,
   adminAdoptionListQuerySchema,
   adminAdoptionActionSchema,
   adminCountryRuleCreateSchema,
   adminCountryRuleUpdateSchema,
+  applicationStatusUpdateSchema,
+  reportAdoptionSchema,
 };

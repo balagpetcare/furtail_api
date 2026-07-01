@@ -1,6 +1,6 @@
 import type { PaymentIntentRequest, PaymentIntentResponse, VerifiedPaymentEvent } from "../providers/paymentProvider.types";
 
-export type PaymentProviderCode = "sslcommerz" | "amarpay" | "bkash" | "nagad" | "eps";
+export type PaymentProviderCode = "sslcommerz" | "amarpay" | "bkash" | "nagad" | "eps" | "wpa";
 
 export type CreatePaymentInput = PaymentIntentRequest & {
   orderId?: number;

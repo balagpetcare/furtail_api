@@ -1,6 +1,9 @@
 const router = require("express").Router();
 const countryScopeGuard = require("../../middlewares/countryScopeGuard");
 
+// ── Health alias (mirrors GET /health at the versioned prefix) ────────────────
+router.get("/health", (_req: any, res: any) => res.json({ ok: true, service: "furtail_api" }));
+
 // =============================================================================
 // Furtail MOBILE API — ACTIVE ROUTES (Phase 3 scope: Furtail Flutter app only)
 // All enterprise modules (clinic, doctor, inventory, warehouse, owner-enterprise,
@@ -20,6 +23,8 @@ router.use("/notifications", require("./modules/notifications/notifications.rout
 router.use("/common", require("./modules/common/common.routes"));
 router.use("/user", require("./modules/profile/profile.routes"));
 router.use("/user/pets", require("./modules/pets/pets.routes"));
+// Public pet profiles, social follow/like, pet posts (optional auth for public view)
+router.use("/pets", require("./modules/pets/pets.public.routes"));
 
 // ── Media ─────────────────────────────────────────────────────────────────────
 router.use("/media", require("./modules/media/media.routes"));
@@ -58,10 +63,13 @@ mountWith503("/campaign", "./modules/campaign/campaign.routes");
 mountWith503("/payments", "./payments/payment.routes");
 mountWith503("/payment/eps", "./modules/payment/eps/eps.routes");
 mountWith503("/payments/eps", "./modules/payment/eps/eps.routes");
+mountWith503("/payments/wpa", "./payments/wpa/wpa.routes");
 
 // Campaign linking — authenticated user bookings, certificates, vaccinations
 router.use("/campaign-link", require("./modules/campaign/campaignLink.routes").default);
 
+// ── Stories (My Day) ──────────────────────────────────────────────────────────
+router.use("/stories", require("./modules/stories/stories.routes"));
 
 // ── Social feed & Fundraising ─────────────────────────────────────────────────
 const adoptionRoutes = require("./modules/adoptions/adoptions.routes");
@@ -84,7 +92,13 @@ router.use("/reports", require("./modules/reports/reports.routes"));
 // [REVIEW] Keep: achievements data is embedded in visitor profile responses.
 router.use("/achievements", require("./modules/achievements/achievements.routes"));
 
+// ── Feeling & Activity ────────────────────────────────────────────────────
+router.use("/feeling-activities", require("./modules/feeling-activities/feeling_activities.routes"));
 
+// ── Public Countries (no auth) ────────────────────────────────────────────
+// GET /api/v1/public/countries        — active countries list
+// GET /api/v1/public/countries/default — default country
+router.use("/public/countries", require("./modules/countries/countries.routes"));
 
 module.exports = router;
 

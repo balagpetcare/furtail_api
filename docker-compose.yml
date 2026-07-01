@@ -1,22 +1,22 @@
 services:
-  bpa_db:
+  furtail-db:
     image: postgres:16-alpine
-    container_name: bpa_db
+    container_name: furtail-db
     environment:
-      POSTGRES_USER: bpa_admin
+      POSTGRES_USER: root
       POSTGRES_PASSWORD: password123
-      POSTGRES_DB: bpa_pet_db
+      POSTGRES_DB: furtail_db
     ports:
       - "5432:5432"
     volumes:
-      - bpa_pg_data:/var/lib/postgresql/data
+      - furtail_pg_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U bpa_admin -d bpa_pet_db"]
+      test: ["CMD-SHELL", "pg_isready -U root -d furtail_db"]
       interval: 5s
       timeout: 5s
       retries: 20
     networks:
-      - bpa_net
+      - furtail-net
 
   furtail-redis:
     image: redis:7-alpine
@@ -25,14 +25,14 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - bpa_redis_data:/data
+      - furtail_redis_data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
       timeout: 5s
       retries: 20
     networks:
-      - bpa_net
+      - furtail-net
 
   furtail-storage:
     image: quay.io/minio/aistor/minio:latest
@@ -45,41 +45,41 @@ services:
       - "9000:9000"
       - "9001:9001"
     volumes:
-      - bpa_minio_data:/data
+      - furtail_minio_data:/data
       - ./minio.license:/minio.license:ro
     networks:
-      - bpa_net
+      - furtail-net
 
-  bpa_api:
+  furtail-api:
     build:
       context: .
-      dockerfile: Dockerfile
-    container_name: bpa_api
+      dockerfile: dockerfile
+    container_name: furtail-api
     # Ensure DB tables exist before starting API (prevents P2021: table does not exist).
     # With volumes (.:/app + /app/node_modules), node_modules can be empty; install deps so socket.io etc. are available.
     command: sh -c "npm ci && npx prisma generate && npx prisma migrate deploy && npm run storage:init && npm run dev"
     env_file:
       - .env.docker
     ports:
-      - "3000:3000"
+      - "3000:7200"
     depends_on:
-      bpa_db:
+      furtail-db:
         condition: service_healthy
       furtail-storage:
         condition: service_started
     networks:
-      - bpa_net
+      - furtail-net
     # Dev-friendly: hot reload (optional). If you don't want bind-mount, comment these lines.
     volumes:
       - .:/app
       - /app/node_modules
 
-  bpa_worker:
+  furtail-email-worker:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: dockerfile
     image: furtail_api
-    container_name: bpa_worker
+    container_name: furtail-email-worker
     command: sh -c "npm ci && npx prisma generate && npm run worker:email"
     env_file:
       - .env.docker
@@ -87,21 +87,49 @@ services:
       REDIS_HOST: furtail-redis
       REDIS_PORT: "6379"
     depends_on:
-      bpa_db:
+      furtail-db:
         condition: service_healthy
       furtail-redis:
         condition: service_healthy
     networks:
-      - bpa_net
+      - furtail-net
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+  furtail-media-worker:
+    build:
+      context: .
+      dockerfile: dockerfile
+    image: furtail_api
+    container_name: furtail-media-worker
+    command: sh -c "npm ci && npx prisma generate && npm run worker:media"
+    env_file:
+      - .env.docker
+    environment:
+      REDIS_ENABLED: "true"
+      VIDEO_PROCESSING_ENABLED: "true"
+      REDIS_HOST: furtail-redis
+      REDIS_PORT: "6379"
+      VIDEO_QUEUE_CONCURRENCY: "1"
+    depends_on:
+      furtail-db:
+        condition: service_healthy
+      furtail-redis:
+        condition: service_healthy
+      furtail-storage:
+        condition: service_started
+    networks:
+      - furtail-net
     volumes:
       - .:/app
       - /app/node_modules
 
 volumes:
-  bpa_pg_data:
-  bpa_minio_data:
-  bpa_redis_data:
+  furtail_pg_data:
+  furtail_minio_data:
+  furtail_redis_data:
 
 networks:
-  bpa_net:
+  furtail-net:
     driver: bridge

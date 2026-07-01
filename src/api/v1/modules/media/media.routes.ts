@@ -2,15 +2,31 @@ const router = require("express").Router();
 const multer = require("multer");
 
 const auth = require("../../../../middleware/auth.middleware");
+const requireAdmin = require("../../../../middleware/admin.middleware");
 const media = require("./media.controller");
 const appConfig = require("../../../../config/appConfig");
 
-// ✅ Standard: memory storage so buffers are available (sharp / optional ffmpeg)
-// Accept ANY field names to avoid silent client-side breakage.
+const os = require("os");
+const path = require("path");
+
 const upload = multer({
-  storage: multer.memoryStorage(),
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, os.tmpdir());
+    },
+    filename: (req, file, cb) => {
+      const rand = require("crypto").randomBytes(16).toString("hex");
+      cb(null, `bpa_upload_${Date.now()}_${rand}${path.extname(file.originalname || "")}`);
+    },
+  }),
   limits: {
-    fileSize: Number(appConfig.mediaPolicy?.maxUploadBytes || process.env.MAX_UPLOAD_BYTES || 100 * 1024 * 1024), // default 100MB
+    // Use the larger of the two limits to defer actual validation to the controller.
+    // This allows the controller to enforce context-specific limits (adoption vs posts).
+    // Multer can't access request body to determine context, so we set a permissive limit here.
+    fileSize: Math.max(
+      Number(appConfig.mediaPolicy?.maxUploadBytes || 200 * 1024 * 1024),
+      Number(appConfig.mediaPolicy?.maxAdoptionVideoBytes || 1024 * 1024 * 1024),
+    ),
   },
 });
 
@@ -23,6 +39,10 @@ router.post("/upload", auth, upload.any(), media.uploadMedia);
 
 // GET /api/v1/media/my
 router.get("/my", auth, media.myMedia);
+
+// POST /api/v1/media/requeue-unprocessed-videos
+// Admin/manual retry for videos that uploaded but were not processed yet.
+router.post("/requeue-unprocessed-videos", auth, requireAdmin, media.requeueUnprocessedVideos);
 
 // DELETE /api/v1/media/:id
 router.delete("/:id", auth, media.delete);

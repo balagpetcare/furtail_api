@@ -9,9 +9,22 @@ function replayKey(eventKey: string): string {
 
 /**
  * Returns true if this payment event was already processed (replay).
+ *
+ * Fail-closed policy: when PAYMENT_PROVIDER=wpa and NODE_ENV=production,
+ * Redis unavailability causes rejection (returns true) rather than allowing
+ * potentially duplicate webhook processing through.
  */
 export async function isPaymentEventReplay(eventKey: string): Promise<boolean> {
-  if (!isRedisEnabled() || !isRedisAvailable()) return false;
+  const redisDown = !isRedisEnabled() || !isRedisAvailable();
+  if (redisDown) {
+    const isWpaProduction =
+      process.env.PAYMENT_PROVIDER === "wpa" && process.env.NODE_ENV === "production";
+    if (isWpaProduction) {
+      console.error("[PaymentReplay] Redis unavailable in production with PAYMENT_PROVIDER=wpa — rejecting webhook (fail-closed)");
+      return true;
+    }
+    return false;
+  }
   const client = getSharedRedisClient();
   if (!client) return false;
   try {

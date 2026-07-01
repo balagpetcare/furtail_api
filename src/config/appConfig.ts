@@ -8,6 +8,22 @@ function boolEnv(name, def = false) {
   return String(v).toLowerCase() === "true" || String(v) === "1";
 }
 
+// Log effective upload limits once at startup — useful for spotting .env misconfigurations.
+const _effectiveMaxUploadMb = Math.round(
+  Number(process.env.MAX_UPLOAD_BYTES || 200 * 1024 * 1024) / (1024 * 1024)
+);
+const _effectiveMaxAdoptionVideoMb = Math.round(
+  Number(process.env.MAX_ADOPTION_VIDEO_BYTES || 1024 * 1024 * 1024) / (1024 * 1024)
+);
+// eslint-disable-next-line no-console
+console.log(
+  `[AppConfig] MAX_UPLOAD_BYTES=${process.env.MAX_UPLOAD_BYTES ?? "(not set, using 200MB default)"} → effective limit: ${_effectiveMaxUploadMb}MB`
+);
+// eslint-disable-next-line no-console
+console.log(
+  `[AppConfig] MAX_ADOPTION_VIDEO_BYTES=${process.env.MAX_ADOPTION_VIDEO_BYTES ?? "(not set, using 1GB default)"} → effective limit: ${_effectiveMaxAdoptionVideoMb}MB`
+);
+
 module.exports = {
   server: {
     port: Number(process.env.PORT || 3000),
@@ -41,8 +57,12 @@ module.exports = {
   })(),
 
   mediaPolicy: {
-    // Single source of truth for upload limits & compression.
-    maxUploadBytes: Number(process.env.MAX_UPLOAD_BYTES || 100 * 1024 * 1024),
+    // General upload limit for posts/reels (200 MB default).
+    // Override with MAX_UPLOAD_BYTES env var (value in bytes).
+    maxUploadBytes: Number(process.env.MAX_UPLOAD_BYTES || 200 * 1024 * 1024),
+    // Adoption video upload limit (1 GB default).
+    // Override with MAX_ADOPTION_VIDEO_BYTES env var (value in bytes).
+    maxAdoptionVideoBytes: Number(process.env.MAX_ADOPTION_VIDEO_BYTES || 1024 * 1024 * 1024),
     imageMaxSide: Number(process.env.IMAGE_MAX_SIDE || 1600),
     imageJpegQuality: Number(process.env.IMAGE_JPEG_QUALITY || 82),
     transcodeVideo: String(process.env.VIDEO_TRANSCODE || "false").toLowerCase() === "true",

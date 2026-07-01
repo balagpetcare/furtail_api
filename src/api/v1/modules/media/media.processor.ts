@@ -49,14 +49,22 @@ async function optimizeImage(file, opts: OptimizeImageOpts = {}) {
   const maxSide = Number(opts.maxSide || appConfig.mediaPolicy?.imageMaxSide || process.env.IMAGE_MAX_SIDE || 1600);
   const quality = Number(opts.quality || appConfig.mediaPolicy?.imageJpegQuality || process.env.IMAGE_JPEG_QUALITY || 82);
   let outBuf;
+  const input = file.buffer || file.path;
+  if (!input) return file;
+
   try {
-    outBuf = await sharp(file.buffer)
+    outBuf = await sharp(input)
       .rotate()
       .resize(maxSide, maxSide, { fit: 'inside' })
       .jpeg({ quality })
       .toBuffer();
+
+    if (file.path) {
+      try { fs.unlinkSync(file.path); } catch (_) {}
+      delete file.path;
+    }
   } catch (err) {
-    console.warn('optimizeImage skipped: sharp could not process uploaded image buffer', {
+    console.warn('optimizeImage skipped: sharp could not process uploaded image', {
       mimetype: file?.mimetype,
       originalname: file?.originalname,
       size: file?.size || file?.buffer?.length || 0,
@@ -76,54 +84,13 @@ async function optimizeImage(file, opts: OptimizeImageOpts = {}) {
 
 type TranscodeVideoOpts = { maxInputMb?: number };
 async function transcodeVideoIfEnabled(file, opts: TranscodeVideoOpts = {}) {
-  const enabled = String(process.env.VIDEO_TRANSCODE || '').toLowerCase() === 'true';
-  if (!enabled) return file;
-
-  const { ffmpeg: F } = loadFfmpeg();
-  if (!F) return file;
-
-  const maxMb = Number(opts.maxInputMb || process.env.VIDEO_TRANSCODE_MAX_MB || 80);
-  const sizeMb = (file.size || file.buffer?.length || 0) / (1024 * 1024);
-  if (sizeMb > maxMb) return file; // too big for in-memory safe transcode
-
-  const tmpDir = os.tmpdir();
-  const id = crypto.randomBytes(8).toString('hex');
-  const inPath = path.join(tmpDir, `bpa_in_${id}`);
-  const outPath = path.join(tmpDir, `bpa_out_${id}.mp4`);
-
-  fs.writeFileSync(inPath, file.buffer);
-
-  await new Promise((resolve, reject) => {
-    F(inPath)
-      .outputOptions([
-        '-movflags +faststart',
-        '-vf scale=trunc(min(iw\,1280)/2)*2:trunc(min(ih\,1280)/2)*2',
-        '-c:v libx264',
-        '-preset veryfast',
-        '-crf 28',
-        '-c:a aac',
-        '-b:a 96k',
-      ])
-      .on('end', resolve)
-      .on('error', reject)
-      .save(outPath);
-  });
-
-  const outBuf = fs.readFileSync(outPath);
-  try { fs.unlinkSync(inPath); } catch (_) {}
-  try { fs.unlinkSync(outPath); } catch (_) {}
-
-  const base = (file.originalname || 'video').replace(/\.[^/.]+$/, '');
-  return {
-    ...file,
-    buffer: outBuf,
-    mimetype: 'video/mp4',
-    originalname: `${base}.mp4`,
-  };
+  // Video transcoding is handled asynchronously by the background media worker.
+  // Return the raw uploaded file structure as-is.
+  return file;
 }
 
 async function processUploadFile(file) {
-  if (!file?.buffer) return file;
+  if (!file) return file;
   if (isImage(file.mimetype)) {
     return optimizeImage(file);
   }
@@ -147,16 +114,17 @@ function makeInvalidImagePayloadError(cause?: unknown) {
  * Throws Error with code INVALID_IMAGE_PAYLOAD if input cannot be decoded or processed.
  */
 async function optimizeProfilePhotoFile(file) {
-  if (!file?.buffer) return file;
+  if (!file?.buffer && !file?.path) return file;
   const maxSide = Number(process.env.PROFILE_PHOTO_MAX_SIDE || 512);
   const quality = Number(process.env.PROFILE_PHOTO_WEBP_QUALITY || 82);
+  const input = file.buffer || file.path;
 
   let meta;
   try {
-    meta = await sharp(file.buffer).metadata();
+    meta = await sharp(input).metadata();
   } catch (err) {
     if (process.env.NODE_ENV !== 'production') {
-      console.warn('optimizeProfilePhotoFile: input buffer failed metadata probe', {
+      console.warn('optimizeProfilePhotoFile: input failed metadata probe', {
         mimetype: file?.mimetype,
         originalname: file?.originalname,
         size: file?.size || file?.buffer?.length || 0,
@@ -171,11 +139,16 @@ async function optimizeProfilePhotoFile(file) {
 
   let outBuf;
   try {
-    outBuf = await sharp(file.buffer)
+    outBuf = await sharp(input)
       .rotate()
       .resize(maxSide, maxSide, { fit: 'cover', position: 'attention' })
       .webp({ quality })
       .toBuffer();
+
+    if (file.path) {
+      try { fs.unlinkSync(file.path); } catch (_) {}
+      delete file.path;
+    }
   } catch (err) {
     if (process.env.NODE_ENV !== 'production') {
       console.warn('optimizeProfilePhotoFile: sharp pipeline failed', {

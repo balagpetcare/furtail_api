@@ -22,7 +22,7 @@ export async function getEffectiveOrgIdsForOwnerPanel(
       where: { ownerUserId: id },
       select: { id: true },
     }),
-    prismaInstance.orgMember.findMany({
+    prismaInstance.branchMember.findMany({
       where: { userId: id, status: "ACTIVE" },
       select: { orgId: true },
     }),

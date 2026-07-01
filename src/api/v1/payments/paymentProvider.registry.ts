@@ -9,6 +9,7 @@ import { bkashStrategy } from "./strategies/bkash.strategy";
 import { nagadStrategy } from "./strategies/nagad.strategy";
 import { sslCommerzStrategy } from "./strategies/sslcommerz.strategy";
 import { epsStrategy } from "./strategies/eps.strategy";
+import { wpaStrategy } from "./strategies/wpa.strategy";
 
 const strategies: Record<PaymentProviderCode, PaymentProviderStrategy> = {
   bkash: bkashStrategy,
@@ -16,6 +17,7 @@ const strategies: Record<PaymentProviderCode, PaymentProviderStrategy> = {
   sslcommerz: sslCommerzStrategy,
   amarpay: amarpayStrategy,
   eps: epsStrategy,
+  wpa: wpaStrategy,
 };
 
 export function getPaymentStrategy(code: PaymentProviderCode): PaymentProviderStrategy {

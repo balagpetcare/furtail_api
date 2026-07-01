@@ -57,6 +57,49 @@ function getAuthUserId(req: any): number | null {
   const n = Number(id);
   return Number.isFinite(n) && n > 0 ? n : null;
 }
+export async function registerDeviceToken(req: Request, res: Response, next: NextFunction) {
+  try {
+    const userId = getAuthUserId(req as any);
+    if (!userId) return res.status(401).json({ success: false, message: "Unauthorized" });
+
+    const token = String(req.body?.token || "").trim();
+    const platform = String(req.body?.platform || "unknown").trim().toLowerCase().slice(0, 32) || "unknown";
+    const deviceId = req.body?.deviceId ? String(req.body.deviceId).trim().slice(0, 255) : null;
+    if (!token) return res.status(400).json({ success: false, message: "token is required" });
+
+    const row = await (prisma as any).userDeviceToken.upsert({
+      where: { token },
+      create: { userId, token, platform, deviceId, isActive: true, lastSeenAt: new Date() },
+      update: { userId, platform, deviceId, isActive: true, lastSeenAt: new Date() },
+    });
+
+    return res.status(200).json({ success: true, data: { id: row.id, platform: row.platform, isActive: row.isActive } });
+  } catch (err) {
+    return next(err);
+  }
+}
+
+export async function unregisterDeviceToken(req: Request, res: Response, next: NextFunction) {
+  try {
+    const userId = getAuthUserId(req as any);
+    if (!userId) return res.status(401).json({ success: false, message: "Unauthorized" });
+
+    const token = String(req.body?.token || req.query?.token || "").trim();
+    const deviceId = String(req.body?.deviceId || req.query?.deviceId || "").trim();
+    const where: any = { userId, isActive: true };
+    if (token) where.token = token;
+    else if (deviceId) where.deviceId = deviceId;
+
+    const result = await (prisma as any).userDeviceToken.updateMany({
+      where,
+      data: { isActive: false, lastSeenAt: new Date() },
+    });
+
+    return res.status(200).json({ success: true, data: { updated: result.count } });
+  } catch (err) {
+    return next(err);
+  }
+}
 
 /**
  * GET /api/v1/notifications?scope=dropdown|page&limit=20&cursor=&type=&branchId=&priority=&from=&to=&unread=
@@ -107,6 +150,7 @@ export async function list(req: Request, res: Response, next: NextFunction) {
       take: limit + 1,
       select: {
         id: true,
+        userId: true,
         type: true,
         title: true,
         message: true,
@@ -130,17 +174,31 @@ export async function list(req: Request, res: Response, next: NextFunction) {
     const rawItems = hasMore ? notifications.slice(0, limit) : notifications;
     const nextCursor = hasMore && rawItems.length ? String(rawItems[rawItems.length - 1].id) : null;
 
-    const items =
-      panel === "producer"
-        ? rawItems.map((n) => ({
-            ...n,
-            displayPriority: getProducerDisplayPriority(String(n.type)),
-          }))
-        : rawItems;
+    const items = rawItems.map((n) => {
+      const metaObj = (n.meta && typeof n.meta === "object") ? (n.meta as Record<string, any>) : {};
+      return {
+        ...n,
+        recipientUserId: n.userId,
+        actorUserId: n.senderId,
+        body: n.message,
+        actorId: metaObj.actorId || n.senderId || null,
+        actorName: metaObj.actorName || n.sender?.profile?.displayName || null,
+        actorAvatarUrl: metaObj.actorAvatarUrl || null,
+        targetType: metaObj.targetType || null,
+        targetId: metaObj.targetId || null,
+        deepLink: metaObj.deepLink || metaObj.route || n.actionUrl || null,
+        metadata: n.meta,
+        ...(panel === "producer" ? { displayPriority: getProducerDisplayPriority(String(n.type)) } : {}),
+      };
+    });
+
+    const unreadCount = await prisma.notification.count({
+      where: { userId, readAt: null, status: NotificationStatus.ACTIVE },
+    });
 
     return res.json({
       success: true,
-      data: { items, nextCursor, hasMore },
+      data: { items, nextCursor, hasMore, unreadCount },
     });
   } catch (err) {
     return next(err);

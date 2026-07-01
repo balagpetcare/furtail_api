@@ -125,26 +125,7 @@ async function isAdminAllowed(userId: number): Promise<boolean> {
 
   if (!phoneDigits && !emailNorm) return false;
 
-  const whitelistCount = await db.superAdminWhitelist.count({
-    where: { isActive: true },
-  });
-
-  if (whitelistCount > 0) {
-    const hit = await db.superAdminWhitelist.findFirst({
-      where: {
-        isActive: true,
-        OR: [
-          emailNorm ? { email: { equals: emailNorm, mode: "insensitive" } } : undefined,
-          phoneDigits ? { phone: phoneDigits } : undefined,
-          phoneLast11 ? { phone: phoneLast11 } : undefined,
-        ].filter(Boolean) as any[],
-      },
-      select: { id: true },
-    });
-    if (hit) return true;
-  }
-
-  // Env fallback (when whitelist empty OR when DB had no match)
+  // Env fallback
   const allowIds = String(process.env.ADMIN_USER_IDS || "")
     .split(",")
     .map((x) => Number(String(x).trim()))
@@ -192,102 +173,33 @@ async function resolveAuthContexts(userId: number): Promise<AuthContext[]> {
   }
 
   // 3) Org members (non-owner)
-  const orgMembers = await db.orgMember.findMany({
+  const branchMembershipsForOrg = await db.branchMember.findMany({
     where: { userId, status: "ACTIVE" },
     select: { orgId: true },
   });
-  for (const om of orgMembers) {
-    if (!ownedOrgs?.some((o) => o.id === om.orgId)) {
-      contexts.push({ role: "STAFF", scopeType: "ORG", scopeId: om.orgId, status: "ACTIVE" });
+  const orgIds = Array.from(new Set(branchMembershipsForOrg.map((bm: any) => bm.orgId))) as number[];
+  for (const orgId of orgIds) {
+    if (!ownedOrgs?.some((o) => o.id === orgId)) {
+      contexts.push({ role: "STAFF", scopeType: "ORG", scopeId: orgId, status: "ACTIVE" });
     }
   }
 
-  // 4) Branch members + access permission status
+  // 4) Branch members
   const branchMembers = await db.branchMember.findMany({
     where: { userId, status: "ACTIVE" },
     select: { branchId: true },
   });
   for (const bm of branchMembers) {
-    const perm = await db.branchAccessPermission.findUnique({
-      where: {
-        branchId_userId: { branchId: bm.branchId, userId },
-      },
-      select: { status: true, expiresAt: true },
-    });
-    let status: "PENDING" | "APPROVED" | "ACTIVE" = "ACTIVE";
-    if (perm) {
-      if (perm.status === "APPROVED") {
-        status = perm.expiresAt && new Date(perm.expiresAt) < new Date() ? "PENDING" : "APPROVED";
-      } else {
-        status = perm.status === "PENDING" ? "PENDING" : "ACTIVE";
-      }
-    } else {
-      // Legacy: No branchAccessPermission record but branch member is ACTIVE
-      // Treat as ACTIVE for backward compatibility
-      status = "ACTIVE";
-    }
-    contexts.push({ role: "STAFF", scopeType: "BRANCH", scopeId: bm.branchId, status });
+    contexts.push({ role: "STAFF", scopeType: "BRANCH", scopeId: bm.branchId, status: "ACTIVE" });
   }
 
-  // 5) Country/State roles (map to ADMIN-like for country scope)
-  const countryRoles = await db.userCountryRole.findMany({
-    where: { userId },
-    select: { countryId: true },
-  });
+  // 5) Country/State roles (deleted from schema)
+  const countryRoles: any[] = [];
   for (const cr of countryRoles) {
     contexts.push({ role: "ADMIN", scopeType: "ORG", scopeId: cr.countryId, status: "ACTIVE" });
   }
 
-  // 6) Owner Team (delegate via UserContext - ownerUserId set, teamId set; not actual owner)
-  const userContexts = await db.userContext.findMany({
-    where: { userId },
-    select: { ownerUserId: true, teamId: true },
-  });
-  const teamDelegate = userContexts.find((uc) => uc.ownerUserId != null && uc.teamId != null);
-  if (teamDelegate && !contexts.some((c) => c.role === "OWNER")) {
-    contexts.push({ role: "TEAM", scopeType: "OWNER", scopeId: teamDelegate.teamId, status: "ACTIVE" });
-  }
-
-  // 7) Producer (ProducerOrg owner or staff)
-  // Owner: use VerificationCase (PRODUCER_ORG) for redirect; fallback to ProducerOrg.status
-  const producerOrg = await db.producerOrg.findFirst({
-    where: { ownerUserId: userId },
-    select: { id: true, status: true },
-  });
-  if (producerOrg) {
-    const latestCase = await db.verificationCase.findFirst({
-      where: { entityType: "PRODUCER_ORG", entityId: producerOrg.id },
-      orderBy: { createdAt: "desc" },
-      select: { status: true },
-    });
-    const caseStatus = latestCase?.status;
-    const status =
-      caseStatus === "APPROVED"
-        ? "APPROVED"
-        : caseStatus === "DRAFT" || caseStatus === "SUBMITTED" || caseStatus === "REJECTED" || !caseStatus
-        ? "PENDING"
-        : producerOrg.status === "VERIFIED"
-        ? "APPROVED"
-        : producerOrg.status === "PENDING"
-        ? "PENDING"
-        : "ACTIVE";
-    contexts.push({ role: "PRODUCER", scopeType: "OWNER", scopeId: producerOrg.id, status });
-  }
-
-  const producerStaff = await db.producerOrgStaff.findMany({
-    where: { userId, status: "ACTIVE" },
-    select: { producerOrgId: true },
-  });
-  for (const ps of producerStaff) {
-    if (!producerOrg || producerOrg.id !== ps.producerOrgId) {
-      const org = await db.producerOrg.findUnique({
-        where: { id: ps.producerOrgId },
-        select: { status: true },
-      });
-      const status = org?.status === "VERIFIED" ? "APPROVED" : org?.status === "PENDING" ? "PENDING" : "ACTIVE";
-      contexts.push({ role: "PRODUCER", scopeType: "ORG", scopeId: ps.producerOrgId, status });
-    }
-  }
+  // 6) Owner Team and Producer scopes are deprecated/deleted
 
   return contexts;
 }

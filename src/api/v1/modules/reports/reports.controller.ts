@@ -238,4 +238,34 @@ exports.getRevenueAnalytics = async (req, res) => {
   }
 };
 
+exports.createReport = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    const { type, targetId, reasonCode, details } = req.body;
+    const report = await service.createAbuseReport({
+      reporterId: userId,
+      type,
+      targetId,
+      reasonCode,
+      details,
+    });
+
+    return res.status(201).json({
+      success: true,
+      data: report,
+    });
+  } catch (error) {
+    console.error("createReport error:", error);
+    const status = error.statusCode || 500;
+    return res.status(status).json({
+      success: false,
+      message: error.message || "Failed to submit report",
+    });
+  }
+};
+
 export {};

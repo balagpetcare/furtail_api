@@ -1,4 +1,5 @@
 const prisma = require('../../../../infrastructure/db/prismaClient');
+const { createSocialNotification } = require('../../services/socialNotification.service');
 
 function toInt(v) {
   const n = Number(v);
@@ -17,25 +18,35 @@ exports.followUser = async (req, res) => {
     if (!targetId) return badRequest(res, 'Invalid userId');
     if (targetId === me) return badRequest(res, 'You cannot follow yourself');
 
-    await prisma.userFollow.upsert({
+    const existingFollow = await prisma.userFollow.findUnique({
       where: { followerId_followingId: { followerId: me, followingId: targetId } },
-      update: {},
-      create: { followerId: me, followingId: targetId },
+      select: { id: true },
     });
+    if (!existingFollow) {
+      await prisma.userFollow.create({ data: { followerId: me, followingId: targetId } });
 
-    // best-effort cache update
-    await prisma.userStatsCache.upsert({
-      where: { userId: targetId },
-      update: { followersCount: { increment: 1 } },
-      create: { userId: targetId, followersCount: 1, followingCount: 0, petsCount: 0, pawPoints: 0 },
-    }).catch(() => {});
+      // best-effort cache update
+      await prisma.userStatsCache.upsert({
+        where: { userId: targetId },
+        update: { followersCount: { increment: 1 } },
+        create: { userId: targetId, followersCount: 1, followingCount: 0, petsCount: 0, pawPoints: 0 },
+      }).catch(() => {});
 
-    await prisma.userStatsCache.upsert({
-      where: { userId: me },
-      update: { followingCount: { increment: 1 } },
-      create: { userId: me, followersCount: 0, followingCount: 1, petsCount: 0, pawPoints: 0 },
-    }).catch(() => {});
+      await prisma.userStatsCache.upsert({
+        where: { userId: me },
+        update: { followingCount: { increment: 1 } },
+        create: { userId: me, followersCount: 0, followingCount: 1, petsCount: 0, pawPoints: 0 },
+      }).catch(() => {});
 
+      createSocialNotification({
+        recipientUserId: targetId,
+        actorUserId: me,
+        type: 'USER_FOLLOWED',
+        targetType: 'USER',
+        targetId: me,
+        route: `/profile/${me}`,
+      }).catch((e) => console.warn('[Notification] Failed to send user follow notification:', e.message));
+    }
     return res.json({ success: true, message: 'Followed' });
   } catch (e) {
     return res.status(500).json({ success: false, message: 'Failed to follow user' });
@@ -73,9 +84,9 @@ exports.likeUserProfile = async (req, res) => {
     if (targetId === me) return badRequest(res, 'You cannot like your own profile');
 
     await prisma.userProfileLike.upsert({
-      where: { userId_likedByUserId: { userId: targetId, likedByUserId: me } },
+      where: { userId_likedById: { userId: targetId, likedById: me } },
       update: {},
-      create: { userId: targetId, likedByUserId: me },
+      create: { userId: targetId, likedById: me },
     });
 
     return res.json({ success: true, message: 'Liked' });
@@ -91,7 +102,7 @@ exports.unlikeUserProfile = async (req, res) => {
     if (!me) return res.status(401).json({ success: false, message: 'Unauthorized' });
     if (!targetId) return badRequest(res, 'Invalid userId');
 
-    await prisma.userProfileLike.deleteMany({ where: { userId: targetId, likedByUserId: me } });
+    await prisma.userProfileLike.deleteMany({ where: { userId: targetId, likedById: me } });
     return res.json({ success: true, message: 'Unliked' });
   } catch (e) {
     return res.status(500).json({ success: false, message: 'Failed to unlike profile' });
@@ -129,6 +140,17 @@ exports.sendFriendRequest = async (req, res) => {
       select: { id: true },
     });
 
+    createSocialNotification({
+      recipientUserId: toUserId,
+      actorUserId: me,
+      type: 'FRIEND_REQUEST_RECEIVED',
+      targetType: 'FRIEND_REQUEST',
+      targetId: reqRow.id,
+      route: `/profile/${me}`,
+      metadata: { requestId: reqRow.id },
+      dedupeKey: `FRIEND_REQUEST_RECEIVED:${reqRow.id}`,
+    }).catch((e) => console.warn('[Notification] Failed to send friend request notification:', e.message));
+
     return res.status(201).json({ success: true, message: 'Friend request sent', data: { requestId: reqRow.id } });
   } catch (e) {
     return res.status(500).json({ success: false, message: 'Failed to send friend request' });
@@ -149,14 +171,31 @@ exports.acceptFriendRequest = async (req, res) => {
 
     const pair = fr.fromUserId < fr.toUserId ? { userAId: fr.fromUserId, userBId: fr.toUserId } : { userAId: fr.toUserId, userBId: fr.fromUserId };
 
-    await prisma.$transaction([
-      prisma.userFriendRequest.update({ where: { id: requestId }, data: { status: 'ACCEPTED', respondedAt: new Date() } }),
-      prisma.userFriend.upsert({
-        where: { userAId_userBId: pair },
-        update: {},
-        create: { ...pair },
-      }),
-    ]);
+    // Guard: only update if still PENDING (prevents race / double-accept)
+    const updated = await prisma.userFriendRequest.updateMany({
+      where: { id: requestId, status: 'PENDING' },
+      data: { status: 'ACCEPTED' },
+    });
+    if (updated.count === 0) {
+      return badRequest(res, 'Request is no longer pending');
+    }
+
+    await prisma.userFriend.upsert({
+      where: { userAId_userBId: pair },
+      update: {},
+      create: { ...pair },
+    });
+
+    createSocialNotification({
+      recipientUserId: fr.fromUserId,
+      actorUserId: me,
+      type: 'FRIEND_REQUEST_ACCEPTED',
+      targetType: 'USER',
+      targetId: me,
+      route: `/profile/${me}`,
+      metadata: { requestId },
+      dedupeKey: `FRIEND_REQUEST_ACCEPTED:${requestId}`,
+    }).catch((e) => console.warn('[Notification] Failed to send friend accepted notification:', e.message));
 
     return res.json({ success: true, message: 'Request accepted' });
   } catch (e) {
@@ -176,7 +215,10 @@ exports.rejectFriendRequest = async (req, res) => {
     if (fr.toUserId !== me) return res.status(403).json({ success: false, message: 'Forbidden' });
     if (fr.status !== 'PENDING') return badRequest(res, 'Request is not pending');
 
-    await prisma.userFriendRequest.update({ where: { id: requestId }, data: { status: 'REJECTED', respondedAt: new Date() } });
+    await prisma.userFriendRequest.updateMany({
+      where: { id: requestId, status: 'PENDING' },
+      data: { status: 'REJECTED' },
+    });
     return res.json({ success: true, message: 'Request rejected' });
   } catch (e) {
     return res.status(500).json({ success: false, message: 'Failed to reject friend request' });
@@ -195,7 +237,10 @@ exports.cancelFriendRequest = async (req, res) => {
     if (fr.fromUserId !== me) return res.status(403).json({ success: false, message: 'Forbidden' });
     if (fr.status !== 'PENDING') return badRequest(res, 'Request is not pending');
 
-    await prisma.userFriendRequest.update({ where: { id: requestId }, data: { status: 'CANCELED', respondedAt: new Date() } });
+    await prisma.userFriendRequest.updateMany({
+      where: { id: requestId, status: 'PENDING' },
+      data: { status: 'CANCELED' },
+    });
     return res.json({ success: true, message: 'Request canceled' });
   } catch (e) {
     return res.status(500).json({ success: false, message: 'Failed to cancel friend request' });
@@ -211,7 +256,7 @@ exports.getSocialStatus = async (req, res) => {
 
     const [following, liked, friend, outgoingReq, incomingReq] = await Promise.all([
       prisma.userFollow.findUnique({ where: { followerId_followingId: { followerId: me, followingId: targetId } }, select: { id: true } }),
-      prisma.userProfileLike.findUnique({ where: { userId_likedByUserId: { userId: targetId, likedByUserId: me } }, select: { id: true } }),
+      prisma.userProfileLike.findUnique({ where: { userId_likedById: { userId: targetId, likedById: me } }, select: { id: true } }),
       prisma.userFriend.findUnique({
         where: {
           userAId_userBId: me < targetId ? { userAId: me, userBId: targetId } : { userAId: targetId, userBId: me },
@@ -271,3 +316,5 @@ exports.getSocialStatus = async (req, res) => {
 };
 
 export {};
+
+

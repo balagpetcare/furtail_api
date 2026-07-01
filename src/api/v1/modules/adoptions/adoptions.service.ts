@@ -67,6 +67,17 @@ function buildListWhere(filters: any, mode: "public" | "owner", ownerId?: number
   const search = String(filters.search || "").trim();
   const species = filters.species ? String(filters.species).trim().toUpperCase() : null;
   const countryId = toInt(filters.countryId);
+  const breed = String(filters.breed || "").trim();
+  const gender = filters.gender ? String(filters.gender).trim().toUpperCase() : null;
+  const size = String(filters.size || "").trim();
+  const minAgeDays = filters.minAgeDays !== undefined && filters.minAgeDays !== null ? Number(filters.minAgeDays) : null;
+  const maxAgeDays = filters.maxAgeDays !== undefined && filters.maxAgeDays !== null ? Number(filters.maxAgeDays) : null;
+  const vaccinated = filters.vaccinated;
+  const dewormed = filters.dewormed;
+  const neutered = filters.neutered;
+  const goodWithKids = filters.goodWithKids;
+  const goodWithDogs = filters.goodWithDogs;
+  const goodWithCats = filters.goodWithCats;
 
   const where: any = {
     deletedAt: null,
@@ -74,8 +85,22 @@ function buildListWhere(filters: any, mode: "public" | "owner", ownerId?: number
     ...(mode === "owner" && ownerId ? { ownerId } : {}),
     ...(species ? { species: species as any } : {}),
     ...(countryId ? { countryId } : {}),
+    ...(gender ? { gender: gender as any } : {}),
+    ...(breed ? { breed: { contains: breed, mode: "insensitive" } } : {}),
+    ...(size ? { sizeText: { contains: size, mode: "insensitive" } } : {}),
+    ...(vaccinated === true ? { vaccinated: true } : {}),
+    ...(dewormed === true ? { dewormed: true } : {}),
+    ...(neutered === true ? { neutered: true } : {}),
     ...buildLocationFilters(filters),
   };
+
+  // Age range filter using totalAgeDays
+  if (minAgeDays !== null && !isNaN(minAgeDays)) {
+    where.totalAgeDays = { ...(where.totalAgeDays || {}), gte: minAgeDays };
+  }
+  if (maxAgeDays !== null && !isNaN(maxAgeDays)) {
+    where.totalAgeDays = { ...(where.totalAgeDays || {}), lte: maxAgeDays };
+  }
 
   if (mode === "owner") {
     const statuses = parseStatusFilter(filters.status);
@@ -94,8 +119,17 @@ function buildListWhere(filters: any, mode: "public" | "owner", ownerId?: number
     ];
   }
 
+  // Compatibility via nested criteria relation
+  if (goodWithKids === true) {
+    where.criteria = { ...( where.criteria || {}), canHaveChildren: true };
+  }
+  if (goodWithDogs === true || goodWithCats === true) {
+    where.criteria = { ...(where.criteria || {}), canHaveOtherPets: true };
+  }
+
   return where;
 }
+
 
 function listingInclude(viewerId?: number | null) {
   return {
@@ -107,7 +141,9 @@ function listingInclude(viewerId?: number | null) {
             id: true,
             url: true,
             type: true,
+            mimeType: true,
             thumbnailUrl: true,
+            hlsUrl: true,
           },
         },
       },
@@ -262,6 +298,76 @@ async function ensureShelterOwnership(userId: number, shelterProfileId?: number 
   }
 }
 
+async function ensureAdoptionReferences(body: any) {
+  const countryId = toInt(body.countryId);
+  if (!countryId) {
+    throw createHttpError(400, "Country is required");
+  }
+
+  const [
+    country,
+    division,
+    district,
+    upazila,
+    area,
+  ] = await Promise.all([
+    prisma.country.findUnique({
+      where: { id: countryId },
+      select: { id: true },
+    }),
+    toInt(body.bdDivisionId)
+      ? prisma.bdDivision.findUnique({
+          where: { id: toInt(body.bdDivisionId)! },
+          select: { id: true },
+        })
+      : null,
+    toInt(body.bdDistrictId)
+      ? prisma.bdDistrict.findUnique({
+          where: { id: toInt(body.bdDistrictId)! },
+          select: { id: true, divisionId: true },
+        })
+      : null,
+    toInt(body.bdUpazilaId)
+      ? prisma.bdUpazila.findUnique({
+          where: { id: toInt(body.bdUpazilaId)! },
+          select: { id: true, districtId: true },
+        })
+      : null,
+    toInt(body.bdAreaId)
+      ? prisma.bdArea.findUnique({
+          where: { id: toInt(body.bdAreaId)! },
+          select: { id: true, upazilaId: true, districtId: true },
+        })
+      : null,
+  ]);
+
+  if (!country) {
+    throw createHttpError(400, "Selected country does not exist");
+  }
+  if (toInt(body.bdDivisionId) && !division) {
+    throw createHttpError(400, "Selected division does not exist");
+  }
+  if (toInt(body.bdDistrictId) && !district) {
+    throw createHttpError(400, "Selected district does not exist");
+  }
+  if (toInt(body.bdUpazilaId) && !upazila) {
+    throw createHttpError(400, "Selected upazila does not exist");
+  }
+  if (toInt(body.bdAreaId) && !area) {
+    throw createHttpError(400, "Selected area does not exist");
+  }
+
+  if (division && district && Number(district.divisionId) !== Number(division.id)) {
+    throw createHttpError(400, "Selected district does not belong to the selected division");
+  }
+  if (district && upazila && Number(upazila.districtId) !== Number(district.id)) {
+    throw createHttpError(400, "Selected upazila does not belong to the selected district");
+  }
+  if (upazila && area && Number(area.upazilaId) !== Number(upazila.id)) {
+    throw createHttpError(400, "Selected area does not belong to the selected upazila");
+  }
+}
+
 function normalizePetStatus(submitNow?: boolean): AdoptionPetStatus {
   return submitNow ? "PUBLISHED" : "DRAFT";
 }
@@ -287,6 +393,11 @@ function buildPetData(body: any, partial = false) {
   if (!partial || hasOwn(body, "name")) data.name = body.name;
   if (!partial || hasOwn(body, "breed")) data.breed = body.breed ?? undefined;
   if (!partial || hasOwn(body, "ageText")) data.ageText = body.ageText ?? undefined;
+  if (!partial || hasOwn(body, "ageYears")) data.ageYears = toInt(body.ageYears) ?? undefined;
+  if (!partial || hasOwn(body, "ageMonths")) data.ageMonths = toInt(body.ageMonths) ?? undefined;
+  if (!partial || hasOwn(body, "ageDays")) data.ageDays = toInt(body.ageDays) ?? undefined;
+  if (!partial || hasOwn(body, "totalAgeDays")) data.totalAgeDays = toInt(body.totalAgeDays) ?? undefined;
+  if (!partial || hasOwn(body, "approximateDateOfBirth")) data.approximateDateOfBirth = body.approximateDateOfBirth ? new Date(body.approximateDateOfBirth) : undefined;
   if (!partial || hasOwn(body, "gender")) data.gender = body.gender ?? "UNKNOWN";
   if (!partial || hasOwn(body, "sizeText")) data.sizeText = body.sizeText ?? undefined;
   if (!partial || hasOwn(body, "colorText")) data.colorText = body.colorText ?? undefined;
@@ -392,6 +503,7 @@ export async function createAdoptionListing(params: { userId: number; body: any 
   const mediaIds = Array.isArray(params.body.mediaIds) ? params.body.mediaIds.map((id: unknown) => Number(id)).filter(Number.isFinite) : [];
   await ensureMediaOwnership(params.userId, mediaIds);
   await ensureShelterOwnership(params.userId, toInt(params.body.shelterProfileId));
+  await ensureAdoptionReferences(params.body);
 
   const status = normalizePetStatus(Boolean(params.body.submitNow));
   const petData = buildPetData(params.body, false);
@@ -452,6 +564,11 @@ export async function updateAdoptionListing(params: { id: number; user: any; bod
       id: true,
       ownerId: true,
       status: true,
+      countryId: true,
+      bdDivisionId: true,
+      bdDistrictId: true,
+      bdUpazilaId: true,
+      bdAreaId: true,
     },
   });
 
@@ -475,6 +592,13 @@ export async function updateAdoptionListing(params: { id: number; user: any; bod
     await ensureMediaOwnership(Number(params.user.id), mediaIds);
   }
   await ensureShelterOwnership(Number(params.user.id), toInt(params.body.shelterProfileId));
+  await ensureAdoptionReferences({
+    countryId: params.body.countryId ?? listing.countryId,
+    bdDivisionId: hasOwn(params.body, "bdDivisionId") ? params.body.bdDivisionId : listing.bdDivisionId,
+    bdDistrictId: hasOwn(params.body, "bdDistrictId") ? params.body.bdDistrictId : listing.bdDistrictId,
+    bdUpazilaId: hasOwn(params.body, "bdUpazilaId") ? params.body.bdUpazilaId : listing.bdUpazilaId,
+    bdAreaId: hasOwn(params.body, "bdAreaId") ? params.body.bdAreaId : listing.bdAreaId,
+  });
 
   const updateData = buildPetData(params.body, true);
   const nextStatus =
@@ -1511,6 +1635,12 @@ export async function getApplicationDetail(params: {
     throw createHttpError(403, "Forbidden");
   }
 
+  // Strip private owner notes from applicant view
+  if (isApplicant && !isOwner && !params.isAdmin) {
+    const { ownerNotes: _hidden, ...rest } = application as any;
+    return rest;
+  }
+
   return application;
 }
 
@@ -1547,20 +1677,24 @@ export async function updateApplicationStatus(params: {
     throw createHttpError(400, "You cannot review your own application");
   }
 
+  const updateData: any = {
+    status: params.status,
+    reviewedAt: new Date(),
+  };
+  if (params.status === "REJECTED" && params.note) {
+    updateData.rejectedReason = params.note;
+  }
+
   const updated = await prisma.$transaction(async (tx: any) => {
     const app = await tx.adoptionApplication.update({
       where: { id: params.applicationId },
-      data: {
-        status: params.status,
-      }
+      data: updateData,
     });
 
     if (params.status === "APPROVED") {
       await tx.adoptionPet.update({
         where: { id: application.petId },
-        data: {
-          status: "ADOPTED",
-        }
+        data: { status: "ADOPTED" },
       });
     }
 
@@ -1581,33 +1715,72 @@ export async function updateApplicationStatus(params: {
     console.error("Audit log failed (ignored):", e);
   }
 
-  try {
-    await createAdoptionNotification({
-      recipientUserId: application.applicantId,
-      actorUserId: params.userId,
-      type:
-        params.status === "APPROVED"
-          ? "ADOPTION_APPLICATION_APPROVED"
-          : "ADOPTION_APPLICATION_REJECTED",
-      title:
-        params.status === "APPROVED"
-          ? "Adoption application approved"
-          : "Adoption application updated",
-      body: `Your application for ${application.pet.name} is now ${params.status.toLowerCase().replace(/_/g, " ")}.`,
-      route: `/adoption-application/${application.id}`,
-      targetId: application.id,
-      targetType: "ADOPTION_APPLICATION",
-      dedupeKey: `adoption:application:${application.id}:status:${params.status}`,
-      metadata: {
-        applicationId: application.id,
-        status: params.status,
-        note: params.note || null,
-      },
-    });
-  } catch (e) {
-    console.error("Notification failed (ignored):", e);
+  const notifTypeMap: Record<string, string> = {
+    APPROVED: "ADOPTION_APPLICATION_APPROVED",
+    REJECTED: "ADOPTION_APPLICATION_REJECTED",
+    SHORTLISTED: "ADOPTION_APPLICATION_SHORTLISTED",
+    INTERVIEW_SCHEDULED: "ADOPTION_APPLICATION_INTERVIEW_SCHEDULED",
+    OWNER_REVIEW: "ADOPTION_APPLICATION_MORE_INFO_REQUESTED",
+  };
+  const notifTitleMap: Record<string, string> = {
+    APPROVED: "Application approved 🎉",
+    REJECTED: "Application not progressed",
+    SHORTLISTED: "You've been shortlisted!",
+    INTERVIEW_SCHEDULED: "Interview scheduled",
+    OWNER_REVIEW: "More information requested",
+  };
+  const notifType = notifTypeMap[params.status];
+  if (notifType) {
+    try {
+      await createAdoptionNotification({
+        recipientUserId: application.applicantId,
+        actorUserId: params.userId,
+        type: notifType as any,
+        title: notifTitleMap[params.status] ?? "Application updated",
+        body: `Your application for ${application.pet.name} is now ${params.status.toLowerCase().replace(/_/g, " ")}.`,
+        route: `/adoption-application/${application.id}`,
+        targetId: application.id,
+        targetType: "ADOPTION_APPLICATION",
+        dedupeKey: `adoption:application:${application.id}:status:${params.status}`,
+        metadata: {
+          applicationId: application.id,
+          status: params.status,
+          note: params.note || null,
+        },
+      });
+    } catch (e) {
+      console.error("Notification failed (ignored):", e);
+    }
   }
 
+  return updated;
+}
+
+export async function updateOwnerNotes(params: {
+  applicationId: number;
+  userId: number;
+  isAdmin: boolean;
+  notes: string;
+}) {
+  const application = await prisma.adoptionApplication.findUnique({
+    where: { id: params.applicationId },
+    include: { pet: { select: { ownerId: true } } },
+  });
+
+  if (!application || application.deletedAt) {
+    throw createHttpError(404, "Adoption application not found");
+  }
+
+  const isOwner = application.pet.ownerId === params.userId;
+  if (!isOwner && !params.isAdmin) {
+    throw createHttpError(403, "Forbidden");
+  }
+
+  const updated = await prisma.adoptionApplication.update({
+    where: { id: params.applicationId },
+    data: { ownerNotes: params.notes },
+    select: { id: true, ownerNotes: true },
+  });
 
   return updated;
 }

@@ -3,8 +3,13 @@ const controller = require("./reports.controller");
 const authenticateToken = require("../../../../middleware/auth.middleware");
 const requirePermission = require("../../../../middlewares/requirePermission");
 
-// All routes require authentication + reports.read or reports.view (branch staff) permission
+// All routes require authentication
 router.use(authenticateToken);
+
+// POST /api/v1/reports - Abuse reporting endpoint for all users
+router.post("/", controller.createReport);
+
+// Administrative analytics routes require reports.read / reports.view permissions
 router.use(requirePermission("reports.read", "reports.view", "org.read", "branches.read"));
 
 // GET /api/v1/reports/sales - Sales report

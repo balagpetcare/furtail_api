@@ -27,19 +27,11 @@ async function resolveCountryContext(req: any, prisma: any): Promise<{
 
   const userId = Number(req.user?.id || 0);
   if (Number.isFinite(userId) && userId > 0 && prisma) {
-    const userCountry = await prisma.userCountryRole.findFirst({
-      where: { userId },
-      include: { country: { select: { id: true, code: true } } },
-    });
-    if (userCountry?.country?.code) {
-      return { countryCode: userCountry.country.code, countryId: userCountry.country.id };
-    }
-
-    const orgMember = await prisma.orgMember.findFirst({
+    const branchMember = await prisma.branchMember.findFirst({
       where: { userId, status: "ACTIVE" },
       include: { org: { select: { countryId: true } } },
     });
-    let countryId = orgMember?.org?.countryId ?? null;
+    let countryId = branchMember?.org?.countryId ?? null;
 
     if (!countryId) {
       const ownedOrg = await prisma.organization.findFirst({

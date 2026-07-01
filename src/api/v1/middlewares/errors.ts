@@ -36,10 +36,14 @@ function fallbackMulterMessage(err: any): { status: number; message: string; cod
     name === "MulterError" || (typeof code === "string" && String(code).startsWith("LIMIT_"));
   if (!isMulter) return null;
   if (code === "LIMIT_FILE_SIZE") {
+    const maxSizeMb = Math.round(
+      Number(process.env.MAX_UPLOAD_BYTES || 200 * 1024 * 1024) / (1024 * 1024)
+    );
     return {
-      status: 400,
-      message: "Uploaded file is too large. Please upload a smaller file.",
+      status: 413,
+      message: `Uploaded file is too large. Maximum allowed size is ${maxSizeMb}MB.`,
       code: "FILE_TOO_LARGE",
+      meta: { maxSizeMb },
     };
   }
   if (
@@ -83,17 +87,27 @@ function errorHandler(err: unknown, req: Request, res: Response, next: NextFunct
   }
 
   const status: number = Number(e?.statusCode || e?.status || 500);
-  const message: string = String(e?.message || "Internal server error");
 
+  // Always log the full error server-side
   if (process.env.NODE_ENV !== "production") {
     // eslint-disable-next-line no-console
     console.error(err);
   }
 
+  // Never expose raw error messages (stack traces, module paths, etc.) for 500 errors
+  let message: string;
+  if (status >= 500) {
+    message = "Something went wrong. Please try again.";
+  } else {
+    message = String(e?.message || "Something went wrong. Please try again.");
+  }
+
   const payload: any = { success: false, message };
-  if (e?.details !== undefined) payload.details = e.details;
   if (typeof e?.code === "string" && e.code.length > 0) payload.code = e.code;
   if (e?.meta !== undefined) payload.meta = e.meta;
+
+  // Include details object only for non-500 errors
+  if (status < 500 && e?.details !== undefined) payload.details = e.details;
 
   res.status(status).json(payload);
 }

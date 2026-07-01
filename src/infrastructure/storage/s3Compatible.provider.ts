@@ -77,16 +77,21 @@ class S3CompatibleStorageProvider {
     );
   }
 
-  async getObject(key: string) {
-    const response = await this.#client.send(
-      new GetObjectCommand({
-        Bucket: this.config.bucketName,
-        Key: key,
-      })
-    );
+  async getObject(key: string, range?: { start: number; end: number }) {
+    const input: Record<string, unknown> = {
+      Bucket: this.config.bucketName,
+      Key: key,
+    };
+    if (range) {
+      input.Range = `bytes=${range.start}-${range.end}`;
+    }
+    const response = await this.#client.send(new GetObjectCommand(input));
     return {
       body: response.Body,
       contentType: response.ContentType,
+      contentLength: response.ContentLength,
+      contentRange: response.ContentRange,
+      statusCode: response.$metadata.httpStatusCode,
     };
   }
 

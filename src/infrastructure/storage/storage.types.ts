@@ -18,16 +18,24 @@ export interface PutObjectInput {
   contentType?: string;
 }
 
+export interface GetObjectRange {
+  start: number;
+  end: number;
+}
+
 export interface GetObjectResult {
   body: NodeJS.ReadableStream;
   contentType?: string;
+  contentLength?: number;
+  contentRange?: string;
+  statusCode?: number;
 }
 
 export interface StorageProvider {
   readonly name: StorageProviderName;
   readonly config: StorageConfig;
   putObject(input: PutObjectInput): Promise<void>;
-  getObject(key: string): Promise<GetObjectResult>;
+  getObject(key: string, range?: GetObjectRange): Promise<GetObjectResult>;
   deleteObject(key: string): Promise<void>;
   objectExists(key: string): Promise<boolean>;
   getSignedGetUrl(key: string, expiresInSeconds?: number): Promise<string>;
